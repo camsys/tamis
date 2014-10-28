@@ -8,6 +8,23 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
             configuredTables: ko.observableArray([]),
 
             activate: function () {
+
+                var that = this;
+                $.get("assets/json/results.json",
+                    function (queryData) {
+
+                        var data = {};
+                        data.BridgeFeatureResults = queryData.BridgeFeatureResults;
+                        appstate.queryResults = queryData;
+                        appstate.queryName = 'Assets';
+                        appstate.querydescription = JSON.parse('{"queryName":"Assets","criteria":[{"name":"Geographic Definition","value":"Regions"},{"name":"Geographic Filter","value":"CENTRAL REGION, SOUTHEAST REGION"},{"name":"Asset Filter","value":"Bridge Assets"}]}');
+
+                        that.realactivate();
+                    }
+                );
+            },
+
+            realactivate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 var configuredTables = [];

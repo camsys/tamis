@@ -1,25 +1,5 @@
 <div class="container" data-bind="visible: charts().length > 0">
-    <div class="col-md-6" data-bind="compose: querydescription"></div>
-</div>
-<div class="container" data-bind="visible: charts().length > 0">
-    <div class="form-inline">
-        <select id="selectQuery" class="form-control pull-right"
-                data-bind="options: graphMetrics,
-                    optionsText: 'name',
-                    optionsValue: 'value',
-                    value: selectedMetric">
-        </select>
-        <label class="col-sm-2 control-label pull-right">Selected measure:</label>
-        <select id="selectOrder" class="form-control pull-right"
-                data-bind="options: levelOrders,
-                    optionsText: 'name',
-                    optionsValue: 'name',
-                    value: selectedOrder">
-        </select>
-        <label class="col-sm-2 control-label pull-right">Summarize By:</label>
-        <a class="btn btn-primary" data-bind="click: print">Print</a>
-    </div>
-
+    <div data-bind="compose: { model: querydescription, preserveContext: true }"></div>
     <div class="row">
         <ul class="nav nav-tabs">
             <!-- ko foreach: charts -->

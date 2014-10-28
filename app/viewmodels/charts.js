@@ -11,6 +11,8 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             levelOrders: ko.observableArray([]),
             selectedOrder: ko.observable(),
 
+
+
             activate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
@@ -20,7 +22,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                     this.graphMetrics(this.reportdef.graphMetrics);
                     this.selectedMetric(this.reportdef.graphMetrics[0].value); //set default
                     this.selectedOrder(this.reportdef.levelOrders[0].name); //set default
-                    this.levelOrders(this.reportdef.levelOrders)
+                    this.levelOrders(this.reportdef.levelOrders);
                     var that = this;
                     this.selectedMetric.subscribe(function (newValue) {
                         that.refreshCharts();
