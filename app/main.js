@@ -14,9 +14,6 @@ requirejs.config({
         'highcharts': '../bower_components/highcharts/highcharts',
         'cookie': '../assets/js/jquery-cookie',
         'validator': '../bower_components/bootstrapvalidator/dist/js/bootstrapValidator',
-        'esri': '../assets/js/init',
-        'map': '../assets/js/map',
-        'dojo': '../assets/js/dojo.js.uncompressed',
     },
     shim: {
         bootstrap: {

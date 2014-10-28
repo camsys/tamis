@@ -2,69 +2,6 @@
     <div class="col-md-6" data-bind="compose: querydescription"></div>
 </div>
 <div class="container">
-
-    <div class="row">
-
-
-
-
-        <!-- ESRI ArcGIS API -->
-        <link rel="stylesheet" href="http://js.arcgis.com/3.11/dijit/themes/claro/claro.css">
-        <link rel="stylesheet" href="http://js.arcgis.com/3.11/esri/css/esri.css">
-        <script src="http://js.arcgis.com/3.11/"></script>
-
-        <!-- Just using jquery for the ajax call -->
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
-        <style>
-            html, body, #mapPane, #map {
-                padding: 0;
-                margin: 0;
-                height: 100%;
-            }
-        </style>
-
-        <!-- Load a map -->
-        <script src="../map/map.js"></script>
-
-        <script type="text/javascript">
-            dojo.require("esri.map");
-            dojo.require("esri.geometry.jsonUtils");
-            dojo.require("esri.utils");
-            dojo.require("esri.layers.FeatureLayer");
-            dojo.require("esri.layers.graphics");
-            dojo.require("esri.dijit.BasemapGallery");
-            dojo.require("esri.dijit.Legend");
-            dojo.require("esri.toolbars.draw");
-            dojo.require("esri.toolbars.edit");
-            dojo.require("esri.tasks.PrintTask");
-            dojo.require("esri.tasks.query");
-            dojo.require("esri.tasks.geometry");
-            dojo.require("esri.tasks.identify");
-            dojo.require("esri.dijit.Scalebar");
-            dojo.require("dojo.io.script");
-
-            dojo.addOnLoad(function() {
-                tamis.Map.initializeMap();
-            });
-
-        </script>
-
-        <div data-dojo-type="dijit/layout/ContentPane" id="legendPane"
-             data-dojo-props="title:'Legend', selected:true">
-            <div id="legendDiv"></div>
-        </div>
-        <div id="mapPane">
-            <div id="map">
-                <div id="basemapGallery"></div>
-            </div>
-        </div>
-
-
-
-    </div>
-
-
     <div class="row">
         <div style="display: none"  data-bind="visible: configuredTables().length > 0">
             <div class="tabbable">

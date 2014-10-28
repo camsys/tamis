@@ -1,5 +1,5 @@
-define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '../config/appstate', 'plugins/router', '../definitions/tabledefs', '../config/config', './querydescription', 'dojo', 'esri', 'map'],
-    function (http, app, ko, jqueryui, datatables, appstate, router, tabledefs, config, querydescription, dojo, esri, map) {
+define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '../config/appstate', 'plugins/router', '../definitions/tabledefs', '../config/config', './querydescription'],
+    function (http, app, ko, jqueryui, datatables, appstate, router, tabledefs, config, querydescription) {
 
         return {
 
@@ -58,27 +58,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
 
             compositionComplete: function () {
                 $('a[data-toggle="tab"]:first').trigger("shown.bs.tab");
-
-                dojo.require("esri.map");
-                dojo.require("esri.geometry.jsonUtils");
-                dojo.require("esri.utils");
-                dojo.require("esri.layers.FeatureLayer");
-                dojo.require("esri.layers.graphics");
-                dojo.require("esri.dijit.BasemapGallery");
-                dojo.require("esri.dijit.Legend");
-                dojo.require("esri.toolbars.draw");
-                dojo.require("esri.toolbars.edit");
-                dojo.require("esri.tasks.PrintTask");
-                dojo.require("esri.tasks.query");
-                dojo.require("esri.tasks.geometry");
-                dojo.require("esri.tasks.identify");
-                dojo.require("esri.dijit.Scalebar");
-                dojo.require("dojo.io.script");
-
-                dojo.addOnLoad(function() {
-                    tamis.Map.initializeMap();
-                });
-
             },
 
             showWarning: function (message) {
