@@ -2,12 +2,12 @@
     <div class="row">
         <div class="col-md-8">
             <div class="well well-sm">
-                <form>
+                <form id="queryConfigForm">
                     <div class="row">
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label for="selectQuery">Which query would you like to run?</label>
-                                <select id="selectQuery" class="form-control"
+                                <select id="selectQuery" name="seletQuery" class="form-control"
                                         data-bind="
                                         options: queries,
                                         optionsText: 'name',
@@ -19,7 +19,7 @@
                             <div class="form-group" data-bind="fadeVisible: selectedQuery">
                                 <label for="selectGeoType">By what geographic definition do you want your data
                                     summarized?</label>
-                                <select id="selectGeoType" class="form-control"
+                                <select id="selectGeoType" name="selectGeoType" class="form-control"
                                         data-bind="
                                         options: geographicTypes,
                                         optionsText: 'name',

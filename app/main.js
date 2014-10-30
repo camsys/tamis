@@ -14,6 +14,7 @@ requirejs.config({
         'highcharts': '../bower_components/highcharts/highcharts',
         'cookie': '../assets/js/jquery-cookie',
         'validator': '../bower_components/bootstrapvalidator/dist/js/bootstrapValidator',
+        'komapping': '../bower_components/knockout-mapping/knockout.mapping',
     },
     shim: {
         bootstrap: {

@@ -126,9 +126,27 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     });
             },
 
+            canDeactivate: function () {
+                if(this.selectedQuery()){
+                    var title = 'Confirm';
+                    var msg = 'Do you want to leave this page and abandon your changes?';
+                    return app.showMessage(msg, title, ['Yes', 'No'])
+                        .then(function (selectedOption) {
+                            return selectedOption === 'Yes';
+                        });
+                } else {
+                    return true;
+                };
+            },
+
             bindingComplete: function () {
 
                 var that = this;
+
+                $(window).bind('beforeunload', function(e){
+
+                    // i.e; if form state change show warning box, else don't show it.
+                });
 
                 $('#assetTree').jstree({'plugins': ["checkbox"], 'core': {
                     'data': that.assetTreeNodes()
@@ -370,25 +388,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     }
                 })
                 if (hasResults == false) {
-                    this.showWarning('Your query returned no data.  Modify your query parameters and try again.');
+                    app.showMessage(config.noResultsMessage.message, config.noResultsMessage.title);
                 } else {
                     router.navigate('queryresults');
                 }
-            },
-
-            showWarning: function (message) {
-                $("#div-dialog-warning-message").html(message)
-                $("#div-dialog-warning").dialog({
-                    buttons: {
-                        "Ok": function () {
-                            $(this).dialog("close");
-                        }
-                    },
-                    dialogClass: "error",
-                    modal: true,
-                    resizable: false,
-                    title: 'Error'
-                });
             },
 
             createQueryDescription: function(){

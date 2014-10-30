@@ -8,9 +8,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
             configuredTables: ko.observableArray([]),
 
             activate: function () {
-
                 var that = this;
-                $.get("assets/json/results.json",
+                $.get("assets/json/mapdata.json",
                     function (queryData) {
 
                         var data = {};
@@ -53,15 +52,30 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
             },
 
             bindingComplete: function () {
+                $('#mapiframe').load(function() {
+                    var parentEvent = jQuery.Event( "loaddata" );
+                    parentEvent.queryResults = appstate.queryResults;
+                    $( "body" ).trigger( parentEvent );
+                });
 
                 $(this.configuredTables()).each(function (index, table) {
 
-                    $('#' + table.id + '_table').dataTable({
+                    var table = $('#' + table.id + '_table').dataTable({
                         "aoColumnDefs": [
                             { "sWidth": "10%", "aTargets": [ -1 ] }
                         ],
                         "data": table.data,
                         "columns": table.columnDefs
+                    });
+
+                    $(table).on('click', 'tr', function () {
+                        if ($(this).hasClass('selected')) {
+                            $(this).removeClass('selected');
+                        }
+                        else {
+                            table.$('tr.selected').removeClass('selected');
+                            $(this).addClass('selected');
+                        }
                     });
                 });
 
@@ -75,21 +89,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
 
             compositionComplete: function () {
                 $('a[data-toggle="tab"]:first').trigger("shown.bs.tab");
-            },
 
-            showWarning: function (message) {
-                $("#div-dialog-warning-message").html(message)
-                $("#div-dialog-warning").dialog({
-                    buttons: {
-                        "Ok": function () {
-                            $(this).dialog("close");
-                        }
-                    },
-                    dialogClass: "error",
-                    modal: true,
-                    resizable: false,
-                    title: 'Error'
-                });
+                var footerTop = $('#mapheight').height() + $('header').height();
+                $("#stickyfooter").css('top', footerTop + 'px');
+
             },
         };
     });

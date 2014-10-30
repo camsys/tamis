@@ -1,21 +1,52 @@
-<div class="container">
+<div class="container" id="resultscontainer">
     <div class="row">
         <div style="display: none"  data-bind="visible: configuredTables().length > 0">
-            <div class="tabbable">
-                <ul class="nav nav-tabs">
-                    <!-- ko foreach: configuredTables -->
-                       <li data-bind="css: { active: $index() == 0 }"><a data-toggle="tab" data-bind="attr: { href: '#' + id + '_tab_div' }"><span data-bind="text: title"/></a></li>
-                    <!-- /ko -->
-                </ul>
-                <div class="tab-content">
-                    <!-- ko foreach: configuredTables -->
-                        <div class="tab-pane" data-bind="attr: { id: id  + '_tab_div' }, css: { active: $index() == 0 }">
-                            <table cellpadding="0" cellspacing="0" border="0" id="example1" class="queryResults" width="100%"
-                                   data-bind="attr: { id: id + '_table' }"/>
-                        </div>
-                    <!-- /ko -->
-                </div><!-- /.tab-content -->
-            </div><!-- /.tabbable -->
+
+
+
+            <style>
+                #mapwrapper {
+                    display: block;
+                    position:absolute;
+                    float:left;
+                    height:auto;
+                    bottom:0;
+                    top:0;
+                    left:0;
+                    right:0;
+                    margin-top:50px; /* adjust top margin to your header height */
+                }
+
+                #mapiframe {
+                    width:100%;
+                    height: 500px;
+                }
+
+                #resulttabs {
+                    margin-left: 20px;
+                    margin-right: 20px;
+                }
+            </style>
+            <div id="mapwrapper" class="row" >
+                <div id="mapheight">
+                    <iframe id="mapiframe" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" src="tazeen/Map.html"></iframe>
+                    <div class="tabbable" id="resulttabs">
+                        <ul class="nav nav-tabs">
+                            <!-- ko foreach: configuredTables -->
+                               <li data-bind="css: { active: $index() == 0 }"><a data-toggle="tab" data-bind="attr: { href: '#' + id + '_tab_div' }"><span data-bind="text: title"/></a></li>
+                            <!-- /ko -->
+                        </ul>
+                        <div class="tab-content">
+                            <!-- ko foreach: configuredTables -->
+                                <div class="tab-pane" data-bind="attr: { id: id  + '_tab_div' }, css: { active: $index() == 0 }">
+                                    <table cellpadding="0" cellspacing="0" border="0" id="example1" class="queryResults" width="100%"
+                                           data-bind="attr: { id: id + '_table' }"/>
+                                </div>
+                            <!-- /ko -->
+                        </div><!-- /.tab-content -->
+                    </div><!-- /.tabbable -->
+                </div>
+            </div>
         </div>
     </div>
 </div>
