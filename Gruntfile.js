@@ -270,6 +270,11 @@ module.exports = function (grunt) {
                     cwd: 'bower_components/datatables/media/images/',
                     src: '**/*.{gif,jpeg,jpg,png}',
                     dest: '<%= paths.build %>/images'
+                },{
+                    expand: true,
+                    cwd: 'maps',
+                    src: '**/*.*',
+                    dest: '<%= paths.build %>/maps'
                 }]
             }
         },

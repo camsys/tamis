@@ -37,6 +37,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                             table.data = data[dataKey];
                             table.columnDefs = tabledefs[dataKey];
                             table.id = index;
+                            $(table.data).each(function (index, row) {
+                                row.id = (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+                            });
                             configuredTables.push(table);
                         }
                     });
@@ -52,15 +55,22 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
             },
 
             bindingComplete: function () {
+
+                var parentEvent = jQuery.Event( "loaddata" );
+                parentEvent.queryResults = appstate.queryResults;
+                parentEvent.labels = {};
+
                 $('#mapiframe').load(function() {
-                    var parentEvent = jQuery.Event( "loaddata" );
-                    parentEvent.queryResults = appstate.queryResults;
+                    $.each(parentEvent.queryResults, function( k, v ) {
+                        var columnDefs = tabledefs[k];
+                        parentEvent.labels[k] = columnDefs;
+                    });
                     $( "body" ).trigger( parentEvent );
                 });
 
                 $(this.configuredTables()).each(function (index, table) {
 
-                    var table = $('#' + table.id + '_table').dataTable({
+                    var dataTable = $('#' + table.id + '_table').dataTable({
                         "aoColumnDefs": [
                             { "sWidth": "10%", "aTargets": [ -1 ] }
                         ],
@@ -68,13 +78,17 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                         "columns": table.columnDefs
                     });
 
-                    $(table).on('click', 'tr', function () {
+                    $(dataTable).on('click', 'tr', function () {
                         if ($(this).hasClass('selected')) {
                             $(this).removeClass('selected');
                         }
                         else {
-                            table.$('tr.selected').removeClass('selected');
+                            dataTable.$('tr.selected').removeClass('selected');
                             $(this).addClass('selected');
+                            var rowData = dataTable.fnGetData( this );
+                            var parentEvent = jQuery.Event( "rowselect" );
+                            parentEvent.rowData = rowData;
+                            $( "body" ).trigger( parentEvent );
                         }
                     });
                 });
@@ -93,6 +107,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                 var footerTop = $('#mapheight').height() + $('header').height();
                 $("#stickyfooter").css('top', footerTop + 'px');
 
+            },
+
+            canDeactivate: function () {
+                $("#stickyfooter").css('top', '');
+                return true;
             },
         };
     });

@@ -20,6 +20,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
             useAssetFilter: ko.observable(),
             assetFilters: ko.observableArray([]),
             assetTreeNodes: ko.observableArray([]),
+            queryComplete: false,
 
             resetObservables: function () {
                 this.selectedQuery(null);
@@ -127,7 +128,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
             },
 
             canDeactivate: function () {
-                if(this.selectedQuery()){
+                if(this.selectedQuery() && !this.queryComplete){
                     var title = 'Confirm';
                     var msg = 'Do you want to leave this page and abandon your changes?';
                     return app.showMessage(msg, title, ['Yes', 'No'])
@@ -141,6 +142,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
 
             bindingComplete: function () {
 
+                this.queryComplete = false;
                 var that = this;
 
                 $(window).bind('beforeunload', function(e){
@@ -369,9 +371,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                         appstate.queryName = 'Assets';
                         appstate.queryResults = $.parseJSON(data);
                         that.validateResponse();
+                        that.queryComplete = true;
                     },
                     error: function (data) {
-                        console.log('error');
+                        alert("Error querying server")
                     }
 
                 });
