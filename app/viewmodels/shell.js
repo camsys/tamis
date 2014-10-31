@@ -1,4 +1,4 @@
-﻿define(['plugins/router', "durandal/app"], function (router, app) {
+﻿define(['plugins/router', "durandal/app", 'cookie'], function (router, app, cookie) {
     return {
         router: router,
 
@@ -13,7 +13,18 @@
                 /*{durandal:routes}*/
             ]).buildNavigationModel();
 
+            router.guardRoute = function (instance, instruction) {
+
+                var appCookie = $.cookie('name');
+                if(instruction.fragment == '' || appCookie){
+                    return true;
+                }else{
+                    return 'viewmodels/home'
+                }
+
+            };
+
             return router.activate();
-        }
+        },
     };
 });

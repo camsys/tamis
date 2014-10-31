@@ -9,10 +9,10 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
 
             activate: function () {
 
-                var appCookie = $.cookie('app');
+                var appCookie = $.cookie('name');
                 if(appCookie){
                     this.hasCookie(true);
-                    appstate.username = $.cookie('name');
+                    appstate.username = appCookie;
                     this.username(appstate.username);
                 }
             },

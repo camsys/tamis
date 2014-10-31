@@ -5,11 +5,6 @@ define(['plugins/dialog', 'knockout', '../config/helper'], function (dialog, ko,
         this.email = ko.observable('');
     };
 
-    CustomModal.prototype.optout = function () {
-        $.cookie('app', 'TAMIS', { expires: 60, path: '/' });
-        dialog.close(this, this.email());
-    };
-
     CustomModal.prototype.binding = function (view) {
         this.dialog = dialog;
         var that = this;
@@ -18,7 +13,6 @@ define(['plugins/dialog', 'knockout', '../config/helper'], function (dialog, ko,
                 console.log('bah');
             },
             onSuccess: function(e) {
-                $.cookie('app', 'TAMIS', { expires: 60, path: '/' });
                 $.cookie('name', that.name(), { expires: 60, path: '/' });
                 that.dialog.close(that, that.email());
             },
