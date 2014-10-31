@@ -79,6 +79,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     })
                 ).then(function () {
                         var geoTreeNodes = [];
+
+                        var sorter = function compare(a,b) {
+                            if (a.text < b.text)
+                                return -1;
+                            if (a.text > b.text)
+                                return 1;
+                            return 0;
+                        }
+
                         $(Object.getOwnPropertyNames(that.areaTree)).each(function () {
                             var geoTypeName = this;
                             var geoTreeNode = {};
@@ -86,8 +95,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                             geoTreeNode.text = 'All ' + geoTypeName;
                             geoTreeNode.a_attr = {'selectionId': geoTypeName},
                             geoTreeNode.state = { 'opened': true, 'selected': false };
-                            geoTreeNode.selectionId = geoTypeName,
-                                that.geoTreeNode = geoTreeNode;
+                            geoTreeNode.selectionId = geoTypeName;
+                            that.geoTreeNode = geoTreeNode;
                             $(that.areaTree[this]).each(function (index, childElement) {
                                 var child = {};
                                 child.text = childElement.Name;
@@ -98,6 +107,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                                 child.selectionId = childElement.Value;
                                 that.geoTreeNode.children.push(child);
                             });
+                            geoTreeNode.children = geoTreeNode.children.sort(sorter);
                             geoTreeNodes.push(geoTreeNode);
                         });
                         that.geoTreeNodes = geoTreeNodes;
@@ -121,6 +131,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                                 child.selectionId = childElement.Value;
                                 that.assetTreeNode.children.push(child);
                             });
+                            assetTreeNode.children = assetTreeNode.children.sort(sorter);
                             assetTreeNodes.push(assetTreeNode);
                         });
                         that.assetTreeNodes(assetTreeNodes);
