@@ -11,8 +11,6 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             levelOrders: ko.observableArray([]),
             selectedOrder: ko.observable(),
 
-
-
             activate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
@@ -62,8 +60,12 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                 var charts = this.charts();
                 var metric = this.selectedMetric();
                 var graphMetrics = this.graphMetrics();
-                var reportdef = this.reportdef;
-                //create charts
+                var axisTitle;
+                $.each(graphMetrics, function (index, graphMetric) {
+                    if(metric == graphMetric.value){
+                        axisTitle = graphMetric.name;
+                    }
+                });
 
                 $.each(charts, function (index, chartTabPanel) {
                     var that = this;
@@ -76,20 +78,19 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                         that.categories = [];
 
                         $.each(chartElement.datapoints, function (index, datapoint) {
+                            if(!$.isNumeric(datapoint.metric )){
+                                datapoint.metric = 0;
+                            }
                             that.categories.push(datapoint.name);
                         });
 
-                        $.each(graphMetrics, function (index, graphMetric) {
-                            if(metric == graphMetric.value){
-                                that.axisTitle = graphMetric.name;
-                            }
-                        });
+                        that.axisTitle = axisTitle;
 
                         that.datapoints = $.map(chartElement.datapoints, function (datapoint) {
                             return Number(datapoint.metric);
                         });
 
-                        that.chartTitle = that.chartTabPanel.title
+                        that.chartTitle = axisTitle + ' of ' + that.chartTabPanel.title
                             + ' By ' + topleveltitle
                             + ' For ' + chartElement.text;
 
@@ -148,7 +149,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                 $.each(reportdef.tabs, function (index, tab) {
                     var featureData = data[reportdef.dataKeys[index]];
                     if(!featureData) return true;
-                    var tree = reportsbase.buildHierarchy(featureData, reportdef);  //create the tree based on the levels defined in request
+                    var tree = reportsbase.buildTree(featureData, reportdef);  //create the tree based on the levels defined in request
                     var chartTabPanel = {};
                     chartTabPanel.reportdef = reportdef;
                     chartTabPanel.id = index;
@@ -171,6 +172,29 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                         chart.id = outerIndex + "_" + index;
                         chartTabPanel.charts.push(chart);
                     });
+
+
+                    //now add a summary section below that aggregates by the second dimension
+                    var topLevel = chartTabPanel.reportdef.levels.shift();
+                    tree = reportsbase.buildTree(featureData, chartTabPanel.reportdef);
+                    var summaryChart = {};
+                    summaryChart.level = topLevel;
+                    var topleveltitle = chartTabPanel.reportdef.headers[chartTabPanel.reportdef.fields.indexOf(topLevel)];
+                    topleveltitle = /s$/.test(topleveltitle) ? topleveltitle + "es" : topleveltitle + 's';
+                    summaryChart.text = "All " + topleveltitle;
+                    summaryChart.id = outerIndex + "_" + chartTabPanel.length;
+                    summaryChart.datapoints = []
+
+                    $.each(tree, function (index, child) {
+                        var datapoint = {
+                            name: child.text,
+                            metric: Math.round(child[metric]).toString()
+                        }
+                        summaryChart.datapoints.push(datapoint);
+                    });
+
+                    chartTabPanel.charts.push(summaryChart);
+                    chartTabPanel.reportdef.levels.unshift(topLevel);  //put the level back in so the column offsets are correct
                     chartTabSet.push(chartTabPanel);
                 });
                 return chartTabSet;

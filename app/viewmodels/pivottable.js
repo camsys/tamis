@@ -67,39 +67,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
 
                     var featureData = report.data;
 
-                    $.each(featureData, function (index, feature) {
-                        if (feature['Length'] && feature['NumberOfLanes']) {
-                            feature.LaneMiles = feature['Length'] * feature['NumberOfLanes']
-                        } else {
-                            feature.LaneMiles = 0;
-                        }
-                    });
-
-                    //get distinct values for each level
-                    var levelKeys = {};
-                    for (var i = 0; i < featureData.length; i++) {
-                        var row = featureData[i];
-                        for (var j = 0; j < that.reportdef.levels.length; j++) {
-                            var level = that.reportdef.levels[j];
-                            if (typeof(levelKeys[level]) == 'undefined') {
-                                levelKeys[level] = {};
-                            }
-                            var levelValues = levelKeys[level];
-                            var rowValue = row[level];
-                            levelValues[rowValue] = true;
-                        }
-                    }
-
-                    //now make the hieararchy
-                    var root = {};
-                    root.children = [];
-                    that.buildReferenceTree(featureData, that.reportdef, levelKeys, root, 0);
-
-                    for (var i = 0; i < featureData.length; i++) {
-                        var row = featureData[i];
-                        that.writeRowValuesToLeaf(featureData, that.reportdef, root.children, row, 0);
-                    }
-
                     var summaryGrid = {
                         cells: [],
                         add: function (cell) {
@@ -107,13 +74,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                         }
                     }
 
+                    var tree = reportsbase.buildTree(featureData, that.reportdef);
 
-                    var tree = root.children;
                     that.buildTable(tree, summaryGrid, that.reportdef);  //add the data to the table
 
                     //now add a summary section below that aggregates by the second dimension
                     var topLevel = that.reportdef.levels.shift();
-                    tree = reportsbase.buildHierarchy(featureData, that.reportdef);
+                    tree = reportsbase.buildTree(featureData, that.reportdef);
                     var summaryRoot = {};
                     summaryRoot.level = topLevel;
                     var topleveltitle = that.reportdef.headers[that.reportdef.fields.indexOf(topLevel)];
@@ -159,55 +126,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
 
                 this.pivotTables(this.pivotTablesArray);
 
-            },
-
-            buildReferenceTree: function (data, reportdef, levelKeys, parentNode, depth) {
-                var levels = reportdef.levels
-                var thisLevelValues = Object.getOwnPropertyNames(levelKeys[levels[depth]]);
-                thisLevelValues.sort();
-                for (var i = 0; i < thisLevelValues.length; i++) {
-                    var child = {};
-                    child.text = thisLevelValues[i];
-                    child.children = [];
-                    child.parent = parentNode;
-                    child.depth = depth;
-                    child.level = levels[depth];
-                    parentNode.children.push(child);
-                    if (depth + 1 < levels.length) {
-                        this.buildReferenceTree(data, reportdef, levelKeys, child, depth + 1);
-                    }
-                }
-            },
-
-            writeRowValuesToLeaf: function (data, reportdef, tree, row, depth) {
-                var level = reportdef.levels[depth];
-                var levelValue = row[level];
-                for (var i = 0; i < tree.length; i++) {
-                    var child = tree[i];
-                    if (child.text == levelValue) {
-                        if (!child.children.length > 0) {
-                            for (var j = 0; j < reportdef.sums.length; j++) {
-                                var sum = reportdef.sums[j];
-                                if (!child.hasOwnProperty(sum)) {
-                                    child[sum] = 0;
-                                }
-                                this.addValue(child, sum, row);
-                            }
-                        } else {
-                            this.writeRowValuesToLeaf(data, reportdef, child.children, row, depth + 1);
-                        }
-                    }
-                }
-            },
-
-            addValue: function (child, sum, row) {
-                if (!child.hasOwnProperty(sum)) {
-                    child[sum] = 0;
-                }
-                child[sum] = Number(child[sum]) + Number(row[sum]);
-                if (child.parent != null) {
-                    this.addValue(child.parent, sum, row);
-                }
             },
 
             buildTable: function (tree, table, reportdef) {
