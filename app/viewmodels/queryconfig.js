@@ -156,11 +156,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 this.queryComplete = false;
                 var that = this;
 
-                $(window).bind('beforeunload', function(e){
-
-                    // i.e; if form state change show warning box, else don't show it.
-                });
-
                 $('#assetTree').jstree({'plugins': ["checkbox"], 'core': {
                     'data': that.assetTreeNodes()
                 }}).on('changed.jstree', function (e, data) {

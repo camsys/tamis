@@ -12,7 +12,7 @@ define(
                 dataKeys: ['RouteFeatureResults', 'BridgeFeatureResults'],
                 graphMetrics: [
                     {name: "Miles", value: "Length"},
-                    {name: 'Lane Miles', value: "LaneMiles"}
+                    {name: 'Lane Miles', value: "LaneMiles"},
                 ],
                 levelOrders: [
                     {name: "By Jurisdiction, then by Class", value: ['Jurisdiction', 'FunctionalClass']},

@@ -59,14 +59,10 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             renderCharts: function () {
                 var charts = this.charts();
                 var metric = this.selectedMetric();
-                var graphMetrics = this.graphMetrics();
-                var axisTitle;
-                $.each(graphMetrics, function (index, graphMetric) {
-                    if(metric == graphMetric.value){
-                        axisTitle = graphMetric.name;
-                    }
-                });
+                var axisTitle = this.getSelectedMetricTitle();
+                if(!$.isArray(metric)) metric = [metric];
 
+                var rootScope = this;
                 $.each(charts, function (index, chartTabPanel) {
                     var that = this;
                     that.chartTabPanel = chartTabPanel;
@@ -78,23 +74,37 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                         that.categories = [];
 
                         $.each(chartElement.datapoints, function (index, datapoint) {
-                            if(!$.isNumeric(datapoint.metric )){
-                                datapoint.metric = 0;
-                            }
+
+                            $.each(metric, function (index, field) {
+                                if(!$.isNumeric(datapoint[field] )){
+                                    datapoint[field] = 0;
+                                }else{
+                                    datapoint[field] = Math.round(datapoint[field]);
+                                }
+                            });
+
                             that.categories.push(datapoint.name);
                         });
 
-                        that.axisTitle = axisTitle;
-
-                        that.datapoints = $.map(chartElement.datapoints, function (datapoint) {
-                            return Number(datapoint.metric);
+                        var seriesArray = [];
+                        $.each(metric, function (index, field) {
+                            var series = {};
+                            series.name = rootScope.getLabelForMetric(field);
+                            series.data = $.map(chartElement.datapoints, function (datapoint) {
+                                return Number(datapoint[field]);
+                            });
+                            seriesArray.push(series);
                         });
 
+
+
+
+                        that.axisTitle = axisTitle;
                         that.chartTitle = axisTitle + ' of ' + that.chartTabPanel.title
                             + ' By ' + topleveltitle
                             + ' For ' + chartElement.text;
 
-                        $("#chart_" + chartElement.id).highcharts({
+                        var chartConfig = {
                             chart: {
                                 type: 'column'
                             },
@@ -118,7 +128,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             },
                             tooltip: {
                                 headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                                pointFormat: '<tr><td style="padding:0"><b>{point.y:.1f} ' + that.axisTitle + '</b></td></tr>',
+                                pointFormat: '<tr><td style="padding:0">{series.name} <b>{point.y:.1f} ' + that.axisTitle + '</b></td></tr>',
                                 footerFormat: '</table>',
                                 shared: true,
                                 useHTML: true
@@ -129,12 +139,17 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                                     borderWidth: 0
                                 }
                             },
-                            series: [
-                                {
-                                    data: that.datapoints
-                                }
-                            ]
-                        });
+                            series: seriesArray,
+                        };
+                        if(seriesArray.length > 1){
+                            chartConfig.legend = {
+                                layout: 'vertical',
+                                    align: 'right',
+                                    verticalAlign: 'middle',
+                                    borderWidth: 0
+                            };
+                        }
+                        $("#chart_" + chartElement.id).highcharts(chartConfig);
                     });
                 });
             },
@@ -143,7 +158,6 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             prepareCharts: function (data, reportdef) {
 
                 this.validateRequests(data, reportdef);
-                var metric = this.selectedMetric();
                 var chartTabSet = [];
                 //each chartRequest in the array represents a tabbed panel containing a chart for each node in the tree of aggregated data
                 $.each(reportdef.tabs, function (index, tab) {
@@ -162,12 +176,8 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                         chart.level = root.level;
                         chart.text = root.text;
                         $.each(root.children, function (index, child) {
-
-                            var datapoint = {
-                                name: child.text,
-                                metric: Math.round(child[metric]).toString()
-                            }
-                            chart.datapoints.push(datapoint);
+                            child.name = child.text;
+                            chart.datapoints.push(child);
                         });
                         chart.id = outerIndex + "_" + index;
                         chartTabPanel.charts.push(chart);
@@ -186,11 +196,8 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                     summaryChart.datapoints = []
 
                     $.each(tree, function (index, child) {
-                        var datapoint = {
-                            name: child.text,
-                            metric: Math.round(child[metric]).toString()
-                        }
-                        summaryChart.datapoints.push(datapoint);
+                        child.name = child.text;
+                        summaryChart.datapoints.push(child);
                     });
 
                     chartTabPanel.charts.push(summaryChart);
@@ -238,6 +245,30 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                 popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print()">' + printOutput.html() + '</html>');
                 popupWin.document.close();
             },
+
+            getSelectedMetricTitle: function(){
+                var metricValue = this.selectedMetric();
+                var metricName;
+                $.each(this.graphMetrics(), function (index, metric) {
+                    if(metric.value = metricValue){
+                        metricName = metric.name;
+                        return false;
+                    }
+                });
+                return metricName;
+            },
+
+            getLabelForMetric: function(metric){
+                var label;
+                var that = this;
+                $.each(this.reportdef.fields, function (index, field) {
+                    if(field == metric){
+                        label = that.reportdef.headers[index];
+                        return false;
+                    }
+                });
+                return label;
+            }
 
         };
 
