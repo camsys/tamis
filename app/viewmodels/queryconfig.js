@@ -171,6 +171,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 });
 
                 this.selectedGeographicType.subscribe(function (newValue) {
+                    that.geoFilters([]);
                     that.populateGeoTree(newValue);
                 });
 
