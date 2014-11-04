@@ -17,8 +17,18 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                 }
             },
 
+
+            bindingComplete: function () {
+                if(!this.hasCookie()){
+                    $('#top-menu a').click(function(e) {
+                        e.preventDefault();
+                    });
+                }
+            },
+
             showLoginModal: function () {
                 customModal.show().then(function (response) {
+                    $('#top-menu a').off('click');
                     router.navigate('queryconfig');
                 });
             }
