@@ -51,6 +51,7 @@ module.exports = function (grunt) {
                     'highcharts': '../bower_components/highcharts/highcharts',
                     'cookie': '../assets/js/jquery-cookie',
                     'validator': '../bower_components/bootstrapvalidator/dist/js/bootstrapValidator',
+                    'pivottable': '../bower_components/pivottable/dist/pivot',
                 },
 
                 shim: {
@@ -159,6 +160,7 @@ module.exports = function (grunt) {
                     'bower_components/datatables/media/css/jquery.dataTables.css',
                     'bower_components/jqueryui/themes/base/*.css',
                     'bower_components/jstree/dist/themes/default/style.css',
+                    'bower_components/pivottable/dist/pivot.css'
                 ],
                 dest: '<%= paths.build %>/<%= paths.css %>/libs.css'
             }
