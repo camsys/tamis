@@ -128,6 +128,8 @@ define(['plugins/http', 'durandal/app', 'knockout'],
                                 var sum = reportdef.sums[j];
                                 if (!child.hasOwnProperty(sum)) {
                                     child[sum] = 0;
+                                }else{
+                                    child[sum] = Number(child[sum]).toFixed(2);
                                 }
                                 this.addValue(child, sum, row);
                             }
@@ -143,6 +145,7 @@ define(['plugins/http', 'durandal/app', 'knockout'],
                     child[sum] = 0;
                 }
                 child[sum] = Number(child[sum]) + Number(row[sum]);
+                child[sum] = Number(child[sum]).toFixed(2);
                 if (child.parent != null) {
                     this.addValue(child.parent, sum, row);
                 }

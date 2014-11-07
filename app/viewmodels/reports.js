@@ -94,7 +94,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                             if (!summaryRoot[sum]) {
                                 summaryRoot[sum] = 0;
                             }
-                            summaryRoot[sum] = summaryRoot[sum] + child[sum];
+                            summaryRoot[sum] = Number(summaryRoot[sum]) + Number(child[sum]);
                         });
                     });
 
@@ -166,7 +166,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                                 }
 
                                 if (typeof value == 'number') {
-                                    value = Math.round(value);
+                                    value = value.toFixed(2);
                                 }
                                 table.add({
                                     html: value.toString()
@@ -220,7 +220,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
 
                                     var value = node[field] == null ? "&nbsp;" : node[field];
                                     if (typeof value == 'number') {
-                                        value = Math.round(value);
+                                        value = value.toFixed(2);
                                     }
                                     table.add({
                                         html: value.toString(),

@@ -78,8 +78,6 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             $.each(metric, function (index, field) {
                                 if(!$.isNumeric(datapoint[field] )){
                                     datapoint[field] = 0;
-                                }else{
-                                    datapoint[field] = Math.round(datapoint[field]);
                                 }
                             });
 
