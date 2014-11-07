@@ -1,0 +1,24 @@
+
+                            <div class="control-group"
+                                 data-bind="fadeVisible: ($parent.geoselector.selectedGeographicType())
+                                 && ($parent.geoselector.useGeographicFilter() == 'false' || $parent.geoselector.geoFilters().length > 0)">
+                                <label class="control-label">Do you want to limit the results to specific types of
+                                    assets?</label>
+
+                                <div class="controls">
+                                    <input type="radio" name="resultsFilter" value="true"
+                                           data-bind="checked: useAssetFilter">Yes</input>
+                                    <input type="radio" name="resultsFilter" value="false"
+                                           data-bind="checked: useAssetFilter">No, show me everything</input>
+                                </div>
+                            </div>
+
+                            <div class="control-group"
+                                 data-bind="fadeVisible: ($parent.geoselector.selectedGeographicType())
+                                 && ($parent.geoselector.useGeographicFilter() == 'false' || $parent.geoselector.geoFilters().length > 0)
+                                 && useAssetFilter() == 'true'">
+                                <label class="control-label">Select assets:</label>
+
+                                <div id="assetTree"
+                                     style="height: 200px; width: 500px; overflow: auto; border: 2px solid; border-radius: 5px;"/>
+                            </div>

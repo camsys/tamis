@@ -11,6 +11,8 @@
                 { route: 'reports', moduleId: 'viewmodels/reports', nav: true, title: "Reports" },
                 { route: 'explore', moduleId: 'viewmodels/explore', nav: true, title: "Explore" },
                 { route: 'querydescription', moduleId: 'viewmodels/querydescription', nav: false},
+                { route: 'geoselector', moduleId: 'viewmodels/geoselector', nav: false },
+                { route: 'assetselector', moduleId: 'viewmodels/assetselector', nav: false },
                 /*{durandal:routes}*/
             ]).buildNavigationModel();
 

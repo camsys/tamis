@@ -1,4 +1,4 @@
-{
+callback1({
     "AreaList" : [
         {
             "Value" : "20",
@@ -161,4 +161,4 @@
             "Name" : "SAND LAKE"
         }
     ]
-}
+})

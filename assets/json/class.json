@@ -1,4 +1,4 @@
-{
+callback3({
     "FilterList" : [
         {
             "Value" : "1",
@@ -43,4 +43,4 @@
             "ComparisonOperator" : null
         }
     ]
-}
+})

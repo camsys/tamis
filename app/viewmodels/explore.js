@@ -1,5 +1,5 @@
-define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstrap', 'jquery-ui', '../config/appstate', 'plugins/router', 'pivottable', './querydescription', '../definitions/reportdefs', '../definitions/tabledefs', '../definitions/pivotdefs'/*,'gchart', 'goog!visualization'*/],
-    function (system, http, app, ko, bootstrap, jqueryui, appstate, router, pivottable, querydescription, reportdefs, tabledefs, pivotdefs/*, gchart, google*/) {
+define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstrap', 'jquery-ui', '../config/appstate', 'plugins/router', 'pivottable', './querydescription', '../definitions/reportdefs', '../definitions/tabledefs', '../definitions/pivotdefs', '../config/config' /*,'gchart', 'goog!visualization'*/],
+    function (system, http, app, ko, bootstrap, jqueryui, appstate, router, pivottable, querydescription, reportdefs, tabledefs, pivotdefs, config/*, gchart, google*/) {
 
         return{
             querydescription: querydescription,
@@ -8,7 +8,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             username: ko.observable(),
             selectedpivots: ko.observable(),
 
-            activate: function () {
+            /*activate: function () {
 
                 this.derivedAttributes =  {
                     "Lane Miles": function(row) {
@@ -35,8 +35,14 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                     }
                 );
             },
-
-            realactivate: function () {
+*/
+            activate: function () {
+                if(!appstate.queryName){
+                    app.showMessage(config.noResultsMessage.message, config.noResultsMessage.title).then(function (dialogResult) {
+                        router.navigate('queryconfig');
+                    });
+                    return;
+                }
                 var reportdef = reportdefs[appstate.queryName];
                 this.pivotdefs = pivotdefs[appstate.queryName];
                 var tabs = [];
