@@ -10,7 +10,7 @@ define(
             BridgeFeatureResults: [
                 { title: 'Bridge Name', data: 'BridgeName'},
                 { title: 'CDS', data: 'RouteId'},
-                { title: 'Name', data: 'RouteName'},
+                { title: 'Route Name', data: 'RouteName'},
                 { title: 'Class', data: 'FunctionalClass'},
                 { title: 'Lanes', data: 'NumberOfLanes'},
                 { title: 'Jurisdiction', data: 'Jurisdiction'},
@@ -25,7 +25,7 @@ define(
 
             RouteFeatureResults: [
                 { title: 'CDS', data: 'RouteId'},
-                { title: 'Name', data: 'RouteName'},
+                { title: 'Route Name', data: 'RouteName'},
                 { title: 'Class', data: 'FunctionalClass'},
                 { title: 'Lanes', data: 'NumberOfLanes'},
                 { title: 'Jurisdiction', data: 'Jurisdiction'},

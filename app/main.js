@@ -15,6 +15,16 @@ requirejs.config({
         'cookie': '../assets/js/jquery-cookie',
         'validator': '../bower_components/bootstrapvalidator/dist/js/bootstrapValidator',
         'pivottable': '../bower_components/pivottable/dist/pivot',
+        /*
+
+        dependencies needed for charting in pivot table, don't build properly with durandal tool
+
+        'gchart': '../bower_components/pivottable/dist/gchart_renderers',
+        'propertyParser' : '../bower_components/requirejs-plugins/src/propertyParser',
+        'async': '../bower_components/requirejs-plugins/src/async',
+        'goog': '../bower_components/requirejs-plugins/src/goog',
+
+        */
     },
     shim: {
         bootstrap: {

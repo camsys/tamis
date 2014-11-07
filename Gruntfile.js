@@ -52,6 +52,10 @@ module.exports = function (grunt) {
                     'cookie': '../assets/js/jquery-cookie',
                     'validator': '../bower_components/bootstrapvalidator/dist/js/bootstrapValidator',
                     'pivottable': '../bower_components/pivottable/dist/pivot',
+                    /*'gchart': '../bower_components/pivottable/dist/gchart_renderers',
+                    'propertyParser' : '../bower_components/requirejs-plugins/src/propertyParser',
+                    'async': '../bower_components/requirejs-plugins/src/async',
+                    'goog': '../bower_components/requirejs-plugins/src/goog',*/
                 },
 
                 shim: {

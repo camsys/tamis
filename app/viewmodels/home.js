@@ -20,15 +20,13 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
 
             bindingComplete: function () {
                 if(!this.hasCookie()){
-                    $('#top-menu a').click(function(e) {
-                        e.preventDefault();
-                    });
+                    $('#top-menu a').addClass('btn disabled');
                 }
             },
 
             showLoginModal: function () {
                 customModal.show().then(function (response) {
-                    $('#top-menu a').off('click');
+                    $('#top-menu a').removeClass('btn disabled');
                     router.navigate('queryconfig');
                 });
             }

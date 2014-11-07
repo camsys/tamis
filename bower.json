@@ -13,7 +13,8 @@
     "bootstrapvalidator": "~0.5.2",
     "jstree": "~3.0.8",
     "datatables": "~1.10.3",
-    "pivottable": "~1.2.2"
+    "pivottable": "~1.2.2",
+    "requirejs-plugins": "~1.0.2"
   },
   "devDependencies": {
     "mocha": "~1.17.1",
