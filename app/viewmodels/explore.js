@@ -76,28 +76,28 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                 this.rawdata = [];
                 var that = this;
                 $.each(tabledef.dataKeys, function (index, dataKey) {
-                    var data = appstate.queryResults[dataKey];
+                    var sourcedata = appstate.queryResults[dataKey];
                     var columndefs = tabledefs[dataKey];
                     var labels = {};
                     $.each(columndefs, function (index, columndef) {
                         labels[columndef.data] = columndef.title;
                     });
-                    $.each(data, function (index, row) {
+                    var targetdata = [];
+                    $.each(sourcedata, function (index, sourcerow) {
+                        var targetrow = {};
                         $.each(labels, function (k, v) {
-                            if(k != v){
-                                row[v] = row[k];
-                                delete row[k];
-                            }
+                            targetrow[v] = sourcerow[k];
                         });
+                        targetdata.push(targetrow);
                     });
                     var selectedpivot = Object.keys(pivotdef)[index];
                     var pivotconfig = pivotdef[selectedpivot];
                     pivotconfig = pivotconfig[Object.keys(pivotconfig)[0]]
                     pivotconfig.renderers = that.renderers;
                     pivotconfig.derivedAttributes = that.derivedAttributes;
-                    that.rawdata.push(data);
+                    that.rawdata.push(targetdata);
                     $("#table_" + index).append('<div id="tableholder_' + index + '"></div>');
-                    $("#tableholder_" + index).pivotUI(data, pivotconfig);
+                    $("#tableholder_" + index).pivotUI(targetdata, pivotconfig);
                 });
             },
 
