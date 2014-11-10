@@ -1,5 +1,5 @@
-define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jquery-ui', '../config/config', '../config/appstate', 'plugins/router', '../definitions/tabledefs'],
-    function (http, app, ko, jstree, bootstrap, jqueryui, config, appstate, router, tabledefs) {
+define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jquery-ui', '../config/config', '../config/appstate', 'plugins/router', '../definitions/tabledefs', '../services/dataservice'],
+    function (http, app, ko, jstree, bootstrap, jqueryui, config, appstate, router, tabledefs, dataservice) {
 
         return {
             geoTreeNodes: null,
@@ -28,22 +28,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
 
                 //returning a promise, rendering pauses until promise completes
                 return $.when(
-                    $.ajax({
-                        url: config.districtQueryUrl,
-                        jsonpCallback: 'callback1',
-                        dataType: "jsonp",
-                        success: function (response) {
-                            that.areaTree['Assembly Districts'] = response.AreaList;
-                        }
+                    dataservice.getDistricts(function (response) {
+                        that.areaTree['Assembly Districts'] = response.AreaList;
                     }),
-
-                    $.ajax({
-                        url: config.regionQueryUrl,
-                        jsonpCallback: 'callback2',
-                        dataType: "jsonp",
-                        success: function (response) {
-                            that.areaTree['Regions'] = response.AreaList;
-                        }
+                    dataservice.getRegions(function (response) {
+                        that.areaTree['Regions'] = response.AreaList;
                     })
                 ).then(function () {
                         var geoTreeNodes = [];

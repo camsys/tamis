@@ -1,5 +1,5 @@
-define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jquery-ui', '../config/config'],
-    function (http, app, ko, jstree, bootstrap, jqueryui, config) {
+define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jquery-ui', '../config/config', '../services/dataservice'],
+    function (http, app, ko, jstree, bootstrap, jqueryui, config, dataservice) {
 
         return {
             useAssetFilter: ko.observable(),
@@ -26,18 +26,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
 
                 //returning a promise, rendering pauses until promise completes
                 return $.when(
-                    $.ajax({
-                        url: config.functionalClassQueryUrl,
-                        jsonpCallback: 'callback3',
-                        dataType: "jsonp",
-                        success: function (response) {
-                            var bridges = {};
-                            var roads = {};
-                            roads['types'] = response.FilterList;
-                            bridges['types'] = response.FilterList;
-                            that.assetTree['Road Assets'] = roads;
-                            that.assetTree['Bridge Assets'] = bridges;
-                        }
+                    dataservice.getAssets(function (response) {
+                        var bridges = {};
+                        var roads = {};
+                        roads['types'] = response.FilterList;
+                        bridges['types'] = response.FilterList;
+                        that.assetTree['Road Assets'] = roads;
+                        that.assetTree['Bridge Assets'] = bridges;
                     })
                 ).then(function () {
 
