@@ -11,7 +11,7 @@ define(
                 { title: 'Bridge Name', data: 'BridgeName'},
                 { title: 'CDS', data: 'RouteId'},
                 { title: 'Route Name', data: 'RouteName'},
-                { title: 'Class', data: 'FunctionalClass'},
+                { title: 'NHS Flag', data: 'NHSClass'},
                 { title: 'Lanes', data: 'NumberOfLanes'},
                 { title: 'Jurisdiction', data: 'Jurisdiction'},
                 { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},
@@ -26,7 +26,7 @@ define(
             RouteFeatureResults: [
                 { title: 'CDS', data: 'RouteId'},
                 { title: 'Route Name', data: 'RouteName'},
-                { title: 'Class', data: 'FunctionalClass'},
+                { title: 'NHS Flag', data: 'NHSClass'},
                 { title: 'Lanes', data: 'NumberOfLanes'},
                 { title: 'Jurisdiction', data: 'Jurisdiction'},
                 { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},

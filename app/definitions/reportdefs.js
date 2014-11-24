@@ -3,9 +3,9 @@ define(
         return {
             'Assets': {
                 type: 'bar',
-                headers: ['Jurisdiction', 'Functional Class', 'Miles', 'Lane Miles'],
-                fields: ['Jurisdiction', 'FunctionalClass', 'Length', 'LaneMiles'],
-                levels: ['Jurisdiction', 'FunctionalClass'],
+                headers: ['Jurisdiction', 'NHS Flag', 'Miles', 'Lane Miles'],
+                fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles'],
+                levels: ['Jurisdiction', 'NHSClass'],
                 sums: ['Length', 'LaneMiles'],
                 averages: [],
                 tabs: ['Roads', 'Bridges'],
@@ -15,8 +15,8 @@ define(
                     {name: 'Lane Miles', value: "LaneMiles"},
                 ],
                 levelOrders: [
-                    {name: "By Jurisdiction, then by Class", value: ['Jurisdiction', 'FunctionalClass']},
-                    {name: "By Class, then by Jurisdiction", value: ['FunctionalClass', 'Jurisdiction']}
+                    {name: "By Jurisdiction, then by Class", value: ['Jurisdiction', 'NHSClass']},
+                    {name: "By NHS Flag, then by Jurisdiction", value: ['NHSClass', 'Jurisdiction']}
                 ]
             }
         };

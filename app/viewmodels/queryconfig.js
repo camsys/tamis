@@ -180,7 +180,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     bridgeParameter.Selected = true;
                     bridgeParameter.AreaParameter = null;
                     bridgeParameter.FilterParameters = [];
-                    bridgeParameter.FilterParameters.push({Type: "FunctionalClass", Description: "Class", Filters: bridgeAssetValuesToSubmit});
+                    bridgeParameter.FilterParameters.push({Type: "NHSBoolean", Description: "Class", Filters: bridgeAssetValuesToSubmit});
                     query.Query.DisplayParameters.push(bridgeParameter);
                 }
 
@@ -190,7 +190,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     roadParameter.Selected = true;
                     roadParameter.AreaParameter = null;
                     roadParameter.FilterParameters = [];
-                    roadParameter.FilterParameters.push({Type: "FunctionalClass", Description: "Class", Filters: roadAssetValuesToSubmit});
+                    roadParameter.FilterParameters.push({Type: "NHSBoolean", Description: "Class", Filters: roadAssetValuesToSubmit});
                     query.Query.DisplayParameters.push(roadParameter);
                 }
 
