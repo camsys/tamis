@@ -1,14 +1,18 @@
 define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jquery-ui',
-        '../config/config', '../config/appstate', 'plugins/router', '../definitions/tabledefs', './geoselector', './assetselector'],
+        '../config/config', '../config/appstate', 'plugins/router', '../definitions/tabledefs', './geoselector', './assetselector', './routeselector',  '../services/dataservice'],
     function (http, app, ko, jstree, bootstrap, jqueryui,
-              config, appstate, router, tabledefs, geoselector, assetselector) {
+              config, appstate, router, tabledefs, geoselector,
+              assetselector, routeselector, dataservice) {
 
         return {
             geoselector: geoselector,
             assetselector: assetselector,
+            routeselector: routeselector,
             displayName: 'Query Configuration',
             queries: [
                 {name: "Assets", value: "Assets"},
+                {name: "blah", value: "blah"},
+                {name: "Conditions", value: "Conditions"},
             ],
             selectedQuery: ko.observable(),
             queryComplete: false,
@@ -25,7 +29,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
 
             activate: function () {
 
-                if(this.assetselector.assetTreeNodes().length > 0){
+                if (this.assetselector.assetTreeNodes().length > 0) {
                     this.resetObservables();
                     return;
                 }
@@ -33,7 +37,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
             },
 
             canDeactivate: function () {
-                if(this.selectedQuery() && !this.queryComplete){
+                if (this.selectedQuery() && !this.queryComplete) {
                     var title = 'Confirm';
                     var msg = 'Do you want to leave this page and abandon your changes?';
                     return app.showMessage(msg, title, ['Yes', 'No'])
@@ -42,7 +46,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                         });
                 } else {
                     return true;
-                };
+                }
+                ;
             },
 
             bindingComplete: function () {
@@ -50,9 +55,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 this.queryComplete = false;
                 var that = this;
 
-                $('#assetTree').jstree({'plugins': ["checkbox"], 'core': {
-                    'data': that.assetTreeNodes()
-                }}).on('changed.jstree', function (e, data) {
+                $('#assetTree').jstree({
+                    'plugins': ["checkbox"], 'core': {
+                        'data': that.assetTreeNodes()
+                    }
+                }).on('changed.jstree', function (e, data) {
                     that.updateAssetSelection(e, data)
                 });
 
@@ -100,7 +107,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
             },
 
             executeQuery: function () {
-
+                var that = this;
 
                 var selectedGeographicType = this.geoselector.selectedGeographicType();
                 var useGeographicFilter = this.geoselector.useGeographicFilter();
@@ -122,7 +129,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     geoValuesToSubmit = $.map(geoFilters, function (geoFilter, index) {
                         return {Value: geoFilter.original.selectionId, Name: geoFilter.original.text};
                     });
-                } else {
+                } else if (selectedGeographicType) {
                     //send all the child IDs of whatever Geo Type was selected;
                     geoValuesToSubmit = $.map(this.geoselector.geoTreeNode.children, function (child, index) {
                         return {Value: child.selectionId, Name: child.text};
@@ -134,7 +141,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 var bridgeAssetValuesToSubmit = [];
                 var roadAssetValuesToSubmit = [];
                 if (useAssetFilter == "true") {
-                    var that = this;
+
                     $(assetFilters).each(function (index, node) {
                         if (node.original.parentId) {
                             var assetFilterNode = {Value: node.original.selectionId, Name: node.original.text};
@@ -154,7 +161,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                             }
                         }
                     });
-                } else {
+                } else if (useAssetFilter == "false") {
                     //not using any filter, include all discrete values for all asset types
                     $(this.assetselector.assetTreeNodes()).each(function (index, node) {
                         if (node.text.indexOf('Road') > -1) {
@@ -174,13 +181,24 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 query.Query.DisplayParameters = [];
                 query.Query.DisplayParameters.push(geoParameter);
 
+                for(var i = 0; i < this.queries.length; i++){
+                    if(this.queries[i].name == this.selectedQuery()){
+                        query.Query.Selection = i + 1;
+                    }
+                }
+
+
                 if (bridgeAssetValuesToSubmit.length > 0) {
                     var bridgeParameter = {};
                     bridgeParameter.Name = 'Bridges';
                     bridgeParameter.Selected = true;
                     bridgeParameter.AreaParameter = null;
                     bridgeParameter.FilterParameters = [];
-                    bridgeParameter.FilterParameters.push({Type: "NHSBoolean", Description: "Class", Filters: bridgeAssetValuesToSubmit});
+                    bridgeParameter.FilterParameters.push({
+                        Type: "NHSBoolean",
+                        Description: "Class",
+                        Filters: bridgeAssetValuesToSubmit
+                    });
                     query.Query.DisplayParameters.push(bridgeParameter);
                 }
 
@@ -190,51 +208,82 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     roadParameter.Selected = true;
                     roadParameter.AreaParameter = null;
                     roadParameter.FilterParameters = [];
-                    roadParameter.FilterParameters.push({Type: "NHSBoolean", Description: "Class", Filters: roadAssetValuesToSubmit});
+                    roadParameter.FilterParameters.push({
+                        Type: "NHSBoolean",
+                        Description: "Class",
+                        Filters: roadAssetValuesToSubmit
+                    });
                     query.Query.DisplayParameters.push(roadParameter);
                 }
 
-                var postBody = {};
-                postBody.serializedQueryParameters = JSON.stringify(query);
-                var that = this;
-                appstate.querydescription = this.createQueryDescription();
-                if(config.runQueryUrl ==  'test'){
-                    $.get("assets/json/results_big.json",
-                        function (queryData) {
-
-                            appstate.queryResults = queryData;
-                            appstate.queryName = 'Assets';
-                            appstate.querydescription = JSON.parse('{"queryName":"Assets","criteria":[{"name":"Geographic Definition","value":"Regions"},{"name":"Geographic Filter","value":"CENTRAL REGION, SOUTHEAST REGION"},{"name":"Asset Filter","value":"Bridge Assets"}]}');
-                            that.queryComplete = true;
-                            that.validateResponse();
-                        }
-                    );
-                }else{
-                    $.ajax({
-                        type: "POST",
-                        crossDomain: true,
-                        url: config.runQueryUrl,
-                        data: postBody,
-                        beforeSend: function () {
-                            $('#modal').show();
-                        },
-                        complete: function () {
-                            $('#modal').hide();
-                        },
-                        success: function (data) {
-                            appstate.queryName = 'Assets';
-                            appstate.queryResults = $.parseJSON(data);
-                            that.queryComplete = true;
-                            that.validateResponse();
-                        },
-                        error: function (data) {
-                            alert("Error querying server")
-                        }
-
+                if(this.routeselector.selectedCds()){
+                    query.Query.RouteParameters = [];
+                    query.Query.RouteParameters.push({
+                        Id: this.routeselector.selectedCds()
                     });
                 }
+
+
+                var postBody = {};
+                postBody.serializedQueryParameters = JSON.stringify(query);
+                appstate.querydescription = this.createQueryDescription();
+                appstate.queryName = this.selectedQuery();
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: config.runQueryUrl,
+                    data: postBody,
+                    beforeSend: function () {
+                        $('#modal').show();
+                    },
+                    error: function () {
+                        alert("Error querying server")
+                    },
+                    success: function (data) {
+                        appstate.queryResults = $.parseJSON(data);
+                        that.processResults();
+                    }
+                });
             },
 
+            processResults: function () {
+                var layerMap = {};
+                var that = this;
+
+                $.each(appstate.queryResults, function (k, v) {
+                    layerMap[k] = null;
+                });
+                $.each(appstate.queryResults, function (k, v) {
+                    var results = v;
+                    var objectIds = [];
+                    $(results).each(function (index, row) {
+                        objectIds.push(row.ObjectId);
+                    });
+                    dataservice.getFeatures(k, objectIds.join(), that.createCallback(layerMap, k, that));
+                });
+            },
+
+            createCallback: function(layerMap, k, that) {
+                return function (data) {
+
+                    layerMap[k] = JSON.parse(data);
+
+                    var allLayersReady = true;
+                    $.each(appstate.queryResults, function (k, v) {
+                        var layer = layerMap[k];
+                        if(!layer){
+                            allLayersReady = false;
+                        }
+                    });
+
+                    if(allLayersReady){
+                        appstate.layerMap = layerMap;
+                        $('#modal').hide();
+                        that.queryComplete = true;
+                        that.validateResponse();
+                    }
+                }
+            },
             validateResponse: function () {
                 var tabledef = tabledefs[appstate.queryName];
                 var hasResults = false;
@@ -251,18 +300,23 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 }
             },
 
-            createQueryDescription: function(){
+            createQueryDescription: function () {
                 var queryDescription = {};
                 queryDescription.queryName = this.selectedQuery();
                 queryDescription.criteria = [];
-                queryDescription.criteria.push({name: "Geographic Definition", value: this.geoselector.selectedGeographicTypeDisplay()});
-                queryDescription.criteria.push({name: "Geographic Filter",
+                queryDescription.criteria.push({
+                    name: "Geographic Definition",
+                    value: this.geoselector.selectedGeographicTypeDisplay()
+                });
+                queryDescription.criteria.push({
+                    name: "Geographic Filter",
                     value: this.geoselector.useGeographicFilter() == 'false' ? "None" :
                         $.map(this.geoselector.geoFilters(), function (filter) {
                             return filter.text;
                         }).join(", ")
                 });
-                queryDescription.criteria.push({name: "Asset Filter",
+                queryDescription.criteria.push({
+                    name: "Asset Filter",
                     value: this.assetselector.useAssetFilter() == 'false' ? "None" :
                         $.map(this.assetselector.assetFilters(), function (filter) {
                             return filter.text;

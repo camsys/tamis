@@ -1,0 +1,21 @@
+                            <div class="form-group">
+                                <label for="selectRoute">Which route would you like to analyze?</label>
+                                <select id="selectRoute" name="selectRoute" class="form-control"
+                                        data-bind="
+                                        options: routes,
+                                        optionsText: 'Name',
+                                        optionsValue: 'Id',
+                                        value: selectedRoute,
+                                        optionsCaption: 'Select...'">
+                                </select>
+                            </div>
+
+                            <div class="form-group"  data-bind="fadeVisible: selectedRoute">
+                                <label for="selectCds">Which CDS would you like to analyze?</label>
+                                <select id="selectCds" name="selectCds" class="form-control"
+                                        data-bind="
+                                        options: cdsList,
+                                        value: selectedCds,
+                                        optionsCaption: 'Select...'">
+                                </select>
+                            </div>

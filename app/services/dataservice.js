@@ -32,6 +32,40 @@ define(['../config/config'],
                         callback(response);
                     }
                 })
+            },
+
+            getRoutes : function(callback){
+                return $.ajax({
+                    url: config.routesQueryUrl,
+                    jsonpCallback: 'callback4',
+                    dataType: "jsonp",
+                    success: function (response) {
+                        callback(response);
+                    }
+                })
+            },
+
+            getFeatures : function(key, objectIdString, callback){
+                var featureUrl;
+                if(key == "RouteFeatureResults"){
+                    featureUrl = config.roadFeaturesUrl;
+                } else if(key == "BridgeFeatureResults"){
+                    featureUrl = config.bridgeFeaturesUrl;
+                }
+                var postBody = {};
+                postBody.objectIds = objectIdString;
+                postBody.outFields = 'FID';
+                postBody.f = 'pjson';
+                postBody.outSR = 3857;
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: featureUrl,
+                    data: postBody,
+                    success: function (response) {
+                        callback(response);
+                    }
+                })
             }
         };
     });

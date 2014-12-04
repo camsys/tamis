@@ -14,8 +14,8 @@ tamis.Map = (function () {
     var GEOMETRY_TYPE_POLYLINE = 'polyline';
     var GEOMETRY_TYPE_POLYGON = 'polygon';
 
-    var bridgeResultsLayerName = "Bridge Results";
-    var routeResultsLayerName = "Route Results";
+    var bridgeResultsLayerName = "BridgeFeatureResults";
+    var routeResultsLayerName = "RouteFeatureResults";
 
     var geometryKey = "Geometry";
 
@@ -54,38 +54,22 @@ tamis.Map = (function () {
     dojo.require("esri.tasks.query");
 
     function initializeMap() {
-
-        $(document).ready(jQueryReady);
-
-        var initialExtent = new esri.geometry.Extent({
-            xmin: -16728258.6257211,
-            ymin: 8629018.76165811,
-            xmax: -16630468.4301407,
-            ymax: 8690296.38421335,
-            spatialReference: { wkid: 3857 }
-        });
         map = new esri.Map(mapId, {
             basemap: "streets",
-            extent: initialExtent,
             showInfoWindowOnClick: true
         });
-        dojo.connect(map, "onLoad", function () {
-            setScalebar();
-        });
-        initializeSymbols();
-        initializeRenderers();
-        initializeLegend();
-        initializeLayers();
-
-        //For base map selection
-        //loadBaseMapList();
-        //callRunQueryService();
+        $(document).ready(jQueryReady);
     }
 
     function jQueryReady() {
         parent.$("body").on("loaddata", function (e) {
             tamis.Map.labels = e.labels;
-            loadData(e.queryResults);
+            setScalebar();
+            initializeSymbols();
+            initializeRenderers();
+            initializeLegend();
+            initializeLayers();
+            loadData(e.layers);
         });
 
         parent.$("body").on("rowselect", function (e) {
@@ -122,18 +106,23 @@ tamis.Map = (function () {
     }
 
     function initializeRenderers() {
-        functionalClassRenderer = new esri.renderer.UniqueValueRenderer(polylineSymbol, "FunctionalClass");
-        functionalClassRenderer.addValue("INTERSTATE", redPolylineSymbol);
-        functionalClassRenderer.addValue("PRINCIPAL ARTERIAL - FREEWAY/EXPRESSWAY", pinkPolylineSymbol);
-        functionalClassRenderer.addValue("PRINCIPAL ARTERIAL - OTHER", orchidPolylineSymbol);
+        functionalClassRenderer = new esri.renderer.UniqueValueRenderer(polylineSymbol, "NHS Flag");
+        functionalClassRenderer.addValue("NHS", redPolylineSymbol);
+        functionalClassRenderer.addValue("NOT NHS", pinkPolylineSymbol);
+       /* functionalClassRenderer.addValue("PRINCIPAL ARTERIAL - OTHER", orchidPolylineSymbol);
         functionalClassRenderer.addValue("MINOR ARTERIAL", purple1PolylineSymbol);
         functionalClassRenderer.addValue("MAJOR COLLECTOR", seagreen1PolylineSymbol);
         functionalClassRenderer.addValue("MINOR COLLECTOR", cobaltgreenPolylineSymbol);
-        functionalClassRenderer.addValue("LOCAL", yellow1PolylineSymbol);
+        functionalClassRenderer.addValue("LOCAL", yellow1PolylineSymbol);*/
     }
 
     function initializeLayers() {
-        var bridgeResultsLayer = initializeFeatureCollectionLayer(bridgeResultsLayerName, functionalClassRenderer.toJson());
+        //var bridgeResultsLayer = initializeFeatureCollectionLayer(bridgeResultsLayerName, functionalClassRenderer.toJson());
+        var bridgeResultsRenderer = {
+            "type": "simple",
+            "symbol": pinkPolylineSymbol
+        };
+        var bridgeResultsLayer = initializeFeatureCollectionLayer(bridgeResultsLayerName, bridgeResultsRenderer);
         var routeResultsRenderer = {
             "type": "simple",
             "symbol": redPolylineSymbol
@@ -142,8 +131,8 @@ tamis.Map = (function () {
 
         // Not sure which property sets the layer title in the legend, so using this.
         legendDijit.refresh([
-            {layer: bridgeResultsLayer, title: bridgeResultsLayerName},
-            {layer: routeResultsLayer, title: routeResultsLayerName}
+            {layer: bridgeResultsLayer, title: "Bridges"},
+            {layer: routeResultsLayer, title: "Roads"}
         ]);
         buildLayerList([ bridgeResultsLayer, routeResultsLayer ]);
     }
@@ -177,27 +166,48 @@ tamis.Map = (function () {
         };
 
         //create a feature layer based on the feature collection
-        var infoTemplate = new esri.InfoTemplate("Attributes", "${*}");
+        //var infoTemplate = new esri.InfoTemplate("Attributes", "${*}");
+
+        var infoTemplate = new esri.InfoTemplate();
+        infoTemplate.setTitle("Feature Attributes");
+        infoTemplate.setContent(getTextContent);
+
         var featureLayer = new esri.layers.FeatureLayer(featureCollection, {
             id: layerName,
             infoTemplate: infoTemplate
         });
-        featureLayer.htmlPopupType = esri.layers.FeatureLayer.POPUP_HTML_TEXT
+        featureLayer.htmlPopupType = esri.layers.FeatureLayer.POPUP_HTML_TEXT;
 
         map.addLayer(featureLayer);
         return featureLayer;
     }
 
-    // Adapted from Esri Sample Code: Dynamically create layer list, although in that case layers are coming from a map service.
-    // https://developers.arcgis.com/javascript/jssamples/map_dynamiclayerlist.html
+    function getTextContent(graphic){
+        var fieldLabels = tamis.Map.labels[graphic.attributes.dataKey];
+        var infoElements = [];
+        for(var i = 0; i < fieldLabels.length; i++){
+            var fieldLabel = fieldLabels[i];
+            if(graphic.attributes[fieldLabel.title]){
+                infoElements.push(fieldLabel.title + ": " + graphic.attributes[fieldLabel.title]);
+            }
+        }
+        return infoElements.join('<br/>');
+    }
+
     function buildLayerList(layers) {
         var visible = [];
         var items = [];
         for (var i = 0; i < layers.length; i++) {
             var layer = layers[i];
+            var label;
+            if(layer.id == bridgeResultsLayerName){
+                label = 'Bridges';
+            } else if (layer.id = routeResultsLayerName){
+                label = 'Roads';
+            }
             visible.push(layer.id);
             items.push("<input type='checkbox' class='list_item' onclick='tamis.Map.updateLayerVisibility(this)'" +
-                (layer.visible ? "checked=checked" : "") + "' id='" + layer.id + "'' /><label for='" + layer.id + "'>" + layer.id + "</label><br />");
+                (layer.visible ? "checked=checked" : "") + "' id='" + layer.id + "'' /><label for='" + layer.id + "'>" + label + "</label><br />");
         }
         var layerList = document.getElementById("layer_list");
         layerList.innerHTML = items.join(' ');
@@ -215,9 +225,12 @@ tamis.Map = (function () {
         legendDijit.startup();
     }
 
-    function loadData(responseObject) {
-        loadGeometry(responseObject.BridgeFeatureResults, bridgeResultsLayerName);
-        loadGeometry(responseObject.RouteFeatureResults, routeResultsLayerName);
+    function loadData(layers) {
+        var features = [];
+        $.each(layers, function (layerName, layerData) {
+            features = features.concat(loadGeometry(layerData, layerName));
+        });
+        map.setExtent(esri.graphicsExtent(features))
     }
 
     function loadGeometry(featureResults, layerName) {
@@ -230,9 +243,9 @@ tamis.Map = (function () {
 
         var features = [];
         var geometryType = GEOMETRY_TYPE_POLYLINE;
-        for (var i = 0; i < featureResults.length; i++) {
-            var featureResult = featureResults[i];
-            var geom = convertFeatureResultGeometryToEsriJsonFormat(featureResult);
+        for (var i = 0; i < featureResults.features.length; i++) {
+            var featureResult = featureResults.features[i];
+            var geom = featureResult.geometry;
             var newGraphic = createGraphic(geom, geometryType, featureResult, isRendererDefined, i);
             newGraphic.visible = true;
             features.push(newGraphic);
@@ -241,35 +254,7 @@ tamis.Map = (function () {
         layer.applyEdits(features);
         layer.resume();
         layer.redraw();
-    }
-
-    // This is a simpler way to do this by creating a graphics layer.
-    // Disadvantage is that the Esri legend widget doesn't support graphics layers, so would need to write a custom legend widget.
-    // So went with feature collection layer.
-    function loadGeometryOld(responseObject) {
-        // Can initialize earlier.
-        var bridgeResultsLayer = new esri.layers.GraphicsLayer({
-            id: bridgeResultsLayerName,
-            visible: true
-        });
-        map.addLayer(bridgeResultsLayer);
-
-        var layer = map.getLayer(bridgeResultsLayerName);
-        var isRendererDefined = false;
-
-        layer.clear();
-        layer.suspend();
-
-        var geometryType = GEOMETRY_TYPE_POLYLINE;
-        var geomList = convertFeatureResultGeometriesToEsriJsonFormat(responseObject);
-        for (var i = 0; i < geomList.length; i++) {
-            var newFeat = geomList[i];
-            var newGraphic = createGraphic(newFeat, geometryType, isRendererDefined, i);
-            newGraphic.visible = true;
-            layer.add(newGraphic);
-        }
-        layer.resume();
-        layer.redraw();
+        return features;
     }
 
     /**
@@ -325,25 +310,6 @@ tamis.Map = (function () {
         return value;
     }
 
-    function convertFeatureResultGeometryToEsriJsonFormat(featureResult) {
-        return convertKeyValuePairArrayToObject(featureResult.Geometry);
-    }
-
-    function convertKeyValuePairArrayToObject(keyValuePairArray) {
-        var newObject = {};
-        if ($.isArray(keyValuePairArray)) {
-            for (var i = 0; i < keyValuePairArray.length; i++) {
-                var keyValuePair = keyValuePairArray[i];
-                var key = keyValuePair["Key"];
-                var value = keyValuePair["Value"];
-                if (key) {
-                    newObject[key] = value;
-                }
-            }
-        }
-        return newObject;
-    }
-
     function setScalebar() {
         var scalebar = new esri.dijit.Scalebar({
             map: map,
@@ -356,25 +322,12 @@ tamis.Map = (function () {
             var featureLayer = map.getLayer(layerId);
             $(featureLayer.graphics).each(function (index, feature) {
                 if(feature.attributes.id == rowData.id){
-                   var attrMap = $.map( Object.getOwnPropertyNames(feature.attributes), function( name, i ) {
-                       var label;
-                       $.each(tamis.Map.labels, function( k, v ) {
-                           $(tamis.Map.labels[k]).each(function (index, columndef) {
-                                if(columndef.data == name){
-                                    label = columndef.title;
-                                    return false;
-                                }
-                           });
-                       });
-                       if(label){
-                           return label + ": " + feature.attributes[name];
-                       }
-                    });
-                    var point = feature.geometry.getExtent().getCenter();
+
+                   var point = feature.geometry.getExtent().getCenter();
                     map.centerAt(point);
-                    map.infoWindow.setTitle("Feature details");
-                    map.infoWindow.setContent(attrMap.join('<br/>'));
-                    map.infoWindow.show(point,map.getInfoWindowAnchor(point));
+                    map.infoWindow.setFeatures([feature]);
+                    map.infoWindow.show(feature.geometry.getExtent().getCenter());
+
                     return false;
                 }
             });

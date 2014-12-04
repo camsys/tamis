@@ -16,7 +16,10 @@
                                         optionsCaption: 'Select...'">
                                 </select>
                             </div>
-                            <div data-bind="visible: selectedQuery, compose: { model: geoselector, preserveContext: true }"></div>
+
+                            <div data-bind="visible: (selectedQuery() == 'Conditions'), compose: { model: routeselector, preserveContext: true }"></div>
+
+                            <div data-bind="visible: (selectedQuery() != undefined && selectedQuery() != 'Conditions'), compose: { model: geoselector, preserveContext: true }"></div>
 
                             <div data-bind="visible: (geoselector.useGeographicFilter() == 'false' || geoselector.geoFilters().length > 0),
                              compose: { model: assetselector, preserveContext: true }"></div>
@@ -29,14 +32,20 @@
                                 <a class="btn btn-primary" data-bind="click: executeQuery">Submit your query</a>
                                 <a class="btn btn-primary" data-bind="click: resetObservables">Reset query</a>
                             </div>
+
+                            <div class="button-group" data-bind="fadeVisible: routeselector.selectedCds" style="padding-top: 20px">
+                                <a class="btn btn-primary" data-bind="click: executeQuery">Submit your query</a>
+                                <a class="btn btn-primary" data-bind="click: resetObservables">Reset query</a>
+                            </div>
                         </div>
 
                         <div class="col-md-4" id="querydescription">
                             <strong class="nav-header">Your selected options:</strong>
                             <ul class="nav nav-list">
 
-                                <li data-bind="fadeVisible: selectedQuery">Selected query: <span
-                                        data-bind="text: selectedQuery"/></li>
+                                <li data-bind="fadeVisible: selectedQuery">Selected query: <span data-bind="text: selectedQuery"/></li>
+                                <li data-bind="fadeVisible: routeselector.selectedRoute">Selected Route <span data-bind="text: routeselector.routeName"/></li>
+                                <li data-bind="fadeVisible: routeselector.selectedCds">Selected Route <span data-bind="text: routeselector.selectedCds"/></li>
                                 <li data-bind="fadeVisible: geoselector.selectedGeographicType">Geographic definition: <span
                                         data-bind="text: geoselector.selectedGeographicTypeDisplay"/></li>
                                 <li data-bind="fadeVisible: geoselector.useGeographicFilter() == 'false'">No geographic filter</li>
