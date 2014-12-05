@@ -1,8 +1,3 @@
-/* 
-
- TAMIS Map Demo
-
- */
 
 var tamis = tamis || {};
 
@@ -37,6 +32,10 @@ tamis.Map = (function () {
     var polygonSymbol;
 
     var functionalClassRenderer;
+    var pavementConditionRenderer;
+    var deckConditionRenderer;
+    var bridgeStatusRenderer;
+
     var pointGraphic;
     var legendDijit;
     var labels;
@@ -68,7 +67,7 @@ tamis.Map = (function () {
             initializeSymbols();
             initializeRenderers();
             initializeLegend();
-            initializeLayers();
+            initializeLayers(e.queryName);
             loadData(e.layers);
         });
 
@@ -109,25 +108,33 @@ tamis.Map = (function () {
         functionalClassRenderer = new esri.renderer.UniqueValueRenderer(polylineSymbol, "NHS Flag");
         functionalClassRenderer.addValue("NHS", redPolylineSymbol);
         functionalClassRenderer.addValue("NOT NHS", pinkPolylineSymbol);
-       /* functionalClassRenderer.addValue("PRINCIPAL ARTERIAL - OTHER", orchidPolylineSymbol);
-        functionalClassRenderer.addValue("MINOR ARTERIAL", purple1PolylineSymbol);
-        functionalClassRenderer.addValue("MAJOR COLLECTOR", seagreen1PolylineSymbol);
-        functionalClassRenderer.addValue("MINOR COLLECTOR", cobaltgreenPolylineSymbol);
-        functionalClassRenderer.addValue("LOCAL", yellow1PolylineSymbol);*/
+
+        pavementConditionRenderer = new esri.renderer.UniqueValueRenderer(polylineSymbol, "Pavement Condition");
+        pavementConditionRenderer.addValue("Good", seagreen1PolylineSymbol);
+        pavementConditionRenderer.addValue("Fair", yellow1PolylineSymbol);
+        pavementConditionRenderer.addValue("Poor", redPolylineSymbol);
+        pavementConditionRenderer.addValue("NA", purple1PolylineSymbol);
+
+        bridgeStatusRenderer = new esri.renderer.UniqueValueRenderer(polylineSymbol, "Bridge Status");
+        bridgeStatusRenderer.addValue("Not Deficient", seagreen1PolylineSymbol);
+        bridgeStatusRenderer.addValue("Structurally Deficient", yellow1PolylineSymbol);
+        bridgeStatusRenderer.addValue("Functionally Obsolete", redPolylineSymbol);
+
     }
 
-    function initializeLayers() {
-        //var bridgeResultsLayer = initializeFeatureCollectionLayer(bridgeResultsLayerName, functionalClassRenderer.toJson());
-        var bridgeResultsRenderer = {
-            "type": "simple",
-            "symbol": pinkPolylineSymbol
-        };
-        var bridgeResultsLayer = initializeFeatureCollectionLayer(bridgeResultsLayerName, bridgeResultsRenderer);
-        var routeResultsRenderer = {
-            "type": "simple",
-            "symbol": redPolylineSymbol
-        };
-        var routeResultsLayer = initializeFeatureCollectionLayer(routeResultsLayerName, routeResultsRenderer);
+    function initializeLayers(queryName) {
+        var bridgeRenderer;
+        var routeRenderer;
+        if(queryName == 'Assets'){
+            bridgeRenderer = functionalClassRenderer;
+            routeRenderer = functionalClassRenderer;
+        }else{
+            bridgeRenderer = pavementConditionRenderer;
+            routeRenderer = bridgeStatusRenderer;
+        }
+        var bridgeResultsLayer = initializeFeatureCollectionLayer(bridgeResultsLayerName, bridgeRenderer);
+
+        var routeResultsLayer = initializeFeatureCollectionLayer(routeResultsLayerName, routeRenderer);
 
         // Not sure which property sets the layer title in the legend, so using this.
         legendDijit.refresh([
@@ -207,7 +214,7 @@ tamis.Map = (function () {
             }
             visible.push(layer.id);
             items.push("<input type='checkbox' class='list_item' onclick='tamis.Map.updateLayerVisibility(this)'" +
-                (layer.visible ? "checked=checked" : "") + "' id='" + layer.id + "'' /><label for='" + layer.id + "'>" + label + "</label><br />");
+            (layer.visible ? "checked=checked" : "") + "' id='" + layer.id + "'' /><label for='" + layer.id + "'>" + label + "</label><br />");
         }
         var layerList = document.getElementById("layer_list");
         layerList.innerHTML = items.join(' ');
@@ -290,6 +297,7 @@ tamis.Map = (function () {
         // Define the graphic's attributes here. Unique id seems to be necessary for the feature.
         var attributes = JSON.parse(JSON.stringify(featureResult, attributeReplacer));
         attributes["ObjectID"] = id;
+        //attributes["NHS_NAME"] = attributes["NHS Flag"];//test
         if (simpleSymbol) {
             graphic = new esri.Graphic(esriGeom, simpleSymbol, attributes);
         } else {
@@ -323,7 +331,7 @@ tamis.Map = (function () {
             $(featureLayer.graphics).each(function (index, feature) {
                 if(feature.attributes.id == rowData.id){
 
-                   var point = feature.geometry.getExtent().getCenter();
+                    var point = feature.geometry.getExtent().getCenter();
                     map.centerAt(point);
                     map.infoWindow.setFeatures([feature]);
                     map.infoWindow.show(feature.geometry.getExtent().getCenter());
@@ -340,12 +348,6 @@ tamis.Map = (function () {
     }
 
 }());
-
-
-
-
-
-
 
 
 

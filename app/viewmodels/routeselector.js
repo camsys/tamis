@@ -9,11 +9,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
             selectedCds: ko.observable(),
 
             resetObservables: function () {
-                this.routes([]);
-                this.selectedRoute();
-                this.routeName();
+                this.selectedRoute(null);
                 this.cdsList([]);
-                this.selectedCds();
+                this.selectedCds(null);
             },
 
             activate: function () {
@@ -29,6 +27,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                                 return false;
                             }
                         });
+                    }else{
+                        that.routeName(null);
                     }
                 });
 

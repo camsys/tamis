@@ -33,7 +33,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                             var table = {};
                             table.title = tabname;
                             table.data = data[dataKey];
-                            table.columnDefs = tabledefs[dataKey];
+                            table.columnDefs = tabledef.columnDefs[dataKey];
                             table.id = index;
                             $(table.data).each(function (index, row) {
                                 row.id = (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -62,13 +62,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                             rowMap[row.ObjectId] = row;
                         });
 
-                        var columnDefs = tabledefs[dataKey];
+                        var columnDefs = tabledefs[appstate.queryName].columnDefs[dataKey]
                         parentEvent.labels[dataKey] = columnDefs;
 
                         var layer = appstate.layerMap[dataKey];
                         $.each(layer.features, function (index, feature) {
-                            if(rowMap[feature.attributes.FID]){
-                                var row = rowMap[feature.attributes.FID];
+                            if(rowMap[feature.attributes.OBJECTID]){
+                                var row = rowMap[feature.attributes.OBJECTID];
                                 $.each(columnDefs, function (index, columnDef) {
                                     feature[columnDef.title] = row[columnDef.data];
                                 });
@@ -79,6 +79,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
 
                     });
                     parentEvent.layers = appstate.layerMap;
+                    parentEvent.queryName = appstate.queryName
+                    parentEvent.tableDefs = tabledefs;
                     $( "body" ).trigger( parentEvent );
                 });
 

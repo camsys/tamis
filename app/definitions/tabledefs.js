@@ -4,43 +4,102 @@ define(
             'Assets': {
                 tabs: ['Roads', 'Bridges'],
                 dataKeys: ['RouteFeatureResults', 'BridgeFeatureResults'],
+                columnDefs: {
+                    BridgeFeatureResults: [
+                        { title: 'Bridge Name', data: 'BridgeName'},
+                        { title: 'CDS', data: 'RouteId'},
+                        { title: 'Route Name', data: 'RouteName'},
+                        { title: 'NHS Flag', data: 'NHSClass'},
+                        { title: 'Lanes', data: 'NumberOfLanes'},
+                        { title: 'Jurisdiction', data: 'Jurisdiction'},
+                        { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},
+                        { title: 'End Mile', data: 'ToMP', format: '0,000.0000'},
+                        { title: 'Length', data: 'Length', format: '0,000.0000'}
+                    ],
+
+                    RouteFeatureResults: [
+                        { title: 'CDS', data: 'RouteId'},
+                        { title: 'Route Name', data: 'RouteName'},
+                        { title: 'NHS Flag', data: 'NHSClass'},
+                        { title: 'Lanes', data: 'NumberOfLanes'},
+                        { title: 'Jurisdiction', data: 'Jurisdiction'},
+                        { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},
+                        { title: 'End Mile', data: 'ToMP', format: '0,000.0000'},
+                        { title: 'Length', data: 'Length', format: '0,000.0000'}
+                    ]
+                }
             },
 
+            'Asset Conditions': {
+                tabs: ['Roads', 'Bridges'],
+                dataKeys: ['RouteFeatureResults', 'BridgeFeatureResults'],
+                columnDefs: {
+                    BridgeFeatureResults: [
+                        { title: 'Bridge Name', data: 'BridgeName'},
+                        { title: 'Route Name', data: 'RouteName'},
+                        { title: 'CDS', data: 'RouteId'},
+                        { title: 'Route Name', data: 'RouteName'},
+                        { title: 'NHS Flag', data: 'NHSClass'},
+                        { title: 'Lane Miles', data: 'LaneMiles'},
+                        { title: 'Jurisdiction', data: 'Jurisdiction'},
+                        { title: 'Structure Length', data: 'StructureLength'},
+                        { title: 'Status', data: 'Status'},
+                        { title: 'Deck Condition', data: 'DeckCond'},
+                        { title: 'Deck Width', data: 'DeckWidth'},
+                        { title: 'Structure Length', data: 'StructureLength'},
+                        { title: 'Sub Structure', data: 'SubStructure'},
+                        { title: 'Super Structure', data: 'SuperStructure'},
+                        { title: 'End Mile', data: 'ToMP', format: '0,000.0000'},
+                        { title: 'Length', data: 'Length', format: '0,000.0000'}
+                    ],
+                    RouteFeatureResults: [
+                        { title: 'CDS', data: 'RouteId'},
+                        { title: 'Route Name', data: 'RouteName'},
+                        { title: 'NHS Flag', data: 'NHSClass'},
+                        { title: 'Lanes', data: 'NumberOfLanes'},
+                        { title: 'Jurisdiction', data: 'Jurisdiction'},
+                        { title: 'Pavement Condition', data: 'PavementCond'},
+                        { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},
+                        { title: 'End Mile', data: 'ToMP', format: '0,000.0000'},
+                        { title: 'Length', data: 'Length', format: '0,000.0000'}
+                    ]
+                }
+            },
 
-            BridgeFeatureResults: [
-                { title: 'Bridge Name', data: 'BridgeName'},
-                { title: 'CDS', data: 'RouteId'},
-                { title: 'Route Name', data: 'RouteName'},
-                { title: 'NHS Flag', data: 'NHSClass'},
-                { title: 'Lanes', data: 'NumberOfLanes'},
-                { title: 'Jurisdiction', data: 'Jurisdiction'},
-                { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},
-                { title: 'End Mile', data: 'ToMP', format: '0,000.0000'},
-                { title: 'Length', data: 'Length', format: '0,000.0000'}
-                /* TODO: May add these back for later queries.
-                 { title: 'Owner (Maintenance)', data: 'MaintenanceResponsibility'},
-                 { title: 'AADT', data: 'AADT'},
-                 { title: 'Year Built', data: 'YearBuilt'}*/
-            ],
+            'Conditions for Specified Section of Roadway': {
+                tabs: ['Roads', 'Bridges'],
+                dataKeys: ['RouteFeatureResults', 'BridgeFeatureResults'],
+                columnDefs: {
+                    BridgeFeatureResults: [
+                        { title: 'Bridge Name', data: 'BridgeName'},
+                        { title: 'CDS', data: 'RouteId'},
+                        { title: 'Route Name', data: 'RouteName'},
+                        { title: 'NHS Flag', data: 'NHSClass'},
+                        { title: 'Lanes', data: 'NumberOfLanes'},
+                        { title: 'Structure Length', data: 'StructureLength'},
+                        { title: 'Status', data: 'Status'},
+                        { title: 'Deck Condition', data: 'DeckCond'},
+                        { title: 'Deck Width', data: 'DeckWidth'},
+                        { title: 'Deck Area', data: 'DeckArea'},
+                        { title: 'Structure Length', data: 'StructureLength'},
+                        { title: 'Sub Structure', data: 'SubStructure'},
+                        { title: 'Super Structure', data: 'SuperStructure'},
+                        { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},
+                        { title: 'End Mile', data: 'ToMP', format: '0,000.0000'},
+                        { title: 'Length', data: 'Length', format: '0,000.0000'}
+                    ],
 
-            RouteFeatureResults: [
-                { title: 'CDS', data: 'RouteId'},
-                { title: 'Route Name', data: 'RouteName'},
-                { title: 'NHS Flag', data: 'NHSClass'},
-                { title: 'Lanes', data: 'NumberOfLanes'},
-                { title: 'Jurisdiction', data: 'Jurisdiction'},
-                { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},
-                { title: 'End Mile', data: 'ToMP', format: '0,000.0000'},
-                { title: 'Length', data: 'Length', format: '0,000.0000'}
-                /* TODO: May add these back for later queries.
-                 { title: 'Pavement Condition', data: 'PavementCondition'},
-                 { title: 'Owner (Maintenance)', data: 'MaintenanceResponsibility'},
-                 { title: 'Owner (Management)', data: 'ManagementResponsibility'},
-                 { title: 'Traffic Direction', data: 'TrafficDirection'},
-                 { title: 'Speed', data: 'Speed'},
-                 { title: 'AADT', data: 'AADT'},
-                 { title: 'Facility Type', data: 'FacilityType'}*/
-            ],
-
+                    RouteFeatureResults: [
+                        { title: 'CDS', data: 'RouteId'},
+                        { title: 'Route Name', data: 'RouteName'},
+                        { title: 'NHS Flag', data: 'NHSClass'},
+                        { title: 'Lanes', data: 'NumberOfLanes'},
+                        { title: 'Pavement Condition', data: 'PavementCond'},
+                        { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},
+                        { title: 'End Mile', data: 'ToMP', format: '0,000.0000'},
+                        { title: 'Length', data: 'Length', format: '0,000.0000'}
+                    ]
+                }
+            }
         };
     });

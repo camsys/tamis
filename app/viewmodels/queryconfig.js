@@ -11,8 +11,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
             displayName: 'Query Configuration',
             queries: [
                 {name: "Assets", value: "Assets"},
-                {name: "blah", value: "blah"},
-                {name: "Conditions", value: "Conditions"},
+                {name: "Asset Conditions", value: "Asset Conditions"},
+                {name: "Conditions for Specified Section of Roadway", value: "Conditions for Specified Section of Roadway"},
             ],
             selectedQuery: ko.observable(),
             queryComplete: false,
@@ -24,6 +24,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 this.geoselector.geoFilters([]);
                 this.assetselector.useAssetFilter(null);
                 this.assetselector.assetFilters([]);
+                this.routeselector.resetObservables();
             },
 
 
@@ -57,7 +58,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
 
                 $('#assetTree').jstree({
                     'plugins': ["checkbox"], 'core': {
-                        'data': that.assetTreeNodes()
+                        'data': that.assetselector.assetTreeNodes()
                     }
                 }).on('changed.jstree', function (e, data) {
                     that.updateAssetSelection(e, data)
@@ -67,8 +68,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     that.geoselector.selectedGeographicType(null);
                     that.geoselector.useGeographicFilter(null);
                     that.geoselector.geoFilters([]);
-                    that.useAssetFilter(null);
-                    that.assetFilters([]);
+                    that.assetselector.useAssetFilter(null);
+                    that.assetselector.assetFilters([]);
+                    that.assetselector.buildAssetTree(newValue);
+                    that.routeselector.resetObservables();
                 });
 
                 this.useAssetFilter.subscribe(function (newValue) {
@@ -79,41 +82,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 }, null, "beforeChange");
             },
 
-            updateAssetSelection: function (e, data) {
-                this.values = $("#assetTree").jstree("get_checked", {full: true}, true);
-                //if a root node is checked, the child nodes are all included in the values array along with the parent
-                if (this.values.length > 0) {
-                    this.parentNodeIds = [];
-                    this.filteredValues = [];
-                    var that = this;
-                    $(this.values).each(function (index, node) {
-                        if (!node.original.parentId) {
-                            that.parentNodeIds.push(node.original.text);
-                            that.filteredValues.push(node); //this is a root, it has no parent id
-                        }
-                    });
-
-                    $(this.values).each(function (index, node) {
-                        if (node.original.parentId) {
-                            if (that.parentNodeIds.indexOf(node.original.parentId) == -1) {
-                                that.filteredValues.push(node); //this is a child, and the root wasn't selected, so include it
-                            }
-                        }
-                    });
-                    this.assetFilters(this.filteredValues);
-                } else {
-                    this.assetFilters([]);
-                }
-            },
-
             executeQuery: function () {
+
                 var that = this;
 
                 var selectedGeographicType = this.geoselector.selectedGeographicType();
                 var useGeographicFilter = this.geoselector.useGeographicFilter();
                 var geoFilters = this.geoselector.geoFilters();
-                var useAssetFilter = this.assetselector.useAssetFilter();
-                var assetFilters = this.assetselector.assetFilters();
 
                 var geoParameter = {};
                 geoParameter.Name = 'Jurisdictions';
@@ -138,45 +113,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
 
                 geoParameter.AreaParameter.Areas = geoValuesToSubmit;
 
-                var bridgeAssetValuesToSubmit = [];
-                var roadAssetValuesToSubmit = [];
-                if (useAssetFilter == "true") {
-
-                    $(assetFilters).each(function (index, node) {
-                        if (node.original.parentId) {
-                            var assetFilterNode = {Value: node.original.selectionId, Name: node.original.text};
-                            if (node.original.parentId.indexOf('Road') > -1) {
-                                roadAssetValuesToSubmit.push(assetFilterNode);  //node is a child of All Roads
-                            } else {
-                                bridgeAssetValuesToSubmit.push(assetFilterNode);  //node is a child of All Bridges
-                            }
-                        } else {
-                            if (node.text.indexOf('Road') > -1) {
-                                //All Roads, include all discrete values
-                                roadAssetValuesToSubmit = node.original.types;
-                            }
-                            if (node.text.indexOf('Bridge') > -1) {
-                                //All Bridges, include all discrete values
-                                bridgeAssetValuesToSubmit = node.original.types;
-                            }
-                        }
-                    });
-                } else if (useAssetFilter == "false") {
-                    //not using any filter, include all discrete values for all asset types
-                    $(this.assetselector.assetTreeNodes()).each(function (index, node) {
-                        if (node.text.indexOf('Road') > -1) {
-                            roadAssetValuesToSubmit = $.map(node.children, function (child, index) {
-                                return {Value: child.selectionId, Name: child.text};
-                            });
-                        }
-                        if (node.text.indexOf('Bridge') > -1) {
-                            bridgeAssetValuesToSubmit = $.map(node.children, function (child, index) {
-                                return {Value: child.selectionId, Name: child.text};
-                            });
-                        }
-                    });
-                }
-
                 var query = $.parseJSON('{"Query":{"DisplayParameters":[],"Selection":1}}');
                 query.Query.DisplayParameters = [];
                 query.Query.DisplayParameters.push(geoParameter);
@@ -187,40 +123,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     }
                 }
 
-
-                if (bridgeAssetValuesToSubmit.length > 0) {
-                    var bridgeParameter = {};
-                    bridgeParameter.Name = 'Bridges';
-                    bridgeParameter.Selected = true;
-                    bridgeParameter.AreaParameter = null;
-                    bridgeParameter.FilterParameters = [];
-                    bridgeParameter.FilterParameters.push({
-                        Type: "NHSBoolean",
-                        Description: "Class",
-                        Filters: bridgeAssetValuesToSubmit
-                    });
-                    query.Query.DisplayParameters.push(bridgeParameter);
-                }
-
-                if (roadAssetValuesToSubmit.length > 0) {
-                    var roadParameter = {};
-                    roadParameter.Name = 'Roads';
-                    roadParameter.Selected = true;
-                    roadParameter.AreaParameter = null;
-                    roadParameter.FilterParameters = [];
-                    roadParameter.FilterParameters.push({
-                        Type: "NHSBoolean",
-                        Description: "Class",
-                        Filters: roadAssetValuesToSubmit
-                    });
-                    query.Query.DisplayParameters.push(roadParameter);
-                }
+                var assetParams = this.assetselector.getQueryParams();
+                query.Query.DisplayParameters = query.Query.DisplayParameters.concat(assetParams);
 
                 if(this.routeselector.selectedCds()){
-                    query.Query.RouteParameters = [];
-                    query.Query.RouteParameters.push({
-                        Id: this.routeselector.selectedCds()
-                    });
+                    var cds = this.routeselector.selectedCds();
+                    query = $.parseJSON('{"Query":{"DisplayParameters":[{"Name":"Jurisdictions","Selected":true,"RouteParameters":[{"Id":""}]},{"Name":"Roads","Selected":true,"AreaParameter":null,"FilterParameters":[{"Type":"NHSClass","Description":"Class","Filters":[],"MaxValues":0,"Selected":true}],"RouteParameters":[{"Id":""}]},{"Name":"Bridges","Selected":true,"AreaParameter":null,"FilterParameters":[{"Type":"NHSClass","Description":"Class","Filters":[],"MaxValues":0,"Selected":true}],"RouteParameters":[{"Id":""}]}],"Selection":3}}');
+                    query.Query.DisplayParameters[0].RouteParameters[0].Id = cds;
+                    query.Query.DisplayParameters[1].RouteParameters[0].Id = cds;
+                    query.Query.DisplayParameters[2].RouteParameters[0].Id = cds;
                 }
 
 
@@ -259,7 +170,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     $(results).each(function (index, row) {
                         objectIds.push(row.ObjectId);
                     });
-                    dataservice.getFeatures(k, objectIds.join(), that.createCallback(layerMap, k, that));
+                    dataservice.getFeatures(that.selectedQuery(), k, objectIds.join(), that.createCallback(layerMap, k, that));
                 });
             },
 

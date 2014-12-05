@@ -17,9 +17,9 @@
                                 </select>
                             </div>
 
-                            <div data-bind="visible: (selectedQuery() == 'Conditions'), compose: { model: routeselector, preserveContext: true }"></div>
+                            <div data-bind="visible: (selectedQuery() == 'Conditions for Specified Section of Roadway'), compose: { model: routeselector, preserveContext: true }"></div>
 
-                            <div data-bind="visible: (selectedQuery() != undefined && selectedQuery() != 'Conditions'), compose: { model: geoselector, preserveContext: true }"></div>
+                            <div data-bind="visible: (selectedQuery() != undefined && selectedQuery() != 'Conditions for Specified Section of Roadway'), compose: { model: geoselector, preserveContext: true }"></div>
 
                             <div data-bind="visible: (geoselector.useGeographicFilter() == 'false' || geoselector.geoFilters().length > 0),
                              compose: { model: assetselector, preserveContext: true }"></div>

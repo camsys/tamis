@@ -2,35 +2,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
     function (http, app, ko, jstree, bootstrap, jqueryui, config, dataservice) {
 
         return {
-            routes: ko.observableArray([]),
-            selectedRoute: ko.observable(),
-            routeName: ko.observable(),
-            cdsList: ko.observableArray([]),
-            selectedCds: ko.observable(),
+            conditions: ko.observableArray([]),
+            selectedCondition: ko.observable(),
 
             resetObservables: function () {
-                this.routes([]);
-                this.selectedRoute();
-                this.routeName();
-                this.cdsList([]);
-                this.selectedCds();
+                //this.conditions([]);
+                this.selectedCondition();
             },
 
             activate: function () {
-                var that = this;
-                this.selectedRoute.subscribe(function (newValue) {
-                    if(newValue){
-                        $(that.routes()).each(function (index, route) {
-                            if(route.Id == newValue){
-                                that.routeName(route.Name);
-                                var cdsList = route.Id.split(",");
-                                cdsList.sort(function(a, b){return a-b});
-                                that.cdsList(cdsList);
-                                return false;
-                            }
-                        });
-                    }
-                });
 
                 var that = this;
                 //returning a promise, rendering pauses until promise completes

@@ -77,7 +77,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                 var that = this;
                 $.each(tabledef.dataKeys, function (index, dataKey) {
                     var sourcedata = appstate.queryResults[dataKey];
-                    var columndefs = tabledefs[dataKey];
+                    var columndefs = tabledef.columnDefs[dataKey];
                     var labels = {};
                     $.each(columndefs, function (index, columndef) {
                         labels[columndef.data] = columndef.title;

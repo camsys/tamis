@@ -45,16 +45,57 @@ define(['../config/config'],
                 })
             },
 
-            getFeatures : function(key, objectIdString, callback){
+            getPavement : function(callback){
+                return $.ajax({
+                    url: config.pavementQueryUrl,
+                    jsonpCallback: 'callback5',
+                    dataType: "jsonp",
+                    success: function (response) {
+                        callback(response);
+                    }
+                })
+            },
+
+            getDeck : function(callback){
+                return $.ajax({
+                    url: config.deckQueryUrl,
+                    jsonpCallback: 'callback6',
+                    dataType: "jsonp",
+                    success: function (response) {
+                        callback(response);
+                    }
+                })
+            },
+
+            getBridgeStatus : function(callback){
+                return $.ajax({
+                    url: config.bridgeStatusQueryUrl,
+                    jsonpCallback: 'callback7',
+                    dataType: "jsonp",
+                    success: function (response) {
+                        callback(response);
+                    }
+                })
+            },
+            getFeatures : function(queryName, key, objectIdString, callback){
                 var featureUrl;
-                if(key == "RouteFeatureResults"){
-                    featureUrl = config.roadFeaturesUrl;
-                } else if(key == "BridgeFeatureResults"){
-                    featureUrl = config.bridgeFeaturesUrl;
+                if(queryName == 'Assets'){
+                    if(key == "RouteFeatureResults"){
+                        featureUrl = config.roadFeaturesUrl;
+                    } else if(key == "BridgeFeatureResults"){
+                        featureUrl = config.bridgeFeaturesUrl;
+                    }
+                }else{
+                    if(key == "RouteFeatureResults"){
+                        featureUrl = config.roadFeaturesUrlWithCondition;
+                    } else if(key == "BridgeFeatureResults"){
+                        featureUrl = config.bridgeFeaturesUrlWithCondition;
+                    }
                 }
+
                 var postBody = {};
                 postBody.objectIds = objectIdString;
-                postBody.outFields = 'FID';
+                postBody.outFields = 'OBJECTID';
                 postBody.f = 'pjson';
                 postBody.outSR = 3857;
                 $.ajax({
