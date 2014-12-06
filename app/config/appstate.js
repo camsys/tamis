@@ -1,7 +1,7 @@
 define(
     function () {
         return {
-            ussername: null,
+            username: null,
             queryName: null,
             querydescription: null,
             queryResults: null,

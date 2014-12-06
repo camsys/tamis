@@ -7,20 +7,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
             displayName: 'Query Results',
             configuredTables: ko.observableArray([]),
 
-            /*activate: function () {
-                var that = this;
-                return $.get("assets/json/layers.json",
-                    function (queryData) {
-                        appstate.queryResults = queryData.table;
-                        appstate.queryName = 'Assets';
-                        appstate.querydescription = JSON.parse('{"queryName":"Assets","criteria":[{"name":"Geographic Definition","value":"Regions"},{"name":"Geographic Filter","value":"CENTRAL REGION, SOUTHEAST REGION"},{"name":"Asset Filter","value":"Bridge Assets"}]}');
-                        appstate.layerMap = queryData.layers;
-                        that.realactivate();
-                    }
-                );
-            },
-
-            real*/
             activate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
@@ -66,17 +52,20 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                         parentEvent.labels[dataKey] = columnDefs;
 
                         var layer = appstate.layerMap[dataKey];
-                        $.each(layer.features, function (index, feature) {
-                            if(rowMap[feature.attributes.OBJECTID]){
-                                var row = rowMap[feature.attributes.OBJECTID];
-                                $.each(columnDefs, function (index, columnDef) {
-                                    feature[columnDef.title] = row[columnDef.data];
-                                });
-                                feature.id = row.id;
-                                feature.dataKey = dataKey;
-                            }
-                        });
-
+                        if(layer){
+                            $.each(layer.features, function (index, feature) {
+                                if(rowMap[feature.attributes.OBJECTID]){
+                                    var row = rowMap[feature.attributes.OBJECTID];
+                                    $.each(columnDefs, function (index, columnDef) {
+                                        feature[columnDef.title] = row[columnDef.data];
+                                    });
+                                    feature.id = row.id;
+                                    feature.dataKey = dataKey;
+                                }
+                            });
+                        }else{
+                            delete appstate.layerMap[dataKey];
+                        }
                     });
                     parentEvent.layers = appstate.layerMap;
                     parentEvent.queryName = appstate.queryName

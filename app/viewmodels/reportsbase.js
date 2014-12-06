@@ -86,6 +86,27 @@ define(['plugins/http', 'durandal/app', 'knockout'],
                     }
                 }
 
+
+                this.binsums = {};
+                var that = this;
+                if(reportdef.bins){
+                    $.each(featureData, function (index, feature) {
+                        $.each(reportdef.sums, function (index, sum) {
+                            if (typeof(feature[sum]) !== 'undefined'){
+                                $.each(reportdef.bins, function (index, bin) {
+                                    if (typeof(feature[bin.value]) !== 'undefined'){
+                                        feature[sum + '|' + bin.name + '|' + feature[bin.value]] = feature[sum];
+                                        that.binsums[sum + '|' + bin.name + '|' + feature[bin.value]] = null;
+                                    }
+                                });
+                            }
+                        });
+                    });
+                }
+
+                var originalSums = reportdef.sums;
+                reportdef.sums = reportdef.sums.concat(Object.keys(that.binsums));
+
                 //now make the hieararchy
                 var root = {};
                 root.children = [];
@@ -96,6 +117,7 @@ define(['plugins/http', 'durandal/app', 'knockout'],
                     this.writeRowValuesToLeaf(featureData, reportdef, root.children, row, 0);
                 }
 
+                reportdef.sums = originalSums;
                 return root.children;
             },
 
@@ -126,7 +148,7 @@ define(['plugins/http', 'durandal/app', 'knockout'],
                         if (!child.children.length > 0) {
                             for (var j = 0; j < reportdef.sums.length; j++) {
                                 var sum = reportdef.sums[j];
-                                if (!child.hasOwnProperty(sum)) {
+                                if (typeof(child[sum]) == 'undefined') {
                                     child[sum] = 0;
                                 }else{
                                     child[sum] = Number(child[sum]).toFixed(2);
@@ -141,13 +163,19 @@ define(['plugins/http', 'durandal/app', 'knockout'],
             },
 
             addValue: function (child, sum, row) {
-                if (!child.hasOwnProperty(sum)) {
+                if (typeof(row[sum]) == 'undefined') {
+                    return;
+                }
+                if (typeof(child[sum]) == 'undefined') {
                     child[sum] = 0;
                 }
                 child[sum] = Number(child[sum]) + Number(row[sum]);
                 child[sum] = Number(child[sum]).toFixed(2);
                 if (child.parent != null) {
                     this.addValue(child.parent, sum, row);
+                }
+                if(isNaN(child[sum])){
+                    console.log('x');
                 }
             }
         }

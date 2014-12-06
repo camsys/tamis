@@ -12,12 +12,31 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             selectedOrder: ko.observable(),
 
             activate: function () {
+                var that = this;
+                return $.get("assets/json/appstate.json",
+                    function (queryData) {
+                        appstate = queryData
+                        that.realactivate();
+                    }
+                );
+            },
+
+            realactivate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 if (data && queryName) {
                     this.chartsRawData = data;
                     this.reportdef = $.extend({}, reportdefs[queryName]); //make a local copy of the report def since we'll be modifying it
-                    this.graphMetrics(this.reportdef.graphMetrics);
+                    var graphMetrics = this.reportdef.graphMetrics;
+                    if(this.reportdef.bins){
+                        for(var i = 0; i < this.reportdef.bins.length; i++){
+                            var limit  = graphMetrics.length;
+                            for(var j = 0; j < limit; j++){
+                                graphMetrics.push({name: graphMetrics[j].name + " by " + this.reportdef.bins[i].name, value: this.reportdef.bins[i].value + '|' + graphMetrics[j].value})
+                            }
+                        }
+                    }
+                    this.graphMetrics(graphMetrics);
                     this.selectedMetric(this.reportdef.graphMetrics[0].value); //set default
                     this.selectedOrder(this.reportdef.levelOrders[0].name); //set default
                     this.levelOrders(this.reportdef.levelOrders);
@@ -58,43 +77,76 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
 
             renderCharts: function () {
                 var charts = this.charts();
-                var metric = this.selectedMetric();
+                var metricValue = this.selectedMetric();
+
+                //pipe delimiter in metric value indicates we want to display the selected series binned by values
+                var metricElements = metricValue.split('|');
+                var binName = null;
+                var metric;
+                if(metricElements.length > 1){
+                    binName = metricElements[0]
+                    metric = metricElements[1];
+                }else{
+                    metric = metricValue;
+                }
                 var axisTitle = this.getSelectedMetricTitle();
-                if(!$.isArray(metric)) metric = [metric];
 
                 var rootScope = this;
                 $.each(charts, function (index, chartTabPanel) {
                     var that = this;
                     that.chartTabPanel = chartTabPanel;
                     var chartElements = chartTabPanel.charts;
-                    var topleveltitle = that.reportdef.headers[that.reportdef.fields.indexOf(that.reportdef.levels[1])]
                     $.each(chartElements, function (index, chartElement) {
+
+                        var topleveltitle = that.reportdef.headers[that.reportdef.fields.indexOf(that.reportdef.levels[1])]
 
                         that.chartElement = chartElement;
                         that.categories = [];
 
                         $.each(chartElement.datapoints, function (index, datapoint) {
-
-                            $.each(metric, function (index, field) {
-                                if(!$.isNumeric(datapoint[field] )){
-                                    datapoint[field] = 0;
-                                }
-                            });
-
+                            //get rid of any NaNs
+                            if(!$.isNumeric(datapoint[metric] )){
+                                datapoint[metric] = 0;
+                            }
                             that.categories.push(datapoint.name);
                         });
 
                         var seriesArray = [];
-                        $.each(metric, function (index, field) {
+                        that.binSeries = {};
+
+                        if(binName){
+                            var fields = Object.keys(chartElement.datapoints[0]);
+                            $.each(fields, function (index, field) {
+                                if(field.indexOf('|') > -1 && field.indexOf(metric) > -1){
+                                    that.binSeries[field] = null;
+                                }
+                            });
+                        }
+
+                        if(Object.keys(that.binSeries).length < 1){
                             var series = {};
-                            series.name = rootScope.getLabelForMetric(field);
+                            series.name = rootScope.getLabelForMetric(metric);
                             series.data = $.map(chartElement.datapoints, function (datapoint) {
-                                return Number(datapoint[field]);
+                                return Number(datapoint[metric]);
                             });
                             seriesArray.push(series);
-                        });
+                        }else{
+                            $.each(Object.keys(that.binSeries), function (index, bin) {
+                                var series = {};
+                                series.name = bin.split('|')[2];
+                                series.data = $.map(chartElement.datapoints, function (datapoint) {
+                                    return Number(datapoint[bin]);
+                                });
+                                seriesArray.push(series);
+                            });
+                            var binTitle;
 
-
+                            $.each(reportdefs[appstate.queryName].bins, function (index, bin) {
+                                if(binName == bin.value){
+                                    topleveltitle = topleveltitle + ' and ' + bin.name;
+                                }
+                            });
+                        }
 
 
                         that.axisTitle = axisTitle;
@@ -112,9 +164,6 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             title: {
                                 text: that.chartTitle
                             },
-                            /* subtitle: {
-                             text: 'Source: WorldClimate.com'
-                             },*/
                             xAxis: {
                                 categories: that.categories
                             },

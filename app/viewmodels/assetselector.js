@@ -74,7 +74,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     $(that.filterValues.pavement).each(function (index, filterValue) {
                         if(filterValue.Name){
                             var node = {text: 'Pavement Condition: ' + filterValue.Name, value: 'pavement_' + filterValue.Value};
-                            that.bridgeSelections.push(node);
+                            that.roadSelections.push(node);
                             that.filterMap[node.value] = filterValue;
                         }
                     });

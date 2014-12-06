@@ -5,12 +5,13 @@ tamis.Map = (function () {
 
     /* Constants */
 
-    var GEOMETRY_TYPE_POINT = 'point';
-    var GEOMETRY_TYPE_POLYLINE = 'polyline';
-    var GEOMETRY_TYPE_POLYGON = 'polygon';
+    var GEOMETRY_TYPE_POINT = 'esriGeometryPoint';
+    var GEOMETRY_TYPE_POLYLINE = 'esriGeometryPolyline';
+    var GEOMETRY_TYPE_POLYGON = 'esriGeometryPolygon';
 
     var bridgeResultsLayerName = "BridgeFeatureResults";
     var routeResultsLayerName = "RouteFeatureResults";
+    var unstableSlopeResultsLayerName = "UnstableSlopeFeatureResults";
 
     var geometryKey = "Geometry";
 
@@ -61,6 +62,7 @@ tamis.Map = (function () {
     }
 
     function jQueryReady() {
+        parent.$("body").off("loaddata");
         parent.$("body").on("loaddata", function (e) {
             tamis.Map.labels = e.labels;
             setScalebar();
@@ -129,13 +131,18 @@ tamis.Map = (function () {
             bridgeRenderer = functionalClassRenderer;
             routeRenderer = functionalClassRenderer;
         }else{
-            bridgeRenderer = pavementConditionRenderer;
-            routeRenderer = bridgeStatusRenderer;
+            bridgeRenderer =  bridgeStatusRenderer;
+            routeRenderer = pavementConditionRenderer;
         }
-        var bridgeResultsLayer = initializeFeatureCollectionLayer(bridgeResultsLayerName, bridgeRenderer);
+        var bridgeResultsLayer = initializeFeatureCollectionLayer(bridgeResultsLayerName, bridgeRenderer.toJson(), GEOMETRY_TYPE_POLYLINE);
 
-        var routeResultsLayer = initializeFeatureCollectionLayer(routeResultsLayerName, routeRenderer);
+        var routeResultsLayer = initializeFeatureCollectionLayer(routeResultsLayerName, routeRenderer.toJson(), GEOMETRY_TYPE_POLYLINE);
 
+        var unstableSlopeResultsLayer = initializeFeatureCollectionLayer(unstableSlopeResultsLayerName, routeRenderer.toJson(),
+            GEOMETRY_TYPE_POINT);
+
+        // TODO: For query 5, use {layer: unstableSlopeResultsLayer, title: "Unstable Slopes"}
+        // TODO: buildLayerList([ unstableSlopeResultsLayer, routeResultsLayer ]);
         // Not sure which property sets the layer title in the legend, so using this.
         legendDijit.refresh([
             {layer: bridgeResultsLayer, title: "Bridges"},
@@ -144,13 +151,13 @@ tamis.Map = (function () {
         buildLayerList([ bridgeResultsLayer, routeResultsLayer ]);
     }
 
-    function initializeFeatureCollectionLayer(layerName, layerRenderer) {
+    function initializeFeatureCollectionLayer(layerName, layerRenderer, geometryType) {
 
         // We'll add the features later.
         var features = [];
 
         var layerDefinition = {
-            "geometryType": "esriGeometryPolyline",
+            "geometryType": geometryType,
             "objectIdField": "ObjectID",
             "drawingInfo": {
                 "renderer": layerRenderer
@@ -168,7 +175,7 @@ tamis.Map = (function () {
             "layerDefinition": layerDefinition,
             "featureSet": {
                 "features": features,
-                "geometryType": "esriGeometryPolyline"
+                "geometryType": geometryType
             }
         };
 
@@ -211,6 +218,8 @@ tamis.Map = (function () {
                 label = 'Bridges';
             } else if (layer.id = routeResultsLayerName){
                 label = 'Roads';
+            } else if (layer.id = unstableSlopeResultsLayerName){
+                label = 'Unstable Slopes';
             }
             visible.push(layer.id);
             items.push("<input type='checkbox' class='list_item' onclick='tamis.Map.updateLayerVisibility(this)'" +
@@ -249,7 +258,8 @@ tamis.Map = (function () {
         layer.suspend();
 
         var features = [];
-        var geometryType = GEOMETRY_TYPE_POLYLINE;
+        //var geometryType = GEOMETRY_TYPE_POLYLINE;
+        var geometryType = layer.geometryType;
         for (var i = 0; i < featureResults.features.length; i++) {
             var featureResult = featureResults.features[i];
             var geom = featureResult.geometry;
@@ -297,7 +307,6 @@ tamis.Map = (function () {
         // Define the graphic's attributes here. Unique id seems to be necessary for the feature.
         var attributes = JSON.parse(JSON.stringify(featureResult, attributeReplacer));
         attributes["ObjectID"] = id;
-        //attributes["NHS_NAME"] = attributes["NHS Flag"];//test
         if (simpleSymbol) {
             graphic = new esri.Graphic(esriGeom, simpleSymbol, attributes);
         } else {
@@ -348,9 +357,3 @@ tamis.Map = (function () {
     }
 
 }());
-
-
-
-
-
-

@@ -170,7 +170,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     $(results).each(function (index, row) {
                         objectIds.push(row.ObjectId);
                     });
-                    dataservice.getFeatures(that.selectedQuery(), k, objectIds.join(), that.createCallback(layerMap, k, that));
+                    if(objectIds.length > 0){
+                        dataservice.getFeatures(that.selectedQuery(), k, objectIds.join(), that.createCallback(layerMap, k, that));
+                    }
                 });
             },
 
@@ -182,7 +184,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     var allLayersReady = true;
                     $.each(appstate.queryResults, function (k, v) {
                         var layer = layerMap[k];
-                        if(!layer){
+                        if(!layer && appstate.queryResults[k].length > 0){
                             allLayersReady = false;
                         }
                     });
