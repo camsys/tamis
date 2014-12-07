@@ -3,15 +3,15 @@ define(
         return {
             'Assets': {
                 'Roads': {
-                    'Total Centerline Miles by Jurisdiction and Class': {
-                        rows: ["Class"],
+                    'Total Centerline Miles by Jurisdiction and NHS Class': {
+                        rows: ["NHS Class"],
                         cols: ["Jurisdiction"],
                         rendererName: "Table",
                         aggregatorName: "Sum",
-                        vals: ["Length"]
+                        vals: ["Centerline Miles"]
                     },
-                    'Average Lane Count by Jurisdiction and Class': {
-                        rows: ["Class"],
+                    'Average Lane Count by Jurisdiction and NHS Class': {
+                        rows: ["NHS Class"],
                         cols: ["Jurisdiction"],
                         rendererName: "Table",
                         aggregatorName: "Average",
@@ -19,26 +19,26 @@ define(
                     }
                 },
                 'Bridges': {
-                    'Number of Bridges by Jurisdiction and Class': {
-                        rows: ["Class"],
+                    'Number of Bridges by Jurisdiction and NHS Class': {
+                        rows: ["NHS Class"],
                         cols: ["Jurisdiction"],
                         rendererName: "Table",
                         aggregatorName: "Count Unique Values",
                         vals: ["Bridge Name"]
                     },
-                    'Total Centerline Miles by Jurisdiction and Class': {
-                        rows: ["Class"],
+                    'Total Centerline Miles by Jurisdiction and NHS Class': {
+                        rows: ["NHS Class"],
                         cols: ["Jurisdiction"],
                         rendererName: "Table",
                         aggregatorName: "Sum",
-                        vals: ["Length"]
+                        vals: ["Centerline Miles"]
                     },
-                    'Average Lane Count by Jurisdiction and Class': {
-                        rows: ["Class"],
+                    'Average Lane Count by Jurisdiction and NHS Class': {
+                        rows: ["NHS Class"],
                         cols: ["Jurisdiction"],
                         rendererName: "Table",
                         aggregatorName: "Average",
-                        vals: ["Lanes"]
+                        vals: ["Centerline Miles"]
                     },
                 }
             }

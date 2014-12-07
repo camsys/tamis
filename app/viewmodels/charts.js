@@ -11,24 +11,14 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             levelOrders: ko.observableArray([]),
             selectedOrder: ko.observable(),
 
-            activate: function () {
-                var that = this;
-                return $.get("assets/json/appstate.json",
-                    function (queryData) {
-                        appstate = queryData
-                        that.realactivate();
-                    }
-                );
-            },
-
-            realactivate: function () {
+           activate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 if (data && queryName) {
                     this.chartsRawData = data;
                     this.reportdef = $.extend({}, reportdefs[queryName]); //make a local copy of the report def since we'll be modifying it
                     var graphMetrics = this.reportdef.graphMetrics;
-                    if(this.reportdef.bins){
+                    if(this.reportdef.bins && appstate.queryName != "Conditions for Specified Section of Roadway" && graphMetrics.length < 4){
                         for(var i = 0; i < this.reportdef.bins.length; i++){
                             var limit  = graphMetrics.length;
                             for(var j = 0; j < limit; j++){
@@ -38,8 +28,10 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                     }
                     this.graphMetrics(graphMetrics);
                     this.selectedMetric(this.reportdef.graphMetrics[0].value); //set default
-                    this.selectedOrder(this.reportdef.levelOrders[0].name); //set default
-                    this.levelOrders(this.reportdef.levelOrders);
+                    if(this.reportdef.levelOrders && this.reportdef.levelOrders.length > 0){
+                        this.selectedOrder(this.reportdef.levelOrders[0].name); //set default
+                        this.levelOrders(this.reportdef.levelOrders);
+                    }
                     var that = this;
                     this.selectedMetric.subscribe(function (newValue) {
                         that.refreshCharts();
@@ -78,6 +70,10 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             renderCharts: function () {
                 var charts = this.charts();
                 var metricValue = this.selectedMetric();
+
+                if(appstate.queryName == "Conditions for Specified Section of Roadway"){
+                    metricValue = "condition|" + metricValue;
+                }
 
                 //pipe delimiter in metric value indicates we want to display the selected series binned by values
                 var metricElements = metricValue.split('|');
@@ -139,7 +135,6 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                                 });
                                 seriesArray.push(series);
                             });
-                            var binTitle;
 
                             $.each(reportdefs[appstate.queryName].bins, function (index, bin) {
                                 if(binName == bin.value){
@@ -153,6 +148,15 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                         that.chartTitle = axisTitle + ' of ' + that.chartTabPanel.title
                             + ' By ' + topleveltitle
                             + ' For ' + chartElement.text;
+
+                        if(appstate.queryName == "Conditions for Specified Section of Roadway"){
+                            if(metric == 'LaneMiles'){
+                                that.chartTitle = 'Lane Miles by Condition For ' + chartElement.text;
+                            }else{
+                                that.chartTitle = 'Miles by Condition For ' + chartElement.text;
+                            }
+
+                        }
 
                         var chartConfig = {
                             chart: {
@@ -188,7 +192,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             },
                             series: seriesArray,
                         };
-                        if(seriesArray.length > 1){
+                        if(seriesArray.length > 1 || appstate.queryName == "Conditions for Specified Section of Roadway"){
                             chartConfig.legend = {
                                 layout: 'vertical',
                                     align: 'right',
@@ -217,38 +221,51 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                     chartTabPanel.title = tab
                     chartTabPanel.charts = [];
                     var outerIndex = index;
-                    $.each(tree, function (index, root) {
-                        var chart = {};
-                        chart.datapoints = [];
-                        chart.level = root.level;
-                        chart.text = root.text;
-                        $.each(root.children, function (index, child) {
-                            child.name = child.text;
-                            chart.datapoints.push(child);
+                    if(chartTabPanel.reportdef.levels.length > 1){
+
+                        $.each(tree, function (index, root) {
+                            var chart = {};
+                            chart.datapoints = [];
+                            chart.level = root.level;
+                            chart.text = root.text;
+                            $.each(root.children, function (index, child) {
+                                child.name = child.text;
+                                chart.datapoints.push(child);
+                            });
+                            chart.id = outerIndex + "_" + index;
+                            chartTabPanel.charts.push(chart);
                         });
-                        chart.id = outerIndex + "_" + index;
-                        chartTabPanel.charts.push(chart);
-                    });
 
+                        //now add a summary section below that aggregates by the second dimension
+                        var topLevel = chartTabPanel.reportdef.levels.shift();
+                        tree = reportsbase.buildTree(featureData, chartTabPanel.reportdef);
+                        var summaryChart = {};
+                        summaryChart.level = topLevel;
+                        var topleveltitle = chartTabPanel.reportdef.headers[chartTabPanel.reportdef.fields.indexOf(topLevel)];
+                        topleveltitle = /s$/.test(topleveltitle) ? topleveltitle + "es" : topleveltitle + 's';
+                        summaryChart.text = "All " + topleveltitle;
+                        summaryChart.id = outerIndex + "_" + chartTabPanel.length;
+                        summaryChart.datapoints = []
 
-                    //now add a summary section below that aggregates by the second dimension
-                    var topLevel = chartTabPanel.reportdef.levels.shift();
-                    tree = reportsbase.buildTree(featureData, chartTabPanel.reportdef);
-                    var summaryChart = {};
-                    summaryChart.level = topLevel;
-                    var topleveltitle = chartTabPanel.reportdef.headers[chartTabPanel.reportdef.fields.indexOf(topLevel)];
-                    topleveltitle = /s$/.test(topleveltitle) ? topleveltitle + "es" : topleveltitle + 's';
-                    summaryChart.text = "All " + topleveltitle;
-                    summaryChart.id = outerIndex + "_" + chartTabPanel.length;
-                    summaryChart.datapoints = []
+                        $.each(tree, function (index, child) {
+                            child.name = child.text;
+                            summaryChart.datapoints.push(child);
+                        });
 
-                    $.each(tree, function (index, child) {
-                        child.name = child.text;
-                        summaryChart.datapoints.push(child);
-                    });
-
-                    chartTabPanel.charts.push(summaryChart);
-                    chartTabPanel.reportdef.levels.unshift(topLevel);  //put the level back in so the column offsets are correct
+                        chartTabPanel.charts.push(summaryChart);
+                        chartTabPanel.reportdef.levels.unshift(topLevel);  //put the level back in so the column offsets are correct
+                    }else{
+                        $.each(tree, function (index, root) {
+                            var chart = {};
+                            chart.datapoints = [];
+                            chart.level = root.level;
+                            chart.text = root.text;
+                            root.name = root.text;
+                            chart.datapoints.push(root);
+                            chart.id = outerIndex + "_" + index;
+                            chartTabPanel.charts.push(chart);
+                        });
+                    }
                     chartTabSet.push(chartTabPanel);
                 });
                 return chartTabSet;
@@ -257,7 +274,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
 
             validateRequests: function (data, reportdef) {
                 if (reportdef.levels.length > 2) {
-                    throw new Error('Invalid chart configuration');
+                    reportdef.levels = reportdef.levels.slice(0,2)
                 }
 
                 $.each(reportdef.dataKeys, function (index, dataKey) {
@@ -265,7 +282,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                     var featureData = data[dataKey];
                     if(featureData){
                         $.each(featureData, function (index, feature) {
-                            if (feature['Length'] && feature['NumberOfLanes']) {
+                            if(typeof(feature['Length']) != 'undefined' && typeof(feature['NumberOfLanes']) ){
                                 feature.LaneMiles = feature['Length'] * feature['NumberOfLanes']
                             } else {
                                 feature.LaneMiles = 0;

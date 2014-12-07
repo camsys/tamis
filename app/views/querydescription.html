@@ -28,7 +28,7 @@
             </select>
         </label>
     </div>
-    <div class="form-group" data-bind="visible: $parent.levelOrders">
+    <div class="form-group" data-bind="visible: $parent.levelOrders().length > 0">
         <label class="navbar-text" for="selectOrder">Summarize By:
             <select id="selectOrder" class="form-control"
                     data-bind="options: $parent.levelOrders,

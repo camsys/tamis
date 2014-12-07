@@ -1,0 +1,47 @@
+
+                            <div class="form-group">
+                                <label class="control-label">Do you want to limit your results by minimum AADT?</label>
+
+                                <div class="controls">
+                                    <input type="radio" name="resultsFilter" value="true"
+                                           data-bind="checked: useAadtFilter">Yes</input>
+                                    <input type="radio" name="resultsFilter" value="false"
+                                           data-bind="checked: useAadtFilter">No, show me everything</input>
+                                </div>
+                            </div>
+
+                            <div class="form-group"  data-bind="fadeVisible: useAadtFilter() == 'true'">
+                                <label class="control-label">Specify a minumum value for AADT</label>
+                                <div class="controls">
+                                    <input type="text" class="form-control" name="aadtFilter" data-bind="value: aadtFilter, valueUpdate: 'afterkeydown'"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group" data-bind="fadeVisible: useAadtFilter() == 'false' || aadtFilter()">
+                                <label class="control-label">Do you want to limit your results by minimum total risk-hazard score?</label>
+
+                                <div class="controls">
+                                    <input type="radio" name="useScoreFilter" value="true"
+                                           data-bind="checked: useScoreFilter">Yes</input>
+                                    <input type="radio" name="useScoreFilter" value="false"
+                                           data-bind="checked: useScoreFilter">No, show me everything</input>
+                                </div>
+                            </div>
+
+                            <div class="form-group"  data-bind="fadeVisible: useScoreFilter() == 'true'">
+                                <label class="control-label">Specify a minumum value for total risk-hazard score</label>
+                                <div class="controls">
+                                    <input type="text" class="form-control" name="scoreFilter" data-bind="value: scoreFilter, valueUpdate: 'afterkeydown'"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group" data-bind="fadeVisible: useScoreFilter() == 'false' || scoreFilter()">
+                                <label class="control-label">Do you want to show ONLY unstable slopes for which mitigation is NOT present?</label>
+
+                                <div class="controls">
+                                    <input type="radio" name="mitigationNotPresentFilter1" value="true"
+                                           data-bind="checked: mitigationNotPresentFilter">Yes</input>
+                                    <input type="radio" name="mitigationNotPresentFilter2" value="false"
+                                           data-bind="checked: mitigationNotPresentFilter">No, show me everything</input>
+                                </div>
+                            </div>

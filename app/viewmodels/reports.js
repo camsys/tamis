@@ -16,8 +16,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
 
                 if (data && queryName) {
                     this.reportdef = $.extend({}, reportdefs[queryName]); //make a local copy of the report def since we'll be modifying it
-                    this.selectedOrder(this.reportdef.levelOrders[0].name); //set default
-                    this.levelOrders(this.reportdef.levelOrders);
+                    if(this.reportdef.levelOrders && this.reportdef.levelOrders.length > 0){
+                        this.selectedOrder(this.reportdef.levelOrders[0].name); //set default
+                        this.levelOrders(this.reportdef.levelOrders);
+                    }
                     this.selectedOrder.subscribe(function (newValue) {
                         that.refreshTables();
                     });
@@ -70,6 +72,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                     var summaryGrid = {
                         cells: [],
                         add: function (cell) {
+                            console.log(JSON.stringify(cell))
                             this.cells.push(cell);
                         }
                     }
@@ -78,27 +81,28 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
 
                     that.buildTable(tree, summaryGrid, that.reportdef);  //add the data to the table
 
-                    //now add a summary section below that aggregates by the second dimension
-                    var topLevel = that.reportdef.levels.shift();
-                    tree = reportsbase.buildTree(featureData, that.reportdef);
-                    var summaryRoot = {};
-                    summaryRoot.level = topLevel;
-                    var topleveltitle = that.reportdef.headers[that.reportdef.fields.indexOf(topLevel)];
-                    topleveltitle = /s$/.test(topleveltitle) ? topleveltitle + "es" : topleveltitle + 's';
-                    summaryRoot.text = "All " + topleveltitle;
-                    summaryRoot.children = tree;
+                    if(that.reportdef.levels.length > 1) {
+                        //now add a summary section below that aggregates by the second dimension
+                        var topLevel = that.reportdef.levels.shift();
+                        tree = reportsbase.buildTree(featureData, that.reportdef);
+                        var summaryRoot = {};
+                        summaryRoot.level = topLevel;
+                        var topleveltitle = that.reportdef.headers[that.reportdef.fields.indexOf(topLevel)];
+                        topleveltitle = /s$/.test(topleveltitle) ? topleveltitle + "es" : topleveltitle + 's';
+                        summaryRoot.text = "All " + topleveltitle;
+                        summaryRoot.children = tree;
 
-                    that.reportdef.levels.unshift(topLevel);  //put the level back in so the column offsets are correct
-                    $.each(that.reportdef.sums, function (index, sum) {
-                        $.each(summaryRoot.children, function (index, child) {
-                            if (!summaryRoot[sum]) {
-                                summaryRoot[sum] = 0;
-                            }
-                            summaryRoot[sum] = Number(summaryRoot[sum]) + Number(child[sum]);
+                        that.reportdef.levels.unshift(topLevel);  //put the level back in so the column offsets are correct
+                        $.each(that.reportdef.sums, function (index, sum) {
+                            $.each(summaryRoot.children, function (index, child) {
+                                if (!summaryRoot[sum]) {
+                                    summaryRoot[sum] = 0;
+                                }
+                                summaryRoot[sum] = Number(summaryRoot[sum]) + Number(child[sum]);
+                            });
                         });
-                    });
-
-                    that.buildTable([summaryRoot], summaryGrid, that.reportdef);  //add the data to the table
+                        that.buildTable([summaryRoot], summaryGrid, that.reportdef);  //add the data to the table
+                    }
 
                     var columnCount = that.reportdef.headers.length;
                     var table = '<p class=\"reportheader\">ADOT&PF ' + report.title + ' ' + that.selectedOrder();//' By ' + that.reportdef.headers[0] + ', Then By ' + that.reportdef.headers[1];

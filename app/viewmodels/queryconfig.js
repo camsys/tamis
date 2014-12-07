@@ -1,18 +1,21 @@
 define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jquery-ui',
-        '../config/config', '../config/appstate', 'plugins/router', '../definitions/tabledefs', './geoselector', './assetselector', './routeselector',  '../services/dataservice'],
+        '../config/config', '../config/appstate', 'plugins/router', '../definitions/tabledefs',
+        './geoselector', './assetselector', './routeselector', './slopeselector',  '../services/dataservice'],
     function (http, app, ko, jstree, bootstrap, jqueryui,
               config, appstate, router, tabledefs, geoselector,
-              assetselector, routeselector, dataservice) {
+              assetselector, routeselector, slopeselector, dataservice) {
 
         return {
             geoselector: geoselector,
             assetselector: assetselector,
             routeselector: routeselector,
+            slopeselector: slopeselector,
             displayName: 'Query Configuration',
             queries: [
-                {name: "Assets", value: "Assets"},
-                {name: "Asset Conditions", value: "Asset Conditions"},
-                {name: "Conditions for Specified Section of Roadway", value: "Conditions for Specified Section of Roadway"},
+                {name: "Assets", value: "Assets", id: 1},
+                {name: "Asset Conditions", value: "Asset Conditions", id: 2},
+                {name: "Conditions for Specified Section of Roadway", value: "Conditions for Specified Section of Roadway", id: 3},
+                {name: "Unstable Slopes", value: "Unstable Slopes", id: 5},
             ],
             selectedQuery: ko.observable(),
             queryComplete: false,
@@ -25,6 +28,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 this.assetselector.useAssetFilter(null);
                 this.assetselector.assetFilters([]);
                 this.routeselector.resetObservables();
+                this.slopeselector.resetObservables();
             },
 
 
@@ -72,6 +76,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     that.assetselector.assetFilters([]);
                     that.assetselector.buildAssetTree(newValue);
                     that.routeselector.resetObservables();
+                    that.slopeselector.resetObservables();
                 });
 
                 this.useAssetFilter.subscribe(function (newValue) {
@@ -119,12 +124,17 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
 
                 for(var i = 0; i < this.queries.length; i++){
                     if(this.queries[i].name == this.selectedQuery()){
-                        query.Query.Selection = i + 1;
+                        query.Query.Selection = this.queries[i].id;
                     }
                 }
 
-                var assetParams = this.assetselector.getQueryParams();
-                query.Query.DisplayParameters = query.Query.DisplayParameters.concat(assetParams);
+                if(this.selectedQuery() == 'Unstable Slopes'){
+                    var assetParams = this.slopeselector.getQueryParams();
+                    query.Query.DisplayParameters = query.Query.DisplayParameters.concat(assetParams);
+                }else{
+                    var assetParams = this.assetselector.getQueryParams();
+                    query.Query.DisplayParameters = query.Query.DisplayParameters.concat(assetParams);
+                }
 
                 if(this.routeselector.selectedCds()){
                     var cds = this.routeselector.selectedCds();
@@ -202,13 +212,42 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 var hasResults = false;
                 $(tabledef.dataKeys).each(function () {
                     if (appstate.queryResults[this] && appstate.queryResults[this].length > 0) {
+
+                        $.each(appstate.queryResults[this], function (index, feature) {
+                            if(typeof(feature['Length']) != 'undefined' && typeof(feature['NumberOfLanes']) ){
+                                feature.LaneMiles = feature['Length'] * feature['NumberOfLanes']
+                            } else {
+                                feature.LaneMiles = 0;
+                            }
+
+                            if(typeof(feature['DeckCond']) != 'undefined'){
+                                feature.condition = feature['DeckCond'];
+                            }
+
+                            if(typeof(feature['PavementCond']) != 'undefined'){
+                                feature.condition = feature['PavementCond'];
+                            }
+
+                            if(typeof(feature['BridgeName']) != 'undefined'){
+                                feature.name = feature['BridgeName'];
+                            }
+
+                            if(typeof(feature['BridgeName']) == 'undefined'){
+                                feature.name = feature['RouteName'];
+                            }
+                            feature.count = 1;
+                        });
+
                         hasResults = true;
-                        return false; //break
+                    }else{
+                        delete appstate.queryResults[this];
+                        delete appstate.layerMap[this];
                     }
                 })
                 if (hasResults == false) {
                     app.showMessage(config.noResultsMessage.message, config.noResultsMessage.title);
                 } else {
+                    console.log(JSON.stringify(appstate));
                     router.navigate('queryresults');
                 }
             },

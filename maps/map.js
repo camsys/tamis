@@ -107,7 +107,7 @@ tamis.Map = (function () {
     }
 
     function initializeRenderers() {
-        functionalClassRenderer = new esri.renderer.UniqueValueRenderer(polylineSymbol, "NHS Flag");
+        functionalClassRenderer = new esri.renderer.UniqueValueRenderer(polylineSymbol, "NHS Class");
         functionalClassRenderer.addValue("NHS", redPolylineSymbol);
         functionalClassRenderer.addValue("NOT NHS", pinkPolylineSymbol);
 

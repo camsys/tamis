@@ -85,7 +85,13 @@ define(['../config/config'],
                     } else if(key == "BridgeFeatureResults"){
                         featureUrl = config.bridgeFeaturesUrl;
                     }
-                }else{
+                }else if(queryName == 'Unstable Slopes'){
+                    if(key == "RouteFeatureResults"){
+                        featureUrl = config.roadFeaturesUrl;
+                    } else if(key == "UnstableSlopeFeatureResults"){
+                        featureUrl = config.bridgeFeaturesUrl;
+                    }
+                } else {
                     if(key == "RouteFeatureResults"){
                         featureUrl = config.roadFeaturesUrlWithCondition;
                     } else if(key == "BridgeFeatureResults"){
