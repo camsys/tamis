@@ -25,6 +25,7 @@ define(
                 headers: ['Jurisdiction', 'NHS Class', 'Condition', 'Miles', 'Lane Miles'],
                 fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'condition'],
                 levels: ['Jurisdiction', 'NHSClass', 'condition'],
+                //levels: ['NHSClass', 'Jurisdiction', 'condition'],
                 sums: ['Length', 'LaneMiles'],
                 averages: [],
                 tabs: ['Roads', 'Bridges'],
@@ -34,11 +35,11 @@ define(
                     {name: 'Lane Miles', value: "LaneMiles"},
                 ],
                 levelOrders: [
-                    {name: "By Jurisdiction, then by NHS Class", value: ['Jurisdiction', 'NHSClass']},
-                    {name: "By NHS Class, then by Jurisdiction", value: ['NHSClass', 'Jurisdiction']}
+                    {name: "By Jurisdiction, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'condition']},
+                    {name: "By NHS Class, then by Jurisdiction", value: ['NHSClass', 'Jurisdiction', 'condition']}
                 ]
             },
-            'Conditions for Specified Section of Roadway': {
+            'Conditions of Specified Road / CDS': {
                 type: 'bar',
                 bins: [{name: "Condition", value: "condition"}],
                 headers: ['Miles', 'Lane Miles'],
@@ -52,7 +53,23 @@ define(
                     {name: "Miles", value: "Length"},
                     {name: 'Lane Miles', value: "LaneMiles"},
                 ]
-            }
+            },
+            'Unstable Slopes': {
+                type: 'bar',
+                headers: ['Jurisdiction', 'Risk Score'],
+                fields: ['Jurisdiction', 'riskbucket'],
+                levels: ['Jurisdiction', 'riskbucket'],
+                sums: ['count'],
+                averages: [],
+                tabs: ['Unstable Slopes'],
+                dataKeys: ['UnstableSlopeFeatureResults'],
+                graphMetrics: [
+                    {name: "Count", value: "count"}
+                ],
+                levelOrders: [
+
+                ]
+            },
 
         };
     });

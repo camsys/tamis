@@ -14,7 +14,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
             queries: [
                 {name: "Assets", value: "Assets", id: 1},
                 {name: "Asset Conditions", value: "Asset Conditions", id: 2},
-                {name: "Conditions for Specified Section of Roadway", value: "Conditions for Specified Section of Roadway", id: 3},
+                {name: "Conditions of Specified Road / CDS", value: "Conditions of Specified Road / CDS", id: 3},
                 {name: "Unstable Slopes", value: "Unstable Slopes", id: 5},
             ],
             selectedQuery: ko.observable(),
@@ -108,11 +108,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     //user selected to filter by geo AND didn't select the 'All' option
                     geoValuesToSubmit = $.map(geoFilters, function (geoFilter, index) {
                         return {Value: geoFilter.original.selectionId, Name: geoFilter.original.text};
-                    });
-                } else if (selectedGeographicType) {
-                    //send all the child IDs of whatever Geo Type was selected;
-                    geoValuesToSubmit = $.map(this.geoselector.geoTreeNode.children, function (child, index) {
-                        return {Value: child.selectionId, Name: child.text};
                     });
                 }
 
@@ -235,6 +230,35 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                             if(typeof(feature['BridgeName']) == 'undefined'){
                                 feature.name = feature['RouteName'];
                             }
+
+                            if(typeof(feature['RiskScore']) != 'undefined'){
+                                var risk = feature['RiskScore'];
+                                if(risk < 81){
+                                    risk = "0-80";
+                                }else if(risk < 161){
+                                    risk = "81-160";
+                                }else if(risk < 241){
+                                    risk = "161-240";
+                                }else if(risk < 3211){
+                                    risk = "241-320";
+                                }else if(risk < 401){
+                                    risk = "321-400";
+                                }
+                                feature.riskbucket = risk;
+                            }
+
+                            if(typeof(feature['TotalScore']) != 'undefined'){
+                                var risk = feature['TotalScore'];
+                                if(risk < 251){
+                                    risk = "0-250";
+                                }else if(risk < 501){
+                                    risk = "251-500";
+                                }else {
+                                    risk = "500+";
+                                }
+                                feature.totalscorebucket = risk;
+                            }
+
                             feature.count = 1;
                         });
 

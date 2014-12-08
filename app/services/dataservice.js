@@ -89,7 +89,7 @@ define(['../config/config'],
                     if(key == "RouteFeatureResults"){
                         featureUrl = config.roadFeaturesUrl;
                     } else if(key == "UnstableSlopeFeatureResults"){
-                        featureUrl = config.bridgeFeaturesUrl;
+                        featureUrl = config.slopesQueryUrl;
                     }
                 } else {
                     if(key == "RouteFeatureResults"){

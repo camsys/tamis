@@ -62,15 +62,6 @@ define(['plugins/http', 'durandal/app', 'knockout'],
 
 
             buildTree: function(featureData, reportdef){
-
-                $.each(featureData, function (index, feature) {
-                    if (feature['Length'] && feature['NumberOfLanes']) {
-                        feature.LaneMiles = feature['Length'] * feature['NumberOfLanes']
-                    } else {
-                        feature.LaneMiles = 0;
-                    }
-                });
-
                 //get distinct values for each level
                 var levelKeys = {};
                 for (var i = 0; i < featureData.length; i++) {

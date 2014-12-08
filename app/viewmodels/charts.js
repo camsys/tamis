@@ -11,23 +11,39 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             levelOrders: ko.observableArray([]),
             selectedOrder: ko.observable(),
 
-           activate: function () {
+            /*activate: function () {
+                var that = this;
+                return $.get("assets/json/appstate_q5.json",
+                    function (queryData) {
+                        var fields = Object.keys(queryData);
+                        $.each(fields, function (index, field) {
+                            appstate[field] = queryData[field]
+                        });
+
+                        that.realactivate();
+                    }
+                );
+            },
+
+            real*/
+            activate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 if (data && queryName) {
                     this.chartsRawData = data;
                     this.reportdef = $.extend({}, reportdefs[queryName]); //make a local copy of the report def since we'll be modifying it
                     var graphMetrics = this.reportdef.graphMetrics;
-                    if(this.reportdef.bins && appstate.queryName != "Conditions for Specified Section of Roadway" && graphMetrics.length < 4){
+                    if(this.reportdef.bins && appstate.queryName != "Conditions of Specified Road / CDS" && graphMetrics.length < 4){
+                        var limit  = graphMetrics.length;
                         for(var i = 0; i < this.reportdef.bins.length; i++){
-                            var limit  = graphMetrics.length;
                             for(var j = 0; j < limit; j++){
                                 graphMetrics.push({name: graphMetrics[j].name + " by " + this.reportdef.bins[i].name, value: this.reportdef.bins[i].value + '|' + graphMetrics[j].value})
                             }
                         }
+                        graphMetrics = graphMetrics.slice(limit, graphMetrics.length);
                     }
                     this.graphMetrics(graphMetrics);
-                    this.selectedMetric(this.reportdef.graphMetrics[0].value); //set default
+                    this.selectedMetric(graphMetrics[0].value); //set default
                     if(this.reportdef.levelOrders && this.reportdef.levelOrders.length > 0){
                         this.selectedOrder(this.reportdef.levelOrders[0].name); //set default
                         this.levelOrders(this.reportdef.levelOrders);
@@ -71,7 +87,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                 var charts = this.charts();
                 var metricValue = this.selectedMetric();
 
-                if(appstate.queryName == "Conditions for Specified Section of Roadway"){
+                if(appstate.queryName == "Conditions of Specified Road / CDS"){
                     metricValue = "condition|" + metricValue;
                 }
 
@@ -149,11 +165,38 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             + ' By ' + topleveltitle
                             + ' For ' + chartElement.text;
 
-                        if(appstate.queryName == "Conditions for Specified Section of Roadway"){
+                        if(appstate.queryName == "Conditions of Specified Road / CDS"){
                             if(metric == 'LaneMiles'){
                                 that.chartTitle = 'Lane Miles by Condition For ' + chartElement.text;
                             }else{
                                 that.chartTitle = 'Miles by Condition For ' + chartElement.text;
+                            }
+                        }
+
+                        if(appstate.queryName == "Asset Conditions"){
+                            if(metric == 'LaneMiles'){
+                                that.chartTitle = 'Lane Miles by Pavement Condition For ' + chartElement.text;
+                            }else{
+                                that.chartTitle = 'Miles by Pavement Condition For ' + chartElement.text;
+                            }
+
+                            var conditions = ["Poor", "Fair", "Good", "NA"];
+                            var colors = ["red", "yellow", "green", "grey"];
+
+                            var sorter = function compare(a,b) {
+                                a = conditions.indexOf(a.name);
+                                b = conditions.indexOf(b.name);
+                                if (a < b)
+                                    return -1;
+                                if (a > b)
+                                    return 1;
+                                return 0;
+                            }
+
+                            seriesArray.sort(sorter);
+
+                            for(var i = 0; i < seriesArray.length; i++){
+                                seriesArray[i].color = colors[conditions.indexOf(seriesArray[i].name)];
                             }
 
                         }
@@ -192,7 +235,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             },
                             series: seriesArray,
                         };
-                        if(seriesArray.length > 1 || appstate.queryName == "Conditions for Specified Section of Roadway"){
+                        if(seriesArray.length > 1 || appstate.queryName == "Conditions of Specified Road / CDS"){
                             chartConfig.legend = {
                                 layout: 'vertical',
                                     align: 'right',
@@ -314,7 +357,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                 var metricValue = this.selectedMetric();
                 var metricName;
                 $.each(this.graphMetrics(), function (index, metric) {
-                    if(metric.value = metricValue){
+                    if(metric.value == metricValue){
                         metricName = metric.name;
                         return false;
                     }

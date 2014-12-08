@@ -36,6 +36,7 @@ tamis.Map = (function () {
     var pavementConditionRenderer;
     var deckConditionRenderer;
     var bridgeStatusRenderer;
+    var unstableSlopesRenderer;
 
     var pointGraphic;
     var legendDijit;
@@ -122,15 +123,36 @@ tamis.Map = (function () {
         bridgeStatusRenderer.addValue("Structurally Deficient", yellow1PolylineSymbol);
         bridgeStatusRenderer.addValue("Functionally Obsolete", redPolylineSymbol);
 
+        var greenSquareSymbol = new esri.symbol.SimpleMarkerSymbol();
+        greenSquareSymbol.style = esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE;
+        greenSquareSymbol.setSize(8);
+        greenSquareSymbol.setColor(new dojo.Color([84, 255, 159]));
+
+        var yellowSquareSymbol = new esri.symbol.SimpleMarkerSymbol();
+        yellowSquareSymbol.style = esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE;
+        yellowSquareSymbol.setSize(8);
+        yellowSquareSymbol.setColor(new dojo.Color([255,255,0,0.5]));
+
+        var redSquareSymbol = new esri.symbol.SimpleMarkerSymbol();
+        redSquareSymbol.style = esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE;
+        redSquareSymbol.setSize(8);
+        redSquareSymbol.setColor(new dojo.Color([255, 0, 0]));
+
+         unstableSlopesRenderer = new esri.renderer.UniqueValueRenderer(null, "totalscorebucket");
+         unstableSlopesRenderer.addValue("0-250", greenSquareSymbol);
+         unstableSlopesRenderer.addValue("251-500", yellowSquareSymbol);
+         unstableSlopesRenderer.addValue("500+", redSquareSymbol);
+
+
     }
 
     function initializeLayers(queryName) {
         var bridgeRenderer;
         var routeRenderer;
-        if(queryName == 'Assets'){
+        if(queryName == 'Assets' || queryName == 'Unstable Slopes'){
             bridgeRenderer = functionalClassRenderer;
             routeRenderer = functionalClassRenderer;
-        }else{
+        } else {
             bridgeRenderer =  bridgeStatusRenderer;
             routeRenderer = pavementConditionRenderer;
         }
@@ -138,17 +160,23 @@ tamis.Map = (function () {
 
         var routeResultsLayer = initializeFeatureCollectionLayer(routeResultsLayerName, routeRenderer.toJson(), GEOMETRY_TYPE_POLYLINE);
 
-        var unstableSlopeResultsLayer = initializeFeatureCollectionLayer(unstableSlopeResultsLayerName, routeRenderer.toJson(),
+        var unstableSlopeResultsLayer = initializeFeatureCollectionLayer(unstableSlopeResultsLayerName, unstableSlopesRenderer.toJson(),
             GEOMETRY_TYPE_POINT);
 
-        // TODO: For query 5, use {layer: unstableSlopeResultsLayer, title: "Unstable Slopes"}
-        // TODO: buildLayerList([ unstableSlopeResultsLayer, routeResultsLayer ]);
-        // Not sure which property sets the layer title in the legend, so using this.
-        legendDijit.refresh([
-            {layer: bridgeResultsLayer, title: "Bridges"},
-            {layer: routeResultsLayer, title: "Roads"}
-        ]);
-        buildLayerList([ bridgeResultsLayer, routeResultsLayer ]);
+        if(queryName == 'Unstable Slopes'){
+            legendDijit.refresh([
+                {layer: unstableSlopeResultsLayer, title: "Unstable Slopes by Total Score"},
+                {layer: routeResultsLayer, title: "Roads by NHS Class"}
+            ]);
+            buildLayerList([ unstableSlopeResultsLayer, routeResultsLayer ]);
+        }else{
+            legendDijit.refresh([
+                {layer: bridgeResultsLayer, title: "Bridges"},
+                {layer: routeResultsLayer, title: "Roads"}
+            ]);
+            buildLayerList([ bridgeResultsLayer, routeResultsLayer ]);
+        }
+
     }
 
     function initializeFeatureCollectionLayer(layerName, layerRenderer, geometryType) {
@@ -216,9 +244,9 @@ tamis.Map = (function () {
             var label;
             if(layer.id == bridgeResultsLayerName){
                 label = 'Bridges';
-            } else if (layer.id = routeResultsLayerName){
+            } else if (layer.id == routeResultsLayerName){
                 label = 'Roads';
-            } else if (layer.id = unstableSlopeResultsLayerName){
+            } else if (layer.id == unstableSlopeResultsLayerName){
                 label = 'Unstable Slopes';
             }
             visible.push(layer.id);
@@ -340,11 +368,17 @@ tamis.Map = (function () {
             $(featureLayer.graphics).each(function (index, feature) {
                 if(feature.attributes.id == rowData.id){
 
-                    var point = feature.geometry.getExtent().getCenter();
-                    map.centerAt(point);
-                    map.infoWindow.setFeatures([feature]);
-                    map.infoWindow.show(feature.geometry.getExtent().getCenter());
-
+                    if(feature.geometry.type == 'polyline'){
+                        var point = feature.geometry.getExtent().getCenter();
+                        map.centerAt(point);
+                        map.infoWindow.setFeatures([feature]);
+                        map.infoWindow.show(feature.geometry.getExtent().getCenter());
+                    }else{
+                        var point = feature.geometry;
+                        map.centerAt(point);
+                        map.infoWindow.setFeatures([feature]);
+                        map.infoWindow.show(point);
+                    }
                     return false;
                 }
             });

@@ -66,7 +66,7 @@ define(
                 }
             },
 
-            'Conditions for Specified Section of Roadway': {
+            'Conditions of Specified Road / CDS': {
                 tabs: ['Roads', 'Bridges'],
                 dataKeys: ['RouteFeatureResults', 'BridgeFeatureResults'],
                 columnDefs: {

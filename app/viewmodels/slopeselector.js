@@ -83,12 +83,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     slopeParameter.FilterParameters.push({"Type":"AADT","Filters":[{"NumericValue":aadtFilter,"ComparisonOperator":">="}]});
                 }
 
-                if(scoreFilter && scoreFilter  == "true"){
+                if(scoreFilter){
                     slopeParameter.FilterParameters.push({"Type":"TotalScore","Filters":[{"NumericValue":scoreFilter,"ComparisonOperator":">="}]});
                 }
 
-                if(mitigationNotPresentFilter){
-                    slopeParameter.FilterParameters.push({"Type":"MitigationPresent","Description":"","Filters":[{"Value":"0"}]});
+                slopeParameter.FilterParameters.push({"Type":"MitigationPresent","Description":"","Filters":[{"Value":"0"}]});
+                if(!mitigationNotPresentFilter || mitigationNotPresentFilter == "false"){
+                    slopeParameter.FilterParameters[slopeParameter.FilterParameters.length - 1].Filters.push({"Value":"1"});
                 }
 
                 var displayParameters = [];

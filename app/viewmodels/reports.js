@@ -72,7 +72,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                     var summaryGrid = {
                         cells: [],
                         add: function (cell) {
-                            console.log(JSON.stringify(cell))
                             this.cells.push(cell);
                         }
                     }
@@ -105,7 +104,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                     }
 
                     var columnCount = that.reportdef.headers.length;
-                    var table = '<p class=\"reportheader\">ADOT&PF ' + report.title + ' ' + that.selectedOrder();//' By ' + that.reportdef.headers[0] + ', Then By ' + that.reportdef.headers[1];
+                    var orderTitle = that.selectedOrder();
+                    if(appstate.queryName == 'Asset Conditions'){
+                        orderTitle = orderTitle + ', then by Condition'
+                    }
+                    var table = '<p class=\"reportheader\">ADOT&PF ' + report.title + ' ' + orderTitle;
                     table = table.concat('<table class="gridtable"><tbody><tr>');
                     var rowcount = 0;
                     $.each(summaryGrid.cells, function (index, cell) {
@@ -135,9 +138,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
             buildTable: function (tree, table, reportdef) {
                 var that = this;
                 $.each(tree, function (index, node) {
-                    if (!node.text) {
-                        console.log(node);
-                    }
                     var levelIndex = reportdef.levels.indexOf(node.level);
 
                     //pad the left level columns with empty cells

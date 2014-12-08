@@ -17,7 +17,7 @@ define(
             bridgeFeaturesUrlWithCondition: "http://swdev14.camsys.com/arcgis2/rest/services/AKDOT/TAMIS/MapServer/4/query",
             roadFeaturesUrlWithCondition: "http://swdev14.camsys.com/arcgis2/rest/services/AKDOT/TAMIS/MapServer/3/query",
 
-            slopesQueryUrl: 'http://swdev14.camsys.com/arcgis2/rest/services/AKDOT/TAMIS/MapServer/5/query',
+            slopesQueryUrl: 'http://swdev14.camsys.com/arcgis2/rest/services/AKDOT/TAMIS/MapServer/7/query',
 
             noResultsMessage:{title: "Whoops!", message: "No data is available for display yet, run a query first."}
 
