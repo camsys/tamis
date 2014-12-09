@@ -118,7 +118,7 @@ tamis.Map = (function () {
         pavementConditionRenderer.addValue("Poor", redPolylineSymbol);
         pavementConditionRenderer.addValue("NA", purple1PolylineSymbol);
 
-        bridgeStatusRenderer = new esri.renderer.UniqueValueRenderer(polylineSymbol, "Bridge Status");
+        bridgeStatusRenderer = new esri.renderer.UniqueValueRenderer(polylineSymbol, "Status");
         bridgeStatusRenderer.addValue("Not Deficient", seagreen1PolylineSymbol);
         bridgeStatusRenderer.addValue("Structurally Deficient", yellow1PolylineSymbol);
         bridgeStatusRenderer.addValue("Functionally Obsolete", redPolylineSymbol);
