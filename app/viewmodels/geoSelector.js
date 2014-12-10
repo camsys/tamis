@@ -25,50 +25,41 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 this.assetTree = {};
 
                 var that = this;
+                that.areaTree['Assembly Districts'] = appstate.filterValues.districts;
+                that.areaTree['Regions'] = appstate.filterValues.regions;
 
-                //returning a promise, rendering pauses until promise completes
-                return $.when(
-                    dataservice.getDistricts(function (response) {
-                        that.areaTree['Assembly Districts'] = response.AreaList;
-                    }),
-                    dataservice.getRegions(function (response) {
-                        that.areaTree['Regions'] = response.AreaList;
-                    })
-                ).then(function () {
-                        var geoTreeNodes = [];
+                var geoTreeNodes = [];
+                var sorter = function compare(a, b) {
+                    if (a.text < b.text)
+                        return -1;
+                    if (a.text > b.text)
+                        return 1;
+                    return 0;
+                }
 
-                        var sorter = function compare(a, b) {
-                            if (a.text < b.text)
-                                return -1;
-                            if (a.text > b.text)
-                                return 1;
-                            return 0;
-                        }
-
-                        $(Object.getOwnPropertyNames(that.areaTree)).each(function () {
-                            var geoTypeName = this;
-                            var geoTreeNode = {};
-                            geoTreeNode.children = [];
-                            geoTreeNode.text = 'All ' + geoTypeName;
-                            geoTreeNode.a_attr = {'selectionId': geoTypeName},
-                                geoTreeNode.state = {'opened': true, 'selected': false};
-                            geoTreeNode.selectionId = geoTypeName;
-                            that.geoTreeNode = geoTreeNode;
-                            $(that.areaTree[this]).each(function (index, childElement) {
-                                var child = {};
-                                child.text = childElement.Name;
-                                geoTreeNode.selectionId = childElement.Value,
-                                    child.a_attr = {'selectionId': childElement.Value},
-                                    child.state = {'opened': false, 'selected': false};
-                                child.parentId = that.geoTreeNode.text;
-                                child.selectionId = childElement.Value;
-                                that.geoTreeNode.children.push(child);
-                            });
-                            geoTreeNode.children = geoTreeNode.children.sort(sorter);
-                            geoTreeNodes.push(geoTreeNode);
-                        });
-                        that.geoTreeNodes = geoTreeNodes;
+                $(Object.getOwnPropertyNames(that.areaTree)).each(function () {
+                    var geoTypeName = this;
+                    var geoTreeNode = {};
+                    geoTreeNode.children = [];
+                    geoTreeNode.text = 'All ' + geoTypeName;
+                    geoTreeNode.a_attr = {'selectionId': geoTypeName},
+                        geoTreeNode.state = {'opened': true, 'selected': false};
+                    geoTreeNode.selectionId = geoTypeName;
+                    that.geoTreeNode = geoTreeNode;
+                    $(that.areaTree[this]).each(function (index, childElement) {
+                        var child = {};
+                        child.text = childElement.Name;
+                        geoTreeNode.selectionId = childElement.Value,
+                            child.a_attr = {'selectionId': childElement.Value},
+                            child.state = {'opened': false, 'selected': false};
+                        child.parentId = that.geoTreeNode.text;
+                        child.selectionId = childElement.Value;
+                        that.geoTreeNode.children.push(child);
                     });
+                    geoTreeNode.children = geoTreeNode.children.sort(sorter);
+                    geoTreeNodes.push(geoTreeNode);
+                });
+                that.geoTreeNodes = geoTreeNodes;
             },
 
             bindingComplete: function () {
@@ -133,6 +124,33 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 } else {
                     this.geoFilters([]);
                 }
+            },
+
+            getQueryParams: function(){
+
+                var selectedGeographicType = this.selectedGeographicType();
+                var useGeographicFilter = this.useGeographicFilter();
+                var geoFilters = this.geoFilters();
+
+                var geoParameter = {};
+                geoParameter.Name = 'Jurisdictions';
+                geoParameter.Selected = true;
+                geoParameter.AreaParameter = {};
+                geoParameter.AreaParameter.Type = selectedGeographicType;
+                geoParameter.FilterParameters = [];
+
+                //only filter by geography if the user selected to use a filter AND the geo selection is not the 'All' option
+                var geoValuesToSubmit = [];
+                if (useGeographicFilter == "true" && (geoFilters.length > 1 || geoFilters[0].original.parentId)) {
+                    //user selected to filter by geo AND didn't select the 'All' option
+                    geoValuesToSubmit = $.map(geoFilters, function (geoFilter, index) {
+                        return {Value: geoFilter.original.selectionId, Name: geoFilter.original.text};
+                    });
+                }
+
+                geoParameter.AreaParameter.Areas = geoValuesToSubmit;
+
+                return [geoParameter]
             }
         };
     });

@@ -1,6 +1,90 @@
 define(['../config/config'],
     function (config) {
         return {
+
+            getReferenceData : function(callback){
+
+                this.filterValues = {};
+
+                this.sorter = function compare(a,b) {
+                    var aName = a.Name.toLowerCase();
+                    var bName = b.Name.toLowerCase();
+                    if (aName < bName)
+                        return -1;
+                    if (aName > bName)
+                        return 1;
+                    return 0;
+                }
+
+                var that = this;
+
+                return $.when(
+                    that.getRoutes(function (response) {
+
+                        function hasName(element) {
+                            return element.Name.replace(/ /g,'').length > 0;
+                        }
+                        response.RouteList = response.RouteList.filter(hasName);
+
+                        var routeMap = {};
+                        for(var i = 0; i < response.RouteList.length; i++){
+                            var routeName = response.RouteList[i].Name.replace(/ /g,'').toLowerCase();
+                            if(routeMap[routeName]){
+                                routeMap[routeName].Id = routeMap[routeName].Id + ',' + response.RouteList[i].Id;
+                            }else{
+                                routeMap[routeName] = response.RouteList[i];
+                            }
+                        }
+
+                        var routeList = [];
+
+                        $(Object.keys(routeMap)).each(function (index, key) {
+                            routeList.push(routeMap[key]);
+                        });
+                        routeList.sort(that.sorter);
+                        that.filterValues.routes = routeList
+                    }),
+                    that.getDistricts(function (response) {
+                        response.AreaList.sort(that.sorter);
+                        that.filterValues.districts = response.AreaList;
+                    }),
+                    that.getRegions(function (response) {
+                        response.AreaList.sort(that.sorter);
+                        that.filterValues.regions = response.AreaList;
+                    }),
+                    that.getAssets(function (response) {
+                        response.FilterList.sort(that.sorter);
+                        $(response.FilterList).each(function (index, filterValue) {
+                            filterValue.type = 'NHSClass'
+                        });
+                        that.filterValues.NHSClass = response.FilterList;
+                    }),
+                    that.getPavement(function (response) {
+                        response.FilterList.sort(that.sorter);
+                        $(response.FilterList).each(function (index, filterValue) {
+                            filterValue.type = 'PavementCondition'
+                        });
+                        that.filterValues.PavementCondition = response.FilterList;
+                    }),
+                    that.getDeck(function (response) {
+                        response.FilterList.sort(that.sorter);
+                        $(response.FilterList).each(function (index, filterValue) {
+                            filterValue.type = 'DeckCondition'
+                        });
+                        that.filterValues.DeckCondition = response.FilterList;
+                    }),
+                    that.getBridgeStatus(function (response) {
+                        response.FilterList.sort(that.sorter);
+                        $(response.FilterList).each(function (index, filterValue) {
+                            filterValue.type = 'BridgeStatus'
+                        });
+                        that.filterValues.BridgeStatus = response.FilterList;
+                    })
+                ).then(
+                    callback(that.filterValues)
+                );
+            },
+
             getDistricts : function(callback){
                 return $.ajax({
                     url: config.districtQueryUrl,

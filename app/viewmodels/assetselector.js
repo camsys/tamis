@@ -1,5 +1,5 @@
-define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jquery-ui', '../config/config', '../services/dataservice'],
-    function (http, app, ko, jstree, bootstrap, jqueryui, config, dataservice) {
+define(['plugins/http', 'durandal/app', 'knockout', 'jstree', '../config/appstate'],
+    function (http, app, ko, jstree, appstate) {
 
         return {
             useAssetFilter: ko.observable(),
@@ -20,48 +20,20 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     return;
                 }
 
-                this.areaTree = {};
                 this.assetTree = {};
 
                 var that = this;
-
-                //returning a promise, rendering pauses until promise completes
-                return $.when(
-                    dataservice.getAssets(function (response) {
-                        $(response.FilterList).each(function (index, filterValue) {
-                            filterValue.type = 'NHSClass'
-                        });
-                        that.filterValues.nhsclass = response.FilterList;
-                    }),
-                    dataservice.getPavement(function (response) {
-                        $(response.FilterList).each(function (index, filterValue) {
-                            filterValue.type = 'PavementCondition'
-                        });
-                        that.filterValues.pavement = response.FilterList;
-                    }),
-                    dataservice.getDeck(function (response) {
-                        $(response.FilterList).each(function (index, filterValue) {
-                            filterValue.type = 'DeckCondition'
-                        });
-                        that.filterValues.deck = response.FilterList;
-
-                    }),
-                    dataservice.getBridgeStatus(function (response) {
-                        $(response.FilterList).each(function (index, filterValue) {
-                            filterValue.type = 'BridgeStatus'
-                        });
-                        that.filterValues.bridge = response.FilterList;
-                    })
-                ).then(function () {
-
-                    });
+                that.filterValues.NHSClass = appstate.filterValues.NHSClass;
+                that.filterValues.PavementCondition = appstate.filterValues.PavementCondition;
+                that.filterValues.DeckCondition = appstate.filterValues.DeckCondition;
+                that.filterValues.bridge = appstate.filterValues.bridge;
             },
 
             buildAssetTree: function (selectedQuery){
                 var that = this;
                 that.bridgeSelections = [];
                 that.roadSelections = [];
-                $(that.filterValues.nhsclass).each(function (index, filterValue) {
+                $(that.filterValues.NHSClass).each(function (index, filterValue) {
                     if(filterValue.Name){
                         var node = {text: 'Class: ' + filterValue.Name, value: 'nhsclass_' + filterValue.Value};
                         that.bridgeSelections.push(node);
@@ -71,7 +43,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 });
 
                 if(selectedQuery == "Asset Conditions"){
-                    $(that.filterValues.pavement).each(function (index, filterValue) {
+                    $(that.filterValues.PavementCondition).each(function (index, filterValue) {
                         if(filterValue.Name){
                             var node = {text: 'Pavement Condition: ' + filterValue.Name, value: 'pavement_' + filterValue.Value};
                             that.roadSelections.push(node);
@@ -79,7 +51,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                         }
                     });
 
-                    $(that.filterValues.deck).each(function (index, filterValue) {
+                    $(that.filterValues.DeckCondition).each(function (index, filterValue) {
                         if(filterValue.Name){
                             var node = {text: 'Deck Condition: ' + filterValue.Name, value: 'deck_' + filterValue.Value}
                             that.bridgeSelections.push(node);

@@ -1,9 +1,9 @@
 define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jquery-ui',
         '../config/config', '../config/appstate', 'plugins/router', '../definitions/tabledefs',
-        './geoselector', './assetselector', './routeselector', './slopeselector',  '../services/dataservice'],
+        './geoselector', './assetselector', './routeselector', './slopeselector',  '../services/dataservice', '../config/helper'],
     function (http, app, ko, jstree, bootstrap, jqueryui,
               config, appstate, router, tabledefs, geoselector,
-              assetselector, routeselector, slopeselector, dataservice) {
+              assetselector, routeselector, slopeselector, dataservice, helper) {
 
         return {
             geoselector: geoselector,
@@ -33,10 +33,14 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
 
 
             activate: function () {
-
                 if (this.assetselector.assetTreeNodes().length > 0) {
                     this.resetObservables();
-                    return;
+                }
+
+                if(typeof(appstate.filterValues) == 'undefined'){
+                    return $.when(dataservice.getReferenceData(function (response) {
+                        appstate.filterValues = response;
+                    }));
                 }
 
             },
@@ -91,37 +95,17 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
 
                 var that = this;
 
-                var selectedGeographicType = this.geoselector.selectedGeographicType();
-                var useGeographicFilter = this.geoselector.useGeographicFilter();
-                var geoFilters = this.geoselector.geoFilters();
-
-                var geoParameter = {};
-                geoParameter.Name = 'Jurisdictions';
-                geoParameter.Selected = true;
-                geoParameter.AreaParameter = {};
-                geoParameter.AreaParameter.Type = selectedGeographicType;
-                geoParameter.FilterParameters = [];
-
-                //only filter by geography if the user selected to use a filter AND the geo selection is not the 'All' option
-                var geoValuesToSubmit = [];
-                if (useGeographicFilter == "true" && (geoFilters.length > 1 || geoFilters[0].original.parentId)) {
-                    //user selected to filter by geo AND didn't select the 'All' option
-                    geoValuesToSubmit = $.map(geoFilters, function (geoFilter, index) {
-                        return {Value: geoFilter.original.selectionId, Name: geoFilter.original.text};
-                    });
-                }
-
-                geoParameter.AreaParameter.Areas = geoValuesToSubmit;
-
                 var query = $.parseJSON('{"Query":{"DisplayParameters":[],"Selection":1}}');
                 query.Query.DisplayParameters = [];
-                query.Query.DisplayParameters.push(geoParameter);
 
                 for(var i = 0; i < this.queries.length; i++){
                     if(this.queries[i].name == this.selectedQuery()){
                         query.Query.Selection = this.queries[i].id;
                     }
                 }
+
+                var geoParams = this.geoselector.getQueryParams();
+                query.Query.DisplayParameters = query.Query.DisplayParameters.concat(geoParams);
 
                 if(this.selectedQuery() == 'Unstable Slopes'){
                     var assetParams = this.slopeselector.getQueryParams();
@@ -209,57 +193,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     if (appstate.queryResults[this] && appstate.queryResults[this].length > 0) {
 
                         $.each(appstate.queryResults[this], function (index, feature) {
-                            if(typeof(feature['Length']) != 'undefined' && typeof(feature['NumberOfLanes']) ){
-                                feature.LaneMiles = feature['Length'] * feature['NumberOfLanes']
-                            } else {
-                                feature.LaneMiles = 0;
-                            }
-
-                            if(typeof(feature['DeckCond']) != 'undefined'){
-                                feature.condition = feature['DeckCond'];
-                            }
-
-                            if(typeof(feature['PavementCond']) != 'undefined'){
-                                feature.condition = feature['PavementCond'];
-                            }
-
-                            if(typeof(feature['BridgeName']) != 'undefined'){
-                                feature.name = feature['BridgeName'];
-                            }
-
-                            if(typeof(feature['BridgeName']) == 'undefined'){
-                                feature.name = feature['RouteName'];
-                            }
-
-                            if(typeof(feature['RiskScore']) != 'undefined'){
-                                var risk = feature['RiskScore'];
-                                if(risk < 81){
-                                    risk = "0-80";
-                                }else if(risk < 161){
-                                    risk = "81-160";
-                                }else if(risk < 241){
-                                    risk = "161-240";
-                                }else if(risk < 3211){
-                                    risk = "241-320";
-                                }else if(risk < 401){
-                                    risk = "321-400";
-                                }
-                                feature.riskbucket = risk;
-                            }
-
-                            if(typeof(feature['TotalScore']) != 'undefined'){
-                                var risk = feature['TotalScore'];
-                                if(risk < 251){
-                                    risk = "0-250";
-                                }else if(risk < 501){
-                                    risk = "251-500";
-                                }else {
-                                    risk = "500+";
-                                }
-                                feature.totalscorebucket = risk;
-                            }
-
-                            feature.count = 1;
+                            helper.processFeature(feature);
                         });
 
                         hasResults = true;
