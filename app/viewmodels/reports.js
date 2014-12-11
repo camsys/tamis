@@ -2,39 +2,50 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
     function (http, app, ko, jstree, bootstrap, datatables, jqueryui, reportsbase, reportdefs, appstate, router, config, querydescription) {
 
         return {
-            querydescription: querydescription,
             pivotTables: ko.observableArray([]),
-            levelOrders: ko.observableArray([]),
-            selectedOrder: ko.observable(),
-            reportdef:null,
-            configuredReports: [],
 
             activate: function () {
+                var that = this;
+                return $.get("assets/json/appstate_q1.json",
+                    function (queryData) {
+                        var fields = Object.keys(queryData);
+                        $.each(fields, function (index, field) {
+                            appstate[field] = queryData[field]
+                        });
+
+                        that.realactivate();
+                    }
+                );
+            },
+
+            realactivate: function () {
                 this.resetObservables();
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
-
                 if (data && queryName) {
                     this.reportdef = $.extend({}, reportdefs[queryName]); //make a local copy of the report def since we'll be modifying it
-                    if(this.reportdef.levelOrders && this.reportdef.levelOrders.length > 0){
-                        this.selectedOrder(this.reportdef.levelOrders[0].name); //set default
-                        this.levelOrders(this.reportdef.levelOrders);
-                    }
-                    this.selectedOrder.subscribe(function (newValue) {
-                        that.refreshTables();
-                    });
+                    this.configuredReports = [];
                     var that = this;
-                    $(this.reportdef.tabs).each(function (index, tabname) {
-                        var dataKey = that.reportdef.dataKeys[index];
-                        if (data[dataKey] && data[dataKey].length > 0) {
-                            var report = {};
-                            report.title = tabname;
-                            report.data = data[dataKey];
-                            report.id = index;
-                            that.configuredReports.push(report);
+                    $(Object.keys(that.reportdef)).each(function (index, tabname) {
+                        var tabdef = that.reportdef[tabname];
+                        if (data[tabdef.dataKey] && data[tabdef.dataKey].length > 0) {
+                            var reportObj = that.generateReport(data[tabdef.dataKey], tabdef, index, tabname);
+                            var configuredReport =
+                            {
+                                html: ko.observable(reportObj.html),
+                                title: ko.observable(reportObj.title),
+                                id: reportObj.id,
+                                selectedOrder: ko.observable(reportObj.selectedOrder),
+                                levelOrders: reportObj.levelOrders,
+                                tabdef: tabdef,
+                                rows: data[tabdef.dataKey],
+                                index: index,
+                                tabname: tabname
+                            };
+                            that.configuredReports.push(configuredReport);
                         }
                     });
-                    this.selectReport();
+                    this.pivotTables(this.configuredReports);
                 } else {
                     app.showMessage(config.noResultsMessage.message, config.noResultsMessage.title).then(function (dialogResult) {
                         router.navigate('queryconfig');
@@ -43,12 +54,27 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                 }
             },
 
+            bindingComplete: function () {
+                var rootscope = this;
+                $.each(this.configuredReports, function (index, pivotTable) {
+                    var selectedOrder = pivotTable.selectedOrder;
+                    this.tabindex = index;
+                    var that = this;
+                    selectedOrder.subscribe(function (newValue) {
+                        $.each(that.levelOrders, function (index, levelOrder) {
+                            if(levelOrder.name == newValue){
+                                that.tabdef.levels = levelOrder.value;
+                                var reportObj = rootscope.generateReport(that.rows, that.tabdef, that.index, that.tabname);
+                                rootscope.pivotTables()[that.index].html(reportObj.html);
+                                rootscope.pivotTables()[that.index].title(reportObj.title);
+                            }
+                        });
+                    });
+                });
+            },
+
             resetObservables: function(){
                 this.pivotTables([]);
-                this.levelOrders([]);
-                this.selectedOrder(null);
-                this.reportdef = null,
-                this.configuredReports = [];
             },
 
             refreshTables: function(){
@@ -58,80 +84,74 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                         that.reportdef.levels = levelOrder.value;
                     }
                 });
-                this.selectReport();
             },
 
-            selectReport: function () {
+            generateReport: function (data, tabdef, id, title) {
 
-                var that = this;
-                that.pivotTablesArray = [];
-                $.each(that.configuredReports, function (index, report) {
+                var featureData = data;
 
-                    var featureData = report.data;
-
-                    var summaryGrid = {
-                        cells: [],
-                        add: function (cell) {
-                            this.cells.push(cell);
-                        }
+                var summaryGrid = {
+                    cells: [],
+                    add: function (cell) {
+                        this.cells.push(cell);
                     }
+                }
 
-                    var tree = reportsbase.buildTree(featureData, that.reportdef);
+                var tree = reportsbase.buildTree(featureData, tabdef);
 
-                    that.buildTable(tree, summaryGrid, that.reportdef);  //add the data to the table
+                this.buildTable(tree, summaryGrid, tabdef);  //add the data to the table
 
-                    if(that.reportdef.levels.length > 1) {
-                        //now add a summary section below that aggregates by the second dimension
-                        var topLevel = that.reportdef.levels.shift();
-                        tree = reportsbase.buildTree(featureData, that.reportdef);
-                        var summaryRoot = {};
-                        summaryRoot.level = topLevel;
-                        var topleveltitle = that.reportdef.headers[that.reportdef.fields.indexOf(topLevel)];
-                        topleveltitle = /s$/.test(topleveltitle) ? topleveltitle + "es" : topleveltitle + 's';
-                        summaryRoot.text = "All " + topleveltitle;
-                        summaryRoot.children = tree;
+                if(tabdef.levels.length > 1) {
+                    //now add a summary section below that aggregates by the second dimension
+                    var topLevel = tabdef.levels.shift();
+                    tree = reportsbase.buildTree(featureData, tabdef);
+                    var summaryRoot = {};
+                    summaryRoot.level = topLevel;
+                    var topleveltitle = tabdef.headers[tabdef.fields.indexOf(topLevel)];
+                    topleveltitle = /s$/.test(topleveltitle) ? topleveltitle + "es" : topleveltitle + 's';
+                    summaryRoot.text = "All " + topleveltitle;
+                    summaryRoot.children = tree;
 
-                        that.reportdef.levels.unshift(topLevel);  //put the level back in so the column offsets are correct
-                        $.each(that.reportdef.sums, function (index, sum) {
-                            $.each(summaryRoot.children, function (index, child) {
-                                if (!summaryRoot[sum]) {
-                                    summaryRoot[sum] = 0;
-                                }
-                                summaryRoot[sum] = Number(summaryRoot[sum]) + Number(child[sum]);
-                            });
+                    tabdef.levels.unshift(topLevel);  //put the level back in so the column offsets are correct
+                    $.each(tabdef.sums, function (index, sum) {
+                        $.each(summaryRoot.children, function (index, child) {
+                            if (!summaryRoot[sum]) {
+                                summaryRoot[sum] = 0;
+                            }
+                            summaryRoot[sum] = Number(summaryRoot[sum]) + Number(child[sum]);
                         });
-                        that.buildTable([summaryRoot], summaryGrid, that.reportdef);  //add the data to the table
-                    }
-
-                    var columnCount = that.reportdef.headers.length;
-                    var orderTitle = that.selectedOrder();
-                    if(appstate.queryName == 'Asset Conditions'){
-                        orderTitle = orderTitle + ', then by Condition'
-                    }
-                    var table = '<p class=\"reportheader\">ADOT&PF ' + report.title + ' ' + orderTitle;
-                    table = table.concat('<table class="gridtable"><tbody><tr>');
-                    var rowcount = 0;
-                    $.each(summaryGrid.cells, function (index, cell) {
-                        table = table.concat('<td'
-                            + (cell.cellCls ? ' class=' + cell.cellCls : '')
-                            + (cell.colspan ? ' colspan=' + cell.colspan : '') + '>'
-                            + (cell.html ? cell.html.toString() : '&nbsp;') + '</td>');
-                        rowcount = rowcount + (cell.colspan ? cell.colspan : 1);
-                        if (rowcount % columnCount == 0) {
-                            table = table.concat('</tr><tr>');
-                            rowcount = 0;
-                        }
                     });
+                    this.buildTable([summaryRoot], summaryGrid, tabdef);  //add the data to the table
+                }
 
-                    table.concat('</tr></tbody></table>');
-                    var pivotTable = {};
-                    pivotTable.html = table.toString()
-                    pivotTable.title = that.reportdef.tabs[index];
-                    pivotTable.id = "pivotTable-" + index;
-                    that.pivotTablesArray.push(pivotTable);
+                var columnCount = tabdef.headers.length;
+                var orderTitle = tabdef.levelOrders[0].name;
+                if(appstate.queryName == 'Asset Conditions'){
+                    orderTitle = orderTitle + ', then by Condition'
+                }
+                var table = '<p class=\"reportheader\">ADOT&PF ' + title + ' ' + orderTitle;
+                table = table.concat('<table class="gridtable"><tbody><tr>');
+                var rowcount = 0;
+                $.each(summaryGrid.cells, function (index, cell) {
+                    table = table.concat('<td'
+                    + (cell.cellCls ? ' class=' + cell.cellCls : '')
+                    + (cell.colspan ? ' colspan=' + cell.colspan : '') + '>'
+                    + (cell.html ? cell.html.toString() : '&nbsp;') + '</td>');
+                    rowcount = rowcount + (cell.colspan ? cell.colspan : 1);
+                    if (rowcount % columnCount == 0) {
+                        table = table.concat('</tr><tr>');
+                        rowcount = 0;
+                    }
                 });
 
-                this.pivotTables(this.pivotTablesArray);
+                table.concat('</tr></tbody></table>');
+                return {
+                    html: table.toString(),
+                    title: title,
+                    id: "pivotTable-" + id,
+                    selectedOrder: tabdef.levelOrders[0],
+                    levelOrders: tabdef.levelOrders
+                };
 
             },
 

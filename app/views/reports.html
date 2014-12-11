@@ -9,8 +9,8 @@
 
 </style>
 <div class="container">
-    <div id="reportcontainer" data-bind="visible: selectedOrder">
-        <div data-bind="compose: { model: querydescription, preserveContext: true }"></div>
+    <div id="reportcontainer" data-bind="visible: pivotTables().length > 0">
+       <!-- <div data-bind="compose: { model: querydescription, preserveContext: true }"></div>-->
         <div class="row">
                 <div class="row">
                     <ul class="nav nav-tabs">
@@ -24,9 +24,18 @@
                         <!-- ko foreach: pivotTables -->
                         <div class="tab-pane" data-bind="attr: { id: 'charttab_' + id }, css: { active: $index() == 0 }">
                             <div class="report-container" data-bind="attr: { id: id }">
+                                <div class="row form-group" data-bind="visible: levelOrders">
+                                    <label class="navbar-text" for="selectOrder">Summarize By:
+                                        <select id="selectOrder" class="form-control"
+                                                data-bind="options: levelOrders,
+                                                optionsText: 'name',
+                                                optionsValue: 'name',
+                                                value: selectedOrder">
+                                        </select>
+                                    </label>
+                                </div>
                                 <p>
-
-                                <div data-bind="html: html"></div>
+                                    <div data-bind="html: html"></div>
                                 </p>
                             </div>
                         </div>

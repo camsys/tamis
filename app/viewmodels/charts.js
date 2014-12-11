@@ -2,60 +2,50 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
     function (system, http, app, ko, bootstrap, jqueryui, reportsbase, highcharts, appstate, reportdefs, router, config, querydescription) {
 
         return{
-            querydescription: querydescription,
-            chartsRawData: null,
-            reportdef: null,
-            charts: ko.observableArray([]),
-            graphMetrics: ko.observableArray([]),
-            selectedMetric: ko.observable(),
-            levelOrders: ko.observableArray([]),
-            selectedOrder: ko.observable(),
+            chartTabs: null,
 
             /*activate: function () {
                 var that = this;
-                return $.get("assets/json/appstate_q5.json",
+                return $.get("assets/json/appstate_q2.json",
                     function (queryData) {
                         var fields = Object.keys(queryData);
                         $.each(fields, function (index, field) {
                             appstate[field] = queryData[field]
                         });
-
                         that.realactivate();
                     }
                 );
             },
 
-            real*/
-            activate: function () {
+            real*/activate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 if (data && queryName) {
                     this.chartsRawData = data;
                     this.reportdef = $.extend({}, reportdefs[queryName]); //make a local copy of the report def since we'll be modifying it
-                    var graphMetrics = this.reportdef.graphMetrics;
-                    if(this.reportdef.bins && appstate.queryName != "Conditions of Specified Road / CDS" && graphMetrics.length < 4){
-                        var limit  = graphMetrics.length;
-                        for(var i = 0; i < this.reportdef.bins.length; i++){
-                            for(var j = 0; j < limit; j++){
-                                graphMetrics.push({name: graphMetrics[j].name + " by " + this.reportdef.bins[i].name, value: this.reportdef.bins[i].value + '|' + graphMetrics[j].value})
-                            }
-                        }
-                        graphMetrics = graphMetrics.slice(limit, graphMetrics.length);
-                    }
-                    this.graphMetrics(graphMetrics);
-                    this.selectedMetric(graphMetrics[0].value); //set default
-                    if(this.reportdef.levelOrders && this.reportdef.levelOrders.length > 0){
-                        this.selectedOrder(this.reportdef.levelOrders[0].name); //set default
-                        this.levelOrders(this.reportdef.levelOrders);
-                    }
+                    this.chartTabs = [];
                     var that = this;
-                    this.selectedMetric.subscribe(function (newValue) {
-                        that.refreshCharts();
+                    $(Object.keys(that.reportdef)).each(function (index, tabname) {
+                        var tabdef = that.reportdef[tabname];
+                        var graphMetrics = tabdef.graphMetrics;
+                        if(tabdef.bins && appstate.queryName != "Conditions of Specified Road / CDS" && graphMetrics.length < 4){
+                            var limit  = graphMetrics.length;
+                            for(var i = 0; i < tabdef.bins.length; i++){
+                                for(var j = 0; j < limit; j++){
+                                    graphMetrics.push({name: graphMetrics[j].name + " by " + tabdef.bins[i].name, value: tabdef.bins[i].value + '|' + graphMetrics[j].value})
+                                }
+                            }
+                            graphMetrics = graphMetrics.slice(limit, graphMetrics.length);
+                            tabdef.graphMetrics = graphMetrics;
+                        }
+                        var featureData = appstate.queryResults[tabdef.dataKey];
+                        var chartTabSet = that.prepareChart(featureData, tabdef, index, tabname);
+                        chartTabSet.featureData = featureData;
+                        chartTabSet.selectedOrder = ko.observable(chartTabSet.tabdef.levelOrders[0].name);
+                        chartTabSet.selectedMetric = ko.observable(chartTabSet.tabdef.graphMetrics[0].name);
+                        that.chartTabs.push(chartTabSet);
                     });
-                    this.selectedOrder.subscribe(function (newValue) {
-                        that.refreshCharts();
-                    });
-                    this.charts(this.prepareCharts(data, this.reportdef));
+                    this.chartTabs = this.chartTabs;
                 } else {
                     app.showMessage(config.noResultsMessage.message, config.noResultsMessage.title).then(function (dialogResult) {
                         router.navigate('queryconfig');
@@ -65,7 +55,40 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             },
 
             //DOM is ready, populate the chart divs
-            attached: function () {
+            bindingComplete: function () {
+                var rootscope = this;
+                $.each(this.chartTabs, function (index, chart) {
+                    this.tabindex = index;
+                    var that = this;
+                    chart.selectedOrder.subscribe(function (newValue) {
+                        $.each(that.tabdef.levelOrders, function (index, levelOrder) {
+                            if(levelOrder.name == newValue){
+                                that.tabdef.levels = levelOrder.value;
+                                var updatedChartTabSet = rootscope.prepareChart(that.featureData, that.tabdef, that.tabindex, that.title);
+                                var existingChartTabSet = rootscope.chartTabs[that.tabindex];
+                                updatedChartTabSet.selectedOrder = existingChartTabSet.selectedOrder;
+                                updatedChartTabSet.selectedMetric = existingChartTabSet.selectedMetric;
+                                updatedChartTabSet.selectedOrder(newValue);
+                                rootscope.chartTabs[that.tabindex] = updatedChartTabSet;
+                            }
+                        });
+                        rootscope.renderCharts();
+                    });
+
+                    chart.selectedMetric.subscribe(function (newValue) {
+                        $.each(that.tabdef.graphMetrics, function (index, graphMetric) {
+                            if(graphMetric.value == newValue){
+                                var updatedChartTabSet = rootscope.prepareChart(that.featureData, that.tabdef, that.tabindex, that.title);
+                                var existingChartTabSet = rootscope.chartTabs[that.tabindex];
+                                updatedChartTabSet.selectedOrder = existingChartTabSet.selectedOrder;
+                                updatedChartTabSet.selectedMetric = existingChartTabSet.selectedMetric;
+                                updatedChartTabSet.selectedMetric(newValue);
+                                rootscope.chartTabs[that.tabindex] = updatedChartTabSet;
+                            }
+                        });
+                        rootscope.renderCharts();
+                    });
+                });
                 this.renderCharts();
             },
 
@@ -84,40 +107,47 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             },
 
             renderCharts: function () {
-                var charts = this.charts();
-                var metricValue = this.selectedMetric();
+                var that = this;
+                $.each(this.chartTabs, function (index, chartTab) {
 
-                if(appstate.queryName == "Conditions of Specified Road / CDS"){
-                    metricValue = "condition|" + metricValue;
-                }
+                    var metricValue = this.selectedMetric();
 
-                //pipe delimiter in metric value indicates we want to display the selected series binned by values
-                var metricElements = metricValue.split('|');
-                var binName = null;
-                var metric;
-                if(metricElements.length > 1){
-                    binName = metricElements[0]
-                    metric = metricElements[1];
-                }else{
-                    metric = metricValue;
-                }
-                var axisTitle = this.getSelectedMetricTitle();
+                    if(appstate.queryName == "Conditions of Specified Road / CDS"){
+                        metricValue = "condition|" + metricValue;
+                    }else{
+                        for(var i = 0; i < chartTab.tabdef.graphMetrics.length; i++){
+                            if(chartTab.tabdef.graphMetrics[i].name == metricValue){
+                                metricValue = chart.tabdef.graphMetrics[i].value
+                            }
+                        }
+                    }
 
-                var rootScope = this;
-                $.each(charts, function (index, chartTabPanel) {
+                    //pipe delimiter in metric value indicates we want to display the selected series binned by values
+                    var metricElements = metricValue.split('|');
+                    var binName = null;
+                    var metric;
+                    if (metricElements.length > 1) {
+                        binName = metricElements[0]
+                        metric = metricElements[1];
+                    } else {
+                        metric = metricValue;
+                    }
+                    var axisTitle = this.selectedMetric();
+
+                    var chartElements = chartTab.charts;
+
                     var that = this;
-                    that.chartTabPanel = chartTabPanel;
-                    var chartElements = chartTabPanel.charts;
+
                     $.each(chartElements, function (index, chartElement) {
 
-                        var topleveltitle = that.reportdef.headers[that.reportdef.fields.indexOf(that.reportdef.levels[1])]
+                        var topleveltitle = that.tabdef.headers[that.tabdef.fields.indexOf(that.tabdef.levels[1])]
 
                         that.chartElement = chartElement;
                         that.categories = [];
 
                         $.each(chartElement.datapoints, function (index, datapoint) {
                             //get rid of any NaNs
-                            if(!$.isNumeric(datapoint[metric] )){
+                            if (!$.isNumeric(datapoint[metric])) {
                                 datapoint[metric] = 0;
                             }
                             that.categories.push(datapoint.name);
@@ -126,23 +156,23 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                         var seriesArray = [];
                         that.binSeries = {};
 
-                        if(binName){
+                        if (binName) {
                             var fields = Object.keys(chartElement.datapoints[0]);
                             $.each(fields, function (index, field) {
-                                if(field.indexOf('|') > -1 && field.indexOf(metric) > -1){
+                                if (field.indexOf('|') > -1 && field.indexOf(metric) > -1) {
                                     that.binSeries[field] = null;
                                 }
                             });
                         }
 
-                        if(Object.keys(that.binSeries).length < 1){
+                        if (Object.keys(that.binSeries).length < 1) {
                             var series = {};
-                            series.name = rootScope.getLabelForMetric(metric);
+                            series.name = metric;
                             series.data = $.map(chartElement.datapoints, function (datapoint) {
                                 return Number(datapoint[metric]);
                             });
                             seriesArray.push(series);
-                        }else{
+                        } else {
                             $.each(Object.keys(that.binSeries), function (index, bin) {
                                 var series = {};
                                 series.name = bin.split('|')[2];
@@ -152,8 +182,8 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                                 seriesArray.push(series);
                             });
 
-                            $.each(reportdefs[appstate.queryName].bins, function (index, bin) {
-                                if(binName == bin.value){
+                            $.each(that.tabdef.bins, function (index, bin) {
+                                if (binName == bin.value) {
                                     topleveltitle = topleveltitle + ' and ' + bin.name;
                                 }
                             });
@@ -161,29 +191,29 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
 
 
                         that.axisTitle = axisTitle;
-                        that.chartTitle = axisTitle + ' of ' + that.chartTabPanel.title
-                            + ' By ' + topleveltitle
-                            + ' For ' + chartElement.text;
+                        that.chartTitle = axisTitle + ' of ' + that.title
+                        + ' By ' + topleveltitle
+                        + ' For ' + chartElement.text;
 
-                        if(appstate.queryName == "Conditions of Specified Road / CDS"){
-                            if(metric == 'LaneMiles'){
+                        if (appstate.queryName == "Conditions of Specified Road / CDS") {
+                            if (metric == 'LaneMiles') {
                                 that.chartTitle = 'Lane Miles by Condition For ' + chartElement.text;
-                            }else{
+                            } else {
                                 that.chartTitle = 'Miles by Condition For ' + chartElement.text;
                             }
                         }
 
-                        if(appstate.queryName == "Asset Conditions"){
-                            if(metric == 'LaneMiles'){
+                        if (appstate.queryName == "Asset Conditions") {
+                            if (metric == 'LaneMiles') {
                                 that.chartTitle = 'Lane Miles by Pavement Condition For ' + chartElement.text;
-                            }else{
+                            } else {
                                 that.chartTitle = 'Miles by Pavement Condition For ' + chartElement.text;
                             }
 
                             var conditions = ["Poor", "Fair", "Good", "NA"];
                             var colors = ["red", "yellow", "green", "grey"];
 
-                            var sorter = function compare(a,b) {
+                            var sorter = function compare(a, b) {
                                 a = conditions.indexOf(a.name);
                                 b = conditions.indexOf(b.name);
                                 if (a < b)
@@ -195,7 +225,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
 
                             seriesArray.sort(sorter);
 
-                            for(var i = 0; i < seriesArray.length; i++){
+                            for (var i = 0; i < seriesArray.length; i++) {
                                 seriesArray[i].color = colors[conditions.indexOf(seriesArray[i].name)];
                             }
 
@@ -220,13 +250,6 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                                     text: that.axisTitle
                                 }
                             },
-                            tooltip: {
-                                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                                pointFormat: '<tr><td style="padding:0">{series.name} <b>{point.y:.1f} ' + that.axisTitle + '</b></td></tr>',
-                                footerFormat: '</table>',
-                                shared: true,
-                                useHTML: true
-                            },
                             plotOptions: {
                                 column: {
                                     pointPadding: 0.2,
@@ -235,104 +258,75 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             },
                             series: seriesArray,
                         };
-                        if(seriesArray.length > 1 || appstate.queryName == "Conditions of Specified Road / CDS"){
+                        if (seriesArray.length > 1 || appstate.queryName == "Conditions of Specified Road / CDS") {
                             chartConfig.legend = {
                                 layout: 'vertical',
-                                    align: 'right',
-                                    verticalAlign: 'middle',
-                                    borderWidth: 0
+                                align: 'right',
+                                verticalAlign: 'middle',
+                                borderWidth: 0
                             };
                         }
                         $("#chart_" + chartElement.id).highcharts(chartConfig);
+                        console.log(chartElement.id)
                     });
                 });
+
             },
 
+            prepareChart: function (featureData, tabdef, index, tabname) {
+                var tree = reportsbase.buildTree(featureData, tabdef);  //create the tree based on the levels defined in request
+                var chartTabPanel = {};
+                chartTabPanel.tabdef = tabdef;
+                chartTabPanel.id = index;
+                chartTabPanel.title = tabname;
+                chartTabPanel.charts = [];
+                var outerIndex = index;
+                if (chartTabPanel.tabdef.levels.length > 1) {
 
-            prepareCharts: function (data, reportdef) {
-
-                this.validateRequests(data, reportdef);
-                var chartTabSet = [];
-                //each chartRequest in the array represents a tabbed panel containing a chart for each node in the tree of aggregated data
-                $.each(reportdef.tabs, function (index, tab) {
-                    var featureData = data[reportdef.dataKeys[index]];
-                    if(!featureData) return true;
-                    var tree = reportsbase.buildTree(featureData, reportdef);  //create the tree based on the levels defined in request
-                    var chartTabPanel = {};
-                    chartTabPanel.reportdef = reportdef;
-                    chartTabPanel.id = index;
-                    chartTabPanel.title = tab
-                    chartTabPanel.charts = [];
-                    var outerIndex = index;
-                    if(chartTabPanel.reportdef.levels.length > 1){
-
-                        $.each(tree, function (index, root) {
-                            var chart = {};
-                            chart.datapoints = [];
-                            chart.level = root.level;
-                            chart.text = root.text;
-                            $.each(root.children, function (index, child) {
-                                child.name = child.text;
-                                chart.datapoints.push(child);
-                            });
-                            chart.id = outerIndex + "_" + index;
-                            chartTabPanel.charts.push(chart);
-                        });
-
-                        //now add a summary section below that aggregates by the second dimension
-                        var topLevel = chartTabPanel.reportdef.levels.shift();
-                        tree = reportsbase.buildTree(featureData, chartTabPanel.reportdef);
-                        var summaryChart = {};
-                        summaryChart.level = topLevel;
-                        var topleveltitle = chartTabPanel.reportdef.headers[chartTabPanel.reportdef.fields.indexOf(topLevel)];
-                        topleveltitle = /s$/.test(topleveltitle) ? topleveltitle + "es" : topleveltitle + 's';
-                        summaryChart.text = "All " + topleveltitle;
-                        summaryChart.id = outerIndex + "_" + chartTabPanel.length;
-                        summaryChart.datapoints = []
-
-                        $.each(tree, function (index, child) {
+                    $.each(tree, function (index, root) {
+                        var chart = {};
+                        chart.datapoints = [];
+                        chart.level = root.level;
+                        chart.text = root.text;
+                        $.each(root.children, function (index, child) {
                             child.name = child.text;
-                            summaryChart.datapoints.push(child);
+                            chart.datapoints.push(child);
                         });
+                        chart.id = outerIndex + "_" + index;
+                        chartTabPanel.charts.push(chart);
+                    });
 
-                        chartTabPanel.charts.push(summaryChart);
-                        chartTabPanel.reportdef.levels.unshift(topLevel);  //put the level back in so the column offsets are correct
-                    }else{
-                        $.each(tree, function (index, root) {
-                            var chart = {};
-                            chart.datapoints = [];
-                            chart.level = root.level;
-                            chart.text = root.text;
-                            root.name = root.text;
-                            chart.datapoints.push(root);
-                            chart.id = outerIndex + "_" + index;
-                            chartTabPanel.charts.push(chart);
-                        });
-                    }
-                    chartTabSet.push(chartTabPanel);
-                });
-                return chartTabSet;
-            },
+                    //now add a summary section below that aggregates by the second dimension
+                    var topLevel = chartTabPanel.tabdef.levels.shift();
+                    tree = reportsbase.buildTree(featureData, chartTabPanel.tabdef);
+                    var summaryChart = {};
+                    summaryChart.level = topLevel;
+                    var topleveltitle = chartTabPanel.tabdef.headers[chartTabPanel.tabdef.fields.indexOf(topLevel)];
+                    topleveltitle = /s$/.test(topleveltitle) ? topleveltitle + "es" : topleveltitle + 's';
+                    summaryChart.text = "All " + topleveltitle;
+                    summaryChart.id = outerIndex + "_" + chartTabPanel.length;
+                    summaryChart.datapoints = []
 
+                    $.each(tree, function (index, child) {
+                        child.name = child.text;
+                        summaryChart.datapoints.push(child);
+                    });
 
-            validateRequests: function (data, reportdef) {
-                if (reportdef.levels.length > 2) {
-                    reportdef.levels = reportdef.levels.slice(0,2)
+                    chartTabPanel.charts.push(summaryChart);
+                    chartTabPanel.tabdef.levels.unshift(topLevel);  //put the level back in so the column offsets are correct
+                } else {
+                    $.each(tree, function (index, root) {
+                        var chart = {};
+                        chart.datapoints = [];
+                        chart.level = root.level;
+                        chart.text = root.text;
+                        root.name = root.text;
+                        chart.datapoints.push(root);
+                        chart.id = outerIndex + "_" + index;
+                        chartTabPanel.charts.push(chart);
+                    });
                 }
-
-                $.each(reportdef.dataKeys, function (index, dataKey) {
-
-                    var featureData = data[dataKey];
-                    if(featureData){
-                        $.each(featureData, function (index, feature) {
-                            if(typeof(feature['Length']) != 'undefined' && typeof(feature['NumberOfLanes']) ){
-                                feature.LaneMiles = feature['Length'] * feature['NumberOfLanes']
-                            } else {
-                                feature.LaneMiles = 0;
-                            }
-                        });
-                    }
-                });
+                return chartTabPanel;
             },
 
             print: function () {
@@ -353,11 +347,11 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                 popupWin.document.close();
             },
 
-            getSelectedMetricTitle: function(){
+            getSelectedMetricTitle: function () {
                 var metricValue = this.selectedMetric();
                 var metricName;
                 $.each(this.graphMetrics(), function (index, metric) {
-                    if(metric.value == metricValue){
+                    if (metric.value == metricValue) {
                         metricName = metric.name;
                         return false;
                     }
@@ -365,11 +359,11 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                 return metricName;
             },
 
-            getLabelForMetric: function(metric){
+            getLabelForMetric: function (metric) {
                 var label;
                 var that = this;
                 $.each(this.reportdef.fields, function (index, field) {
-                    if(field == metric){
+                    if (field == metric) {
                         label = that.reportdef.headers[index];
                         return false;
                     }

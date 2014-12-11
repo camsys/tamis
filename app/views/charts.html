@@ -1,16 +1,36 @@
-<div class="container" data-bind="visible: charts().length > 0">
-    <div data-bind="compose: { model: querydescription, preserveContext: true }"></div>
+<div class="container" data-bind="visible: chartTabs.length > 0">
+    <!--<div data-bind="compose: { model: querydescription, preserveContext: true }"></div>-->
     <div class="row">
         <ul class="nav nav-tabs">
-            <!-- ko foreach: charts -->
+            <!-- ko foreach: chartTabs -->
             <li data-bind="css: { active: $index() == 0 }">
                 <a data-toggle="tab" data-bind="attr: { href: '#charttab_' + id }"><span data-bind="text: title"/></a>
             </li>
             <!-- /ko -->
         </ul>
         <div class="tab-content">
-            <!-- ko foreach: charts -->
+            <!-- ko foreach: chartTabs -->
             <div class="tab-pane" data-bind="attr: { id: 'charttab_' + id }, css: { active: $index() == 0 }">
+                <div class="row form-group">
+                    <label class="navbar-text" for="selectQuery">Selected measure:
+                        <select id="selectQuery" class="form-control"
+                                data-bind="options: tabdef.graphMetrics,
+                            optionsText: 'name',
+                            optionsValue: 'value',
+                            value: selectedMetric">
+                        </select>
+                    </label>
+
+                    <label class="navbar-text" for="selectOrder">Summarize By:
+                        <select id="selectOrder" class="form-control"
+                                data-bind="options: tabdef.levelOrders,
+                            optionsText: 'name',
+                            optionsValue: 'name',
+                            value: selectedOrder">
+                        </select>
+                    </label>
+                </div>
+
                 <!-- ko foreach: charts -->
                 <div class="chart-container" data-bind="attr: { id: 'chart_' + id }"
                      style="width: 800px; height: 400px; margin: 0 auto"></div>
@@ -20,6 +40,3 @@
         </div>
     </div>
 </div>
-
-
-
