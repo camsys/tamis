@@ -2,28 +2,16 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
     function (http, app, ko, jstree, bootstrap, datatables, jqueryui, reportsbase, reportdefs, appstate, router, config, querydescription) {
 
         return {
+            querydescription: querydescription,
             pivotTables: ko.observableArray([]),
+            printable: true,
 
             activate: function () {
-                var that = this;
-                return $.get("assets/json/appstate_q1.json",
-                    function (queryData) {
-                        var fields = Object.keys(queryData);
-                        $.each(fields, function (index, field) {
-                            appstate[field] = queryData[field]
-                        });
-
-                        that.realactivate();
-                    }
-                );
-            },
-
-            realactivate: function () {
                 this.resetObservables();
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 if (data && queryName) {
-                    this.reportdef = $.extend({}, reportdefs[queryName]); //make a local copy of the report def since we'll be modifying it
+                    this.reportdef = $.extend(true, {}, reportdefs[queryName]); //make a local copy of the report def since we'll be modifying it
                     this.configuredReports = [];
                     var that = this;
                     $(Object.keys(that.reportdef)).each(function (index, tabname) {

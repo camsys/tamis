@@ -88,3 +88,48 @@ body.loading {
 body.loading .modal {
     display: block;
 }
+
+#mapwrapper {
+    display: block;
+    position:absolute;
+    float:left;
+    height:auto;
+    bottom:0;
+    top:0;
+    left:0;
+    right:0;
+    margin-top:70px; /* adjust top margin to your header height */
+    text-align: center;
+}
+
+#mapiframe {
+    width:100%;
+    height: 500px;
+}
+
+#resulttabs {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+#geoTree {
+    height: 200px;
+    width: 500px;
+    overflow-y: auto;
+    border: 2px solid;
+    border-radius: 5px;
+}
+
+.querydescription {
+    text-align: center;
+}
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}

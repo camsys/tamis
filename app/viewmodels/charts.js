@@ -3,6 +3,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
 
         return{
             chartTabs: null,
+            querydescription: querydescription,
 
             /*activate: function () {
                 var that = this;
@@ -22,7 +23,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                 var queryName = appstate.queryName;
                 if (data && queryName) {
                     this.chartsRawData = data;
-                    this.reportdef = $.extend({}, reportdefs[queryName]); //make a local copy of the report def since we'll be modifying it
+                    this.reportdef = $.extend(true, {}, reportdefs[queryName]); //make a local copy of the report def since we'll be modifying it
                     this.chartTabs = [];
                     var that = this;
                     $(Object.keys(that.reportdef)).each(function (index, tabname) {
@@ -45,7 +46,6 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                         chartTabSet.selectedMetric = ko.observable(chartTabSet.tabdef.graphMetrics[0].name);
                         that.chartTabs.push(chartTabSet);
                     });
-                    this.chartTabs = this.chartTabs;
                 } else {
                     app.showMessage(config.noResultsMessage.message, config.noResultsMessage.title).then(function (dialogResult) {
                         router.navigate('queryconfig');
@@ -189,6 +189,16 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             });
                         }
 
+                        if(axisTitle.indexOf('|') > -1){
+                            var axisTitles = axisTitle.split('|');
+                            axisTitle = that.tabdef.headers[that.tabdef.fields.indexOf(axisTitles[1])];
+                            axisTitle = axisTitle + ' by ' + that.tabdef.headers[that.tabdef.fields.indexOf(axisTitles[0])];
+                        }
+
+
+                        if (that.tabdef.fields.indexOf(axisTitle) > -1) {
+                            axisTitle = that.tabdef.headers[that.tabdef.fields.indexOf(axisTitle)];
+                        }
 
                         that.axisTitle = axisTitle;
                         that.chartTitle = axisTitle + ' of ' + that.title
@@ -198,6 +208,8 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                         if (appstate.queryName == "Conditions of Specified Road / CDS") {
                             if (metric == 'LaneMiles') {
                                 that.chartTitle = 'Lane Miles by Condition For ' + chartElement.text;
+                            } else if (metric == 'count') {
+                                that.chartTitle = 'Count by Condition For ' + chartElement.text;
                             } else {
                                 that.chartTitle = 'Miles by Condition For ' + chartElement.text;
                             }
@@ -206,6 +218,8 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                         if (appstate.queryName == "Asset Conditions") {
                             if (metric == 'LaneMiles') {
                                 that.chartTitle = 'Lane Miles by Pavement Condition For ' + chartElement.text;
+                            } else if (metric == 'count') {
+                                that.chartTitle = 'Count by Deck Condition For ' + chartElement.text;
                             } else {
                                 that.chartTitle = 'Miles by Pavement Condition For ' + chartElement.text;
                             }
@@ -258,16 +272,13 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             },
                             series: seriesArray,
                         };
-                        if (seriesArray.length > 1 || appstate.queryName == "Conditions of Specified Road / CDS") {
-                            chartConfig.legend = {
-                                layout: 'vertical',
-                                align: 'right',
-                                verticalAlign: 'middle',
-                                borderWidth: 0
-                            };
-                        }
+                        chartConfig.legend = {
+                            layout: 'vertical',
+                            align: 'right',
+                            verticalAlign: 'middle',
+                            borderWidth: 0
+                        };
                         $("#chart_" + chartElement.id).highcharts(chartConfig);
-                        console.log(chartElement.id)
                     });
                 });
 

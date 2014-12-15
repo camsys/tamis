@@ -19,7 +19,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                 this.pivotdefs = pivotdefs[appstate.queryName];
                 var tabs = [];
                 var that = this;
-                $.each(reportdef.tabs, function (index, tabname) {
+                $.each(Object.keys(reportdef), function (index, tabname) {
                     var tabChoices = [];
                     if(that.pivotdefs){
                         $.each(that.pivotdefs[tabname], function (k, v) {

@@ -2,34 +2,34 @@
     <div class="row">
         <article class="row">
 
+                <div class="querydescription" data-bind="visible: querydescription.querystring(), compose: { model: querydescription, preserveContext: true, activate:true }"/>
+
+                <ul class="nav nav-tabs">
+                    <!-- ko foreach: tabs -->
+                    <li data-bind="css: { active: $index() == 0 }">
+                        <a data-toggle="tab" data-bind="attr: { href: '#tab_' + $index() }"><span data-bind="text: name"/></a>
+                    </li>
+                    <!-- /ko -->
+                </ul>
+                <div class="tab-content">
+                    <!-- ko foreach: tabs -->
+                    <div class="tab-pane" data-bind="attr: { id: 'tab_' + $index() }, css: { active: $index() == 0 }">
 
 
-            <ul class="nav nav-tabs">
-                <!-- ko foreach: tabs -->
-                <li data-bind="css: { active: $index() == 0 }">
-                    <a data-toggle="tab" data-bind="attr: { href: '#tab_' + $index() }"><span data-bind="text: name"/></a>
-                </li>
-                <!-- /ko -->
-            </ul>
-            <div class="tab-content">
-                <!-- ko foreach: tabs -->
-                <div class="tab-pane" data-bind="attr: { id: 'tab_' + $index() }, css: { active: $index() == 0 }">
-
-
-                    <div class="row form-group" data-bind="visible: choices">
-                        <label class="navbar-text" for="selectOrder">Predefined Pivots:
-                            <select id="selectOrder" class="form-control" data-bind="options: choices,
+                        <div class="row form-group" data-bind="visible: choices">
+                            <label class="navbar-text" for="selectOrder">Predefined Pivots:
+                                <select id="selectOrder" class="form-control" data-bind="options: choices,
                             optionsText: 'name',
                             optionsValue: 'name',
                             value: selectedpivot">
-                            </select>
-                        </label>
-                    </div>
+                                </select>
+                            </label>
+                        </div>
 
-                    <div data-bind="attr: { id: 'table_' + $index() }" style="margin: 30px;"></div>
+                        <div data-bind="attr: { id: 'table_' + $index() }" style="margin: 30px;"></div>
+                    </div>
+                    <!-- /ko -->
                 </div>
-                <!-- /ko -->
-            </div>
         </article>
     </div>
 </div>

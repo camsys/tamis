@@ -28,6 +28,6 @@
             };
 
             return router.activate();
-        },
+        }
     };
 });

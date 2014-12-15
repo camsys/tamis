@@ -1,4 +1,7 @@
 <div class="container" data-bind="visible: chartTabs.length > 0">
+    <div class="querydescription" data-bind="visible: querydescription.querystring(), compose: { model: querydescription, preserveContext: true, activate:true }"/>
+
+
     <!--<div data-bind="compose: { model: querydescription, preserveContext: true }"></div>-->
     <div class="row">
         <ul class="nav nav-tabs">
@@ -28,6 +31,10 @@
                             optionsValue: 'name',
                             value: selectedOrder">
                         </select>
+                    </label>
+
+                    <label class="navbar-text"> &nbsp;
+                        <a class="form-control btn btn-primary" data-bind="click: $parent.print">Print</a>
                     </label>
                 </div>
 

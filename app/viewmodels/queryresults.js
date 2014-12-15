@@ -15,15 +15,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                         $.each(fields, function (index, field) {
                             appstate[field] = queryData[field]
                         });
-
                         that.realactivate();
                     }
                 );
             },
 
-            real*/
-
-            activate: function () {
+            real*/activate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 var configuredTables = [];
@@ -91,7 +88,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                     parentEvent.tableDefs = tabledefs;
                     $( "body" ).trigger( parentEvent );
                 });
-
+                var that = this;
                 $(this.configuredTables()).each(function (index, table) {
 
                     var dataTable = $('#' + table.id + '_table').dataTable({
@@ -99,7 +96,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                             { "sWidth": "10%", "aTargets": [ -1 ] }
                         ],
                         "data": table.data,
-                        "columns": table.columnDefs
+                        "columns": table.columnDefs,
+                        "drawCallback": function( settings ) {
+                            that.fixFooterHeight();
+                        }
                     });
 
                     $(dataTable).on('click', 'tr', function () {
@@ -125,14 +125,17 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                         $(table).dataTable().fnAdjustColumnSizing();
                     }
                 });
+
             },
 
             compositionComplete: function () {
                 $('a[data-toggle="tab"]:first').trigger("shown.bs.tab");
+                this.fixFooterHeight();
+            },
 
+            fixFooterHeight: function() {
                 var footerTop = $('#mapheight').height() + $('header').height();
                 $("#stickyfooter").css('top', footerTop + 'px');
-
             },
 
             canDeactivate: function () {

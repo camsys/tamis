@@ -10,9 +10,9 @@
 </style>
 <div class="container">
     <div id="reportcontainer" data-bind="visible: pivotTables().length > 0">
-       <!-- <div data-bind="compose: { model: querydescription, preserveContext: true }"></div>-->
         <div class="row">
-                <div class="row">
+            <div class="querydescription" data-bind="visible: querydescription.querystring(), compose: { model: querydescription, preserveContext: true, activate:true }"/>
+            <div class="row">
                     <ul class="nav nav-tabs">
                         <!-- ko foreach: pivotTables -->
                         <li data-bind="css: { active: $index() == 0 }">
@@ -32,6 +32,10 @@
                                                 optionsValue: 'name',
                                                 value: selectedOrder">
                                         </select>
+                                    </label>
+
+                                    <label class="navbar-text"> &nbsp;
+                                        <a class="form-control btn btn-primary" data-bind="click: $parent.print">Print</a>
                                     </label>
                                 </div>
                                 <p>

@@ -41,8 +41,8 @@ define(
                 Roads: {
                     type: 'bar',
                     bins: [{name: "Pavement Condition", value:'PavementCond'}],
-                    headers: ['Jurisdiction', 'NHS Class', 'Condition', 'Miles', 'Lane Miles'],
-                    fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'condition'],
+                    headers: ['Jurisdiction', 'NHS Class', 'Miles', 'Lane Miles', 'Pavement Condition', 'Count'],
+                    fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'PavementCond', 'count'],
                     levels: ['Jurisdiction', 'NHSClass', 'condition'],
                     sums: ['Length', 'LaneMiles'],
                     averages: [],
@@ -58,20 +58,19 @@ define(
                 },
                 Bridges: {
                     type: 'bar',
-                    bins: [{name: "Pavement Condition", value:'PavementCond'}],
-                    headers: ['Jurisdiction', 'NHS Class', 'Condition', 'Miles', 'Lane Miles'],
-                    fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'condition'],
+                    bins: [{name: "Deck Condition", value:'DeckCond'}],
+                    headers: ['Jurisdiction', 'NHS Class', 'Miles', 'Lane Miles', 'Deck Condition', 'Count'],
+                    fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'DeckCond', 'count'],
                     levels: ['Jurisdiction', 'NHSClass', 'condition'],
-                    sums: ['Length', 'LaneMiles'],
+                    sums: ['count'],
                     averages: [],
                     dataKey: 'BridgeFeatureResults',
                     graphMetrics: [
-                        {name: "Miles", value: "Length"},
-                        {name: 'Lane Miles', value: "LaneMiles"},
+                        {name: "Count", value: "count"},
                     ],
                     levelOrders: [
-                        {name: "By Jurisdiction, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'condition']},
-                        {name: "By NHS Class, then by Jurisdiction", value: ['NHSClass', 'Jurisdiction', 'condition']}
+                        {name: "By Jurisdiction, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'DeckCond']},
+                        {name: "By NHS Class, then by Jurisdiction", value: ['NHSClass', 'Jurisdiction', 'DeckCond']}
                     ]
                 }
             },
