@@ -32,7 +32,8 @@ tamis.Map = (function () {
     var polylineSymbol;
     var polygonSymbol;
 
-    var functionalClassRenderer;
+    var roadFunctionalClassRenderer;
+    var bridgeFunctionalClassRenderer;
     var pavementConditionRenderer;
     var deckConditionRenderer;
     var bridgeStatusRenderer;
@@ -95,6 +96,7 @@ tamis.Map = (function () {
         seagreen1PolylineSymbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([84, 255, 159]), 5);
         cobaltgreenPolylineSymbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([61, 145, 640]), 5);
         yellow1PolylineSymbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255, 255, 0]), 5);
+        lightBluePolylineSymbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255, 255, 0]), 5);
 
         polygonSymbol = new esri.symbol.SimpleFillSymbol(
             esri.symbol.SimpleFillSymbol.STYLE_SOLID,
@@ -108,41 +110,47 @@ tamis.Map = (function () {
     }
 
     function initializeRenderers() {
-        functionalClassRenderer = new esri.renderer.UniqueValueRenderer(polylineSymbol, "NHS Class");
-        functionalClassRenderer.addValue("NHS", redPolylineSymbol);
-        functionalClassRenderer.addValue("NOT NHS", pinkPolylineSymbol);
 
-        pavementConditionRenderer = new esri.renderer.UniqueValueRenderer(polylineSymbol, "Pavement Condition");
+
+        var greenSquareSymbol = new esri.symbol.SimpleMarkerSymbol();
+        greenSquareSymbol.style = esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE;
+        greenSquareSymbol.setSize(8);
+        greenSquareSymbol.setColor(new dojo.Color([84, 255, 159]));
+
+        var yellowSquareSymbol = new esri.symbol.SimpleMarkerSymbol();
+        yellowSquareSymbol.style = esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE;
+        yellowSquareSymbol.setSize(8);
+        yellowSquareSymbol.setColor(new dojo.Color([255,255,0,0.5]));
+
+        var redSquareSymbol = new esri.symbol.SimpleMarkerSymbol();
+        redSquareSymbol.style = esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE;
+        redSquareSymbol.setSize(8);
+        redSquareSymbol.setColor(new dojo.Color([255, 0, 0]));
+
+
+        roadFunctionalClassRenderer = new esri.renderer.UniqueValueRenderer(null, "NHS Class");
+        roadFunctionalClassRenderer.addValue("NHS", redPolylineSymbol);
+        roadFunctionalClassRenderer.addValue("NOT NHS", pinkPolylineSymbol);
+
+        pavementConditionRenderer = new esri.renderer.UniqueValueRenderer(null, "Pavement Condition");
         pavementConditionRenderer.addValue("Good", seagreen1PolylineSymbol);
         pavementConditionRenderer.addValue("Fair", yellow1PolylineSymbol);
         pavementConditionRenderer.addValue("Poor", redPolylineSymbol);
         pavementConditionRenderer.addValue("NA", purple1PolylineSymbol);
 
-        bridgeStatusRenderer = new esri.renderer.UniqueValueRenderer(polylineSymbol, "Status");
-        bridgeStatusRenderer.addValue("Not Deficient", seagreen1PolylineSymbol);
-        bridgeStatusRenderer.addValue("Structurally Deficient", yellow1PolylineSymbol);
-        bridgeStatusRenderer.addValue("Functionally Obsolete", redPolylineSymbol);
+        unstableSlopesRenderer = new esri.renderer.UniqueValueRenderer(null, "totalscorebucket");
+        unstableSlopesRenderer.addValue("0-250", greenSquareSymbol);
+        unstableSlopesRenderer.addValue("251-500", yellowSquareSymbol);
+        unstableSlopesRenderer.addValue("500+", redSquareSymbol);
 
-        var greenSquareSymbol = new esri.symbol.SimpleMarkerSymbol();
-        greenSquareSymbol.style = esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE;
-        greenSquareSymbol.setSize(8);
-        greenSquareSymbol.setColor(new dojo.Color([84, 255, 159]));
+        bridgeStatusRenderer = new esri.renderer.UniqueValueRenderer(null, "Status");
+        bridgeStatusRenderer.addValue("Not Deficient", greenSquareSymbol);
+        bridgeStatusRenderer.addValue("Structurally Deficient", yellowSquareSymbol);
+        bridgeStatusRenderer.addValue("Functionally Obsolete", redSquareSymbol);
 
-        var yellowSquareSymbol = new esri.symbol.SimpleMarkerSymbol();
-        yellowSquareSymbol.style = esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE;
-        yellowSquareSymbol.setSize(8);
-        yellowSquareSymbol.setColor(new dojo.Color([255,255,0,0.5]));
-
-        var redSquareSymbol = new esri.symbol.SimpleMarkerSymbol();
-        redSquareSymbol.style = esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE;
-        redSquareSymbol.setSize(8);
-        redSquareSymbol.setColor(new dojo.Color([255, 0, 0]));
-
-         unstableSlopesRenderer = new esri.renderer.UniqueValueRenderer(null, "totalscorebucket");
-         unstableSlopesRenderer.addValue("0-250", greenSquareSymbol);
-         unstableSlopesRenderer.addValue("251-500", yellowSquareSymbol);
-         unstableSlopesRenderer.addValue("500+", redSquareSymbol);
-
+        bridgeFunctionalClassRenderer = new esri.renderer.UniqueValueRenderer(null, "NHS Class");
+        bridgeFunctionalClassRenderer.addValue("NHS", greenSquareSymbol);
+        bridgeFunctionalClassRenderer.addValue("NOT NHS", redSquareSymbol);
 
     }
 
@@ -150,15 +158,20 @@ tamis.Map = (function () {
         var bridgeRenderer;
         var routeRenderer;
         if(queryName == 'Assets' || queryName == 'Unstable Slopes'){
-            bridgeRenderer = functionalClassRenderer;
-            routeRenderer = functionalClassRenderer;
+            bridgeRenderer = bridgeFunctionalClassRenderer;
+            routeRenderer = roadFunctionalClassRenderer;
         } else {
             bridgeRenderer =  bridgeStatusRenderer;
             routeRenderer = pavementConditionRenderer;
         }
-        var bridgeResultsLayer = initializeFeatureCollectionLayer(bridgeResultsLayerName, bridgeRenderer.toJson(), GEOMETRY_TYPE_POLYLINE);
+
+        var rend = new esri.renderer.SimpleRenderer(polygonSymbol);
+
+        var geographyLayer = initializeFeatureCollectionLayer('geography', rend.toJson(), GEOMETRY_TYPE_POLYGON);
 
         var routeResultsLayer = initializeFeatureCollectionLayer(routeResultsLayerName, routeRenderer.toJson(), GEOMETRY_TYPE_POLYLINE);
+
+        var bridgeResultsLayer = initializeFeatureCollectionLayer(bridgeResultsLayerName, bridgeRenderer.toJson(), GEOMETRY_TYPE_POINT);
 
         var unstableSlopeResultsLayer = initializeFeatureCollectionLayer(unstableSlopeResultsLayerName, unstableSlopesRenderer.toJson(),
             GEOMETRY_TYPE_POINT);
@@ -168,13 +181,13 @@ tamis.Map = (function () {
                 {layer: unstableSlopeResultsLayer, title: "Unstable Slopes by Total Score"},
                 {layer: routeResultsLayer, title: "Roads by NHS Class"}
             ]);
-            buildLayerList([ unstableSlopeResultsLayer, routeResultsLayer ]);
+            buildLayerList([ unstableSlopeResultsLayer, routeResultsLayer, geographyLayer ]);
         }else{
             legendDijit.refresh([
                 {layer: bridgeResultsLayer, title: "Bridges"},
                 {layer: routeResultsLayer, title: "Roads"}
             ]);
-            buildLayerList([ bridgeResultsLayer, routeResultsLayer ]);
+            buildLayerList([ bridgeResultsLayer, routeResultsLayer, geographyLayer ]);
         }
 
     }
@@ -226,6 +239,9 @@ tamis.Map = (function () {
 
     function getTextContent(graphic){
         var fieldLabels = tamis.Map.labels[graphic.attributes.dataKey];
+        if(!fieldLabels && graphic.getLayer().id == 'geography'){
+            return graphic.attributes.attributes[Object.keys(graphic.attributes.attributes)[0]];
+        }
         var infoElements = [];
         for(var i = 0; i < fieldLabels.length; i++){
             var fieldLabel = fieldLabels[i];
@@ -241,7 +257,7 @@ tamis.Map = (function () {
         var items = [];
         for (var i = 0; i < layers.length; i++) {
             var layer = layers[i];
-            var label;
+            var label = null;
             if(layer.id == bridgeResultsLayerName){
                 label = 'Bridges';
             } else if (layer.id == routeResultsLayerName){
@@ -249,9 +265,13 @@ tamis.Map = (function () {
             } else if (layer.id == unstableSlopeResultsLayerName){
                 label = 'Unstable Slopes';
             }
-            visible.push(layer.id);
-            items.push("<input type='checkbox' class='list_item' onclick='tamis.Map.updateLayerVisibility(this)'" +
-            (layer.visible ? "checked=checked" : "") + "' id='" + layer.id + "'' /><label for='" + layer.id + "'>" + label + "</label><br />");
+
+            if(label){
+                visible.push(layer.id);
+                items.push("<input type='checkbox' class='list_item' onclick='tamis.Map.updateLayerVisibility(this)'" +
+                (layer.visible ? "checked=checked" : "") + "' id='" + layer.id + "'' /><label for='" + layer.id + "'>" + label + "</label><br />");
+            }
+
         }
         var layerList = document.getElementById("layer_list");
         layerList.innerHTML = items.join(' ');
@@ -266,7 +286,6 @@ tamis.Map = (function () {
         legendDijit = new esri.dijit.Legend({
             map: map
         }, "legendDiv");
-        legendDijit.startup();
     }
 
     function loadData(layers) {
@@ -292,6 +311,10 @@ tamis.Map = (function () {
             var featureResult = featureResults.features[i];
             var geom = featureResult.geometry;
             var newGraphic = createGraphic(geom, geometryType, featureResult, isRendererDefined, i);
+            if(newGraphic.geometry.type == 'polyline' && geometryType.toLowerCase().indexOf('point') > -1){
+                var point = newGraphic.geometry.getExtent().getCenter();
+                newGraphic.geometry = point;
+            }
             newGraphic.visible = true;
             features.push(newGraphic);
         }

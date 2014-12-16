@@ -197,6 +197,39 @@ define(['../config/config'],
                         callback(response);
                     }
                 })
+            },
+            getGeoPolygons : function(geoparam, callback){
+                var featureUrl;
+                var queryParam;
+                var geotype = geoparam[0].AreaParameter.Type;
+                if(geotype == 'HouseDistrict'){
+                    featureUrl = config.districtPolyQueryUrl;
+                    queryParam = 'HOUSE_DISTR_NAME';
+                } else {
+                    featureUrl = config.regionPolyQueryUrl;
+                    queryParam = 'REGION';
+                }
+
+                var whereClause = geoparam[0].AreaParameter.Areas.map(function(geovalue){
+                    return "'" + geovalue.Name + "'";
+                }).join(",");
+
+                whereClause = queryParam + ' in (' + whereClause + ')';
+
+                var postBody = {};
+                postBody.where = whereClause;
+                postBody.outFields = queryParam;
+                postBody.f = 'pjson';
+                postBody.outSR = 3857;
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: featureUrl,
+                    data: postBody,
+                    success: function (response) {
+                        callback(response);
+                    }
+                })
             }
         };
     });

@@ -7,9 +7,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
             displayName: 'Query Results',
             configuredTables: ko.observableArray([]),
 
-            /*activate: function () {
+            activate: function () {
                 var that = this;
-                return $.get("assets/json/appstate_q2.json",
+                return $.get("assets/json/appstate_q1.json",
                     function (queryData) {
                         var fields = Object.keys(queryData);
                         $.each(fields, function (index, field) {
@@ -20,7 +20,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                 );
             },
 
-            real*/activate: function () {
+            realactivate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 var configuredTables = [];

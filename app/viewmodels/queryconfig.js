@@ -153,6 +153,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 $.each(appstate.queryResults, function (k, v) {
                     layerMap[k] = null;
                 });
+                layerMap.geography = null;
+
+                dataservice.getGeoPolygons(this.geoselector.getQueryParams(), that.createCallback(layerMap, 'geography', that));
+
                 $.each(appstate.queryResults, function (k, v) {
                     var results = v;
                     var objectIds = [];
@@ -178,6 +182,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                         }
                     });
 
+                    if(layerMap.geography == null){
+                        allLayersReady = false;
+                    }
+
                     if(allLayersReady){
                         appstate.layerMap = layerMap;
                         $('#modal').hide();
@@ -186,6 +194,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     }
                 }
             },
+
             validateResponse: function () {
                 var tabledef = tabledefs[appstate.queryName];
                 var hasResults = false;

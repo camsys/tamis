@@ -19,6 +19,9 @@ define(
 
             slopesQueryUrl: 'http://swdev14.camsys.com/arcgis2/rest/services/AKDOT/TAMIS/MapServer/7/query',
 
+            regionPolyQueryUrl: 'http://swdev14.camsys.com/arcgis2/rest/services/AKDOT/TAMIS/MapServer/5/query',
+            districtPolyQueryUrl: 'http://swdev14.camsys.com/arcgis2/rest/services/AKDOT/TAMIS/MapServer/6/query',
+
             noResultsMessage:{title: "Whoops!", message: "No data is available for display yet, run a query first."}
 
         };
