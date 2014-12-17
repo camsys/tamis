@@ -12,6 +12,7 @@ define(
                 { title: 'Deck Condition', data: 'DeckCond'},
                 { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'},
                 { title: 'Lane Miles', data: 'LaneMiles', format: '0,000.0000'},
+                { title: 'Deck Area', data: 'deckarea', format: '0,000.0000'},
             ],
 
             RouteFeatureResults: [

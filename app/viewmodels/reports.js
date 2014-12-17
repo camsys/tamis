@@ -7,6 +7,19 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
             printable: true,
 
             activate: function () {
+                var that = this;
+                return $.get("assets/json/appstate_q3.json",
+                    function (queryData) {
+                        var fields = Object.keys(queryData);
+                        $.each(fields, function (index, field) {
+                            appstate[field] = queryData[field]
+                        });
+                        that.realactivate();
+                    }
+                );
+            },
+
+            realactivate: function () {
                 this.resetObservables();
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
@@ -90,7 +103,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                 this.buildTable(tree, summaryGrid, tabdef);  //add the data to the table
 
                 if(tabdef.levels.length > 1) {
-                    //now add a summary section below that aggregates by the second dimension
+                    //add a summary section below that aggregates by the second dimension
                     var topLevel = tabdef.levels.shift();
                     tree = reportsbase.buildTree(featureData, tabdef);
                     var summaryRoot = {};
@@ -168,7 +181,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                             html: node.text
                         });
                         $.each(reportdef.fields, function (index, field) {
-                            if (reportdef.levels.indexOf(field) == -1) {
+                            if (reportdef.levels.indexOf(field) == -1 && field != 'PavementCond') {
 
 
                                 if (reportdef.sums.indexOf(field) > -1 && node[field] == null) {

@@ -17,6 +17,10 @@ define(
                     feature.LaneMiles = 0;
                 }
 
+                if(typeof(feature['StructureLength']) != 'undefined' && typeof(feature['DeckWidth']) != 'undefined'){
+                    feature.deckarea = feature['StructureLength'] * feature['DeckWidth'];
+                }
+
                 if(typeof(feature['DeckCond']) != 'undefined'){
                     feature.condition = feature['DeckCond'];
                 }

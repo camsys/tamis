@@ -10,7 +10,7 @@
                                 </select>
                             </div>
 
-                            <div class="form-group"  data-bind="fadeVisible: selectedRoute">
+                            <div class="form-group"  data-bind="fadeVisible: cdsList().length > 1">
                                 <label for="selectCds">Which CDS would you like to analyze?</label>
                                 <select id="selectCds" name="selectCds" class="form-control"
                                         data-bind="

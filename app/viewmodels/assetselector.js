@@ -90,13 +90,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', '../config/appstat
                     assetTreeNode.text = assetTypeName;
                     assetTreeNode.a_attr = {'selectionId': assetTypeName},
                         assetTreeNode.selectionId = assetTypeName,
-                        assetTreeNode.state = { 'opened': false, 'selected': false };
+                        assetTreeNode.state = { 'opened': true, 'selected': false };
                     that.assetTreeNode = assetTreeNode;
                     $(that.assetTree[this]).each(function (index, childElement) {
                         var child = {};
                         child.text = childElement.text;
                         child.a_attr = {'selectionId': childElement.value},
-                            child.state = { 'opened': false, 'selected': false };
+                            child.state = { 'opened': true, 'selected': false };
                         child.parentId = that.assetTreeNode.selectionId;
                         child.selectionId = childElement.value;
                         that.assetTreeNode.children.push(child);

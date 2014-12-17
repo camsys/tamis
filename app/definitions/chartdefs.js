@@ -42,26 +42,26 @@ define(
                 Roads: {
                     type: 'bar',
                     bins: [{name: "Pavement Condition", value:'PavementCond'}],
-                    headers: ['Jurisdiction', 'NHS Class', 'Pavement Condition', 'Miles', 'Lane Miles'],
-                    fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'condition'],
+                    headers: ['Jurisdiction', 'NHS Class', 'Miles', 'Lane Miles', 'Pavement Condition', 'Count'],
+                    fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'PavementCond', 'count'],
                     levels: ['Jurisdiction', 'NHSClass', 'condition'],
                     sums: ['Length', 'LaneMiles'],
                     averages: [],
                     dataKey: 'RouteFeatureResults',
                     graphMetrics: [
-                        {name: "Miles", value: "Length"},
+                        {name: "Centerline Miles", value: "Length"},
                         {name: 'Lane Miles', value: "LaneMiles"},
                     ],
                     levelOrders: [
-                        {name: "By Jurisdiction, then by NHS Class", value: ['Jurisdiction', 'NHSClass']},
-                        {name: "By NHS Class, then by Jurisdiction", value: ['NHSClass', 'Jurisdiction']}
+                        {name: "By Jurisdiction, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'condition']},
+                        {name: "By NHS Class, then by Jurisdiction", value: ['NHSClass', 'Jurisdiction', 'condition']}
                     ]
                 },
                 Bridges: {
                     type: 'bar',
                     bins: [{name: "Deck Condition", value:'DeckCond'}],
-                    headers: ['Jurisdiction', 'NHS Class', 'Deck Condition', 'Count'],
-                    fields: ['Jurisdiction', 'NHSClass', 'condition', 'count'],
+                    headers: ['Jurisdiction', 'NHS Class', 'Miles', 'Lane Miles', 'Deck Condition', 'Count'],
+                    fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'DeckCond', 'count'],
                     levels: ['Jurisdiction', 'NHSClass', 'condition'],
                     sums: ['count'],
                     averages: [],
@@ -70,43 +70,37 @@ define(
                         {name: "Count", value: "count"},
                     ],
                     levelOrders: [
-                        {name: "By Jurisdiction, then by NHS Class", value: ['Jurisdiction', 'NHSClass']},
-                        {name: "By NHS Class, then by Jurisdiction", value: ['NHSClass', 'Jurisdiction']}
+                        {name: "By Jurisdiction, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'DeckCond']},
+                        {name: "By NHS Class, then by Jurisdiction", value: ['NHSClass', 'Jurisdiction', 'DeckCond']}
                     ]
                 }
             },
             'Conditions of Specified Road / CDS': {
                 Roads: {
                     type: 'bar',
-                    bins: [{name: "Pavement Condition", value:'PavementCond'}],
-                    headers: ['NHS Class', 'Pavement Condition', 'Miles', 'Lane Miles'],
-                    fields: ['NHSClass', 'Length', 'LaneMiles', 'condition'],
-                    levels: ['NHSClass', 'condition'],
+                    bins: [{name: "Pavement Condition", value: "condition"}],
+                    headers: ['Miles', 'Lane Miles'],
+                    fields: ['Length', 'LaneMiles'],
+                    levels: ['RouteName'],
                     sums: ['Length', 'LaneMiles'],
                     averages: [],
                     dataKey: 'RouteFeatureResults',
                     graphMetrics: [
-                        {name: "Miles", value: "Length"},
+                        {name: "Centerline Miles", value: "Length"},
                         {name: 'Lane Miles', value: "LaneMiles"},
-                    ],
-                    levelOrders: [
-                        {name: "By NHS Class", value: ['NHSClass']}
                     ]
                 },
                 Bridges: {
                     type: 'bar',
-                    bins: [{name: "Deck Condition", value:'DeckCond'}],
-                    headers: ['NHS Class', 'Deck Condition', 'Count'],
-                    fields: ['NHSClass', 'condition', 'count'],
-                    levels: ['NHSClass', 'condition'],
+                    bins: [{name: "Deck Condition", value: "condition"}],
+                    headers: ['Miles', 'Lane Miles', 'Count'],
+                    fields: ['Length', 'LaneMiles', 'count'],
+                    levels: ['RouteName'],
                     sums: ['count'],
                     averages: [],
                     dataKey: 'BridgeFeatureResults',
                     graphMetrics: [
                         {name: "Count", value: "count"},
-                    ],
-                    levelOrders: [
-                        {name: "By NHS Class", value: ['NHSClass']}
                     ]
                 }
             },

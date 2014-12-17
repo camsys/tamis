@@ -1,13 +1,13 @@
-define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstrap', 'jquery-ui', './reportsbase', 'highcharts', '../config/appstate', '../definitions/reportdefs', 'plugins/router', '../config/config', './querydescription'],
-    function (system, http, app, ko, bootstrap, jqueryui, reportsbase, highcharts, appstate, reportdefs, router, config, querydescription) {
+define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstrap', 'jquery-ui', './reportsbase', 'highcharts', '../config/appstate', '../definitions/chartdefs', 'plugins/router', '../config/config', './querydescription'],
+    function (system, http, app, ko, bootstrap, jqueryui, reportsbase, highcharts, appstate, chartdefs, router, config, querydescription) {
 
         return{
             chartTabs: null,
             querydescription: querydescription,
 
-            /*activate: function () {
+            activate: function () {
                 var that = this;
-                return $.get("assets/json/appstate_q2.json",
+                return $.get("assets/json/appstate_q3.json",
                     function (queryData) {
                         var fields = Object.keys(queryData);
                         $.each(fields, function (index, field) {
@@ -18,16 +18,16 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                 );
             },
 
-            real*/activate: function () {
+            realactivate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 if (data && queryName) {
                     this.chartsRawData = data;
-                    this.reportdef = $.extend(true, {}, reportdefs[queryName]); //make a local copy of the report def since we'll be modifying it
+                    this.chartdef = $.extend(true, {}, chartdefs[queryName]); //make a local copy of the report def since we'll be modifying it
                     this.chartTabs = [];
                     var that = this;
-                    $(Object.keys(that.reportdef)).each(function (index, tabname) {
-                        var tabdef = that.reportdef[tabname];
+                    $(Object.keys(that.chartdef)).each(function (index, tabname) {
+                        var tabdef = that.chartdef[tabname];
                         var graphMetrics = tabdef.graphMetrics;
                         if(tabdef.bins && appstate.queryName != "Conditions of Specified Road / CDS" && graphMetrics.length < 4){
                             var limit  = graphMetrics.length;
@@ -42,7 +42,11 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                         var featureData = appstate.queryResults[tabdef.dataKey];
                         var chartTabSet = that.prepareChart(featureData, tabdef, index, tabname);
                         chartTabSet.featureData = featureData;
-                        chartTabSet.selectedOrder = ko.observable(chartTabSet.tabdef.levelOrders[0].name);
+                        var selectedOrder = null;
+                        if(typeof(chartTabSet.tabdef.levelOrders) != 'undefined'){
+                            selectedOrder = chartTabSet.tabdef.levelOrders[0].name;
+                        }
+                        chartTabSet.selectedOrder = ko.observable(selectedOrder);
                         chartTabSet.selectedMetric = ko.observable(chartTabSet.tabdef.graphMetrics[0].name);
                         that.chartTabs.push(chartTabSet);
                     });
@@ -97,11 +101,11 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                 var that = this;
                 $.each(this.levelOrders(), function (index, levelOrder) {
                     if(levelOrder.name == that.selectedOrder()){
-                        that.reportdef.levels = levelOrder.value;
+                        that.chartdef.levels = levelOrder.value;
                     }
                 });
 
-                var charts = this.prepareCharts(this.chartsRawData, this.reportdef);
+                var charts = this.prepareCharts(this.chartsRawData, this.chartdef);
                 this.charts(charts);
                 this.renderCharts();
             },
@@ -167,7 +171,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
 
                         if (Object.keys(that.binSeries).length < 1) {
                             var series = {};
-                            series.name = metric;
+                            series.name = that.tabdef.headers[that.tabdef.fields.indexOf(metric)];
                             series.data = $.map(chartElement.datapoints, function (datapoint) {
                                 return Number(datapoint[metric]);
                             });
@@ -207,11 +211,30 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
 
                         if (appstate.queryName == "Conditions of Specified Road / CDS") {
                             if (metric == 'LaneMiles') {
-                                that.chartTitle = 'Lane Miles by Condition For ' + chartElement.text;
+                                that.chartTitle = 'Lane Miles by Pavement Condition For ' + chartElement.text;
                             } else if (metric == 'count') {
-                                that.chartTitle = 'Count by Condition For ' + chartElement.text;
+                                that.chartTitle = 'Count by Deck Condition For ' + chartElement.text;
                             } else {
-                                that.chartTitle = 'Miles by Condition For ' + chartElement.text;
+                                that.chartTitle = 'Centerline Miles by Pavement Condition For ' + chartElement.text;
+                            }
+
+                            var conditions = ["Poor", "Fair", "Good", "NA"];
+                            var colors = ["red", "yellow", "green", "grey"];
+
+                            var sorter = function compare(a, b) {
+                                a = conditions.indexOf(a.name);
+                                b = conditions.indexOf(b.name);
+                                if (a < b)
+                                    return -1;
+                                if (a > b)
+                                    return 1;
+                                return 0;
+                            }
+
+                            seriesArray.sort(sorter);
+
+                            for (var i = 0; i < seriesArray.length; i++) {
+                                seriesArray[i].color = colors[conditions.indexOf(seriesArray[i].name)];
                             }
                         }
 
@@ -323,7 +346,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                         summaryChart.datapoints.push(child);
                     });
 
-                    chartTabPanel.charts.push(summaryChart);
+                    chartTabPanel.charts.unshift(summaryChart);
                     chartTabPanel.tabdef.levels.unshift(topLevel);  //put the level back in so the column offsets are correct
                 } else {
                     $.each(tree, function (index, root) {
@@ -373,9 +396,9 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             getLabelForMetric: function (metric) {
                 var label;
                 var that = this;
-                $.each(this.reportdef.fields, function (index, field) {
+                $.each(this.chartdef.fields, function (index, field) {
                     if (field == metric) {
-                        label = that.reportdef.headers[index];
+                        label = that.chartdef.headers[index];
                         return false;
                     }
                 });

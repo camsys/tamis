@@ -26,6 +26,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                                     return a - b
                                 });
                                 that.cdsList(cdsList);
+                                if(cdsList.length == 1){
+                                    that.selectedCds(cdsList[0]);
+                                }
                                 return false;
                             }
                         });

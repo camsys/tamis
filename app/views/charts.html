@@ -15,6 +15,7 @@
             <!-- ko foreach: chartTabs -->
             <div class="tab-pane" data-bind="attr: { id: 'charttab_' + id }, css: { active: $index() == 0 }">
                 <div class="row form-group">
+
                     <label class="navbar-text" for="selectQuery">Selected measure:
                         <select id="selectQuery" class="form-control"
                                 data-bind="options: tabdef.graphMetrics,
@@ -24,6 +25,7 @@
                         </select>
                     </label>
 
+                    <div class="container" data-bind="visible: tabdef.levelOrders">
                     <label class="navbar-text" for="selectOrder">Summarize By:
                         <select id="selectOrder" class="form-control"
                                 data-bind="options: tabdef.levelOrders,
@@ -32,6 +34,7 @@
                             value: selectedOrder">
                         </select>
                     </label>
+                    </div>
 
                     <label class="navbar-text"> &nbsp;
                         <a class="form-control btn btn-primary" data-bind="click: $parent.print">Print</a>

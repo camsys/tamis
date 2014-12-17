@@ -19,6 +19,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
             ],
             selectedQuery: ko.observable(),
             queryComplete: false,
+            queryId: null,
 
             resetObservables: function () {
                 this.selectedQuery(null);
@@ -103,6 +104,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                         query.Query.Selection = this.queries[i].id;
                     }
                 }
+                this.queryId = query.Query.Selection;
 
                 var geoParams = this.geoselector.getQueryParams();
                 query.Query.DisplayParameters = query.Query.DisplayParameters.concat(geoParams);
@@ -150,13 +152,16 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 var layerMap = {};
                 var that = this;
 
-                $.each(appstate.queryResults, function (k, v) {
-                    layerMap[k] = null;
-                });
-                layerMap.geography = null;
+                if(this.queryId != 3){
+                    $.each(appstate.queryResults, function (k, v) {
+                        layerMap[k] = null;
+                    });
+                    layerMap.geography = null;
 
-                dataservice.getGeoPolygons(this.geoselector.getQueryParams(), that.createCallback(layerMap, 'geography', that));
+                    dataservice.getGeoPolygons(this.geoselector.getQueryParams(), that.createCallback(layerMap, 'geography', that));
+                }
 
+                this.hasResults = false;
                 $.each(appstate.queryResults, function (k, v) {
                     var results = v;
                     var objectIds = [];
@@ -164,9 +169,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                         objectIds.push(row.ObjectId);
                     });
                     if(objectIds.length > 0){
+                        that.hasResults = true;
                         dataservice.getFeatures(that.selectedQuery(), k, objectIds.join(), that.createCallback(layerMap, k, that));
                     }
                 });
+                if (this.hasResults == false) {
+                    app.showMessage(config.noResultsMessage.message, config.noResultsMessage.title);
+                }
             },
 
             createCallback: function(layerMap, k, that) {
@@ -182,7 +191,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                         }
                     });
 
-                    if(layerMap.geography == null){
+                    if(typeof(layerMap.geography) != 'undefined' && layerMap.geography == null){
                         allLayersReady = false;
                     }
 
@@ -223,24 +232,64 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 var queryDescription = {};
                 queryDescription.queryName = this.selectedQuery();
                 queryDescription.criteria = [];
-                queryDescription.criteria.push({
-                    name: "Geographic Definition",
-                    value: this.geoselector.selectedGeographicTypeDisplay()
-                });
-                queryDescription.criteria.push({
-                    name: "Geographic Filter",
-                    value: this.geoselector.useGeographicFilter() == 'false' ? "None" :
-                        $.map(this.geoselector.geoFilters(), function (filter) {
-                            return filter.text;
-                        }).join(", ")
-                });
-                queryDescription.criteria.push({
-                    name: "Asset Filter",
-                    value: this.assetselector.useAssetFilter() == 'false' ? "None" :
-                        $.map(this.assetselector.assetFilters(), function (filter) {
-                            return filter.text;
-                        }).join(", ")
-                });
+                if(this.geoselector.selectedGeographicTypeDisplay()){
+                    queryDescription.criteria.push({
+                        name: "Geographic Definition",
+                        value: this.geoselector.selectedGeographicTypeDisplay()
+                    });
+                    queryDescription.criteria.push({
+                        name: "Geographic Filter",
+                        value: this.geoselector.useGeographicFilter() == 'false' ? "None" :
+                            $.map(this.geoselector.geoFilters(), function (filter) {
+                                return filter.text;
+                            }).join(", ")
+                    });
+                }
+
+                if(this.assetselector.useAssetFilter()){
+                    queryDescription.criteria.push({
+                        name: "Asset Filter",
+                        value: this.assetselector.useAssetFilter() == 'false' ? "None" :
+                            $.map(this.assetselector.assetFilters(), function (filter) {
+                                return filter.text;
+                            }).join(", ")
+                    });
+                }
+
+                if(this.routeselector.routeName()){
+                    queryDescription.criteria.push({
+                        name: "Route Name",
+                        value: this.routeselector.routeName()
+                    });
+
+                    queryDescription.criteria.push({
+                        name: "CDS",
+                        value: this.routeselector.selectedCds()
+                    });
+                }
+
+                if(this.slopeselector.aadtFilter()){
+                    queryDescription.criteria.push({
+                        name: "AADT Filter",
+                        value: this.slopeselector.aadtFilter()
+                    });
+                }
+
+                if(this.slopeselector.scoreFilter()){
+                    queryDescription.criteria.push({
+                        name: "Hazard Score Filter",
+                        value: this.slopeselector.scoreFilter()
+                    });
+                }
+
+                if(this.slopeselector.mitigationNotPresentFilter()){
+                    queryDescription.criteria.push({
+                        name: "Mitigation NOT present Filter",
+                        value: 'True'
+                    });
+                }
+
+
                 return queryDescription;
             }
         };

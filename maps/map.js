@@ -38,10 +38,26 @@ tamis.Map = (function () {
     var deckConditionRenderer;
     var bridgeStatusRenderer;
     var unstableSlopesRenderer;
+    var routeLaneCountRenderer;
+
+    var geographyLayer;
+    var routeResultsLayer;
+    var bridgeResultsLayer;
+    var unstableSlopeResultsLayer;
 
     var pointGraphic;
     var legendDijit;
     var labels;
+
+    var queryName;
+
+    var bridgeRendererNames = [];
+    var routeRendererNames = [];
+
+    var selectedBridgeRenderer = '';
+    var selectedRouteRenderer = '';
+
+    var layers;
 
     /* Initialization */
     dojo.require("esri.toolbars.draw");
@@ -67,12 +83,14 @@ tamis.Map = (function () {
         parent.$("body").off("loaddata");
         parent.$("body").on("loaddata", function (e) {
             tamis.Map.labels = e.labels;
+            tamis.Map.queryName = e.queryName;
+            tamis.Map.layers = e.layers;
             setScalebar();
             initializeSymbols();
             initializeRenderers();
             initializeLegend();
-            initializeLayers(e.queryName);
-            loadData(e.layers);
+            initializeLayers();
+            loadData();
         });
 
         parent.$("body").on("rowselect", function (e) {
@@ -102,7 +120,7 @@ tamis.Map = (function () {
             esri.symbol.SimpleFillSymbol.STYLE_SOLID,
             new esri.symbol.SimpleLineSymbol(
                 esri.symbol.SimpleLineSymbol.STYLE_SOLID,
-                new dojo.Color([0, 0, 255]),
+                new dojo.Color([160, 32, 240]),
                 5
             ),
             new dojo.Color([100, 100, 100, 0.25])
@@ -126,7 +144,6 @@ tamis.Map = (function () {
         redSquareSymbol.style = esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE;
         redSquareSymbol.setSize(8);
         redSquareSymbol.setColor(new dojo.Color([255, 0, 0]));
-
 
         roadFunctionalClassRenderer = new esri.renderer.UniqueValueRenderer(null, "NHS Class");
         roadFunctionalClassRenderer.addValue("NHS", redPolylineSymbol);
@@ -152,9 +169,38 @@ tamis.Map = (function () {
         bridgeFunctionalClassRenderer.addValue("NHS", greenSquareSymbol);
         bridgeFunctionalClassRenderer.addValue("NOT NHS", redSquareSymbol);
 
+        routeLaneCountRenderer = new esri.renderer.UniqueValueRenderer(null, "Lanes");
+        routeLaneCountRenderer.addValue("1", seagreen1PolylineSymbol);
+        routeLaneCountRenderer.addValue("2", yellow1PolylineSymbol);
+        routeLaneCountRenderer.addValue("3", redPolylineSymbol);
+        routeLaneCountRenderer.addValue("4", purple1PolylineSymbol);
+        routeLaneCountRenderer.addValue("5", pinkPolylineSymbol);
+        routeLaneCountRenderer.addValue("6", orchidPolylineSymbol);
     }
 
-    function initializeLayers(queryName) {
+    function initializeLayers(rendererName, rendererType) {
+        var queryName = tamis.Map.queryName;
+
+        if (queryName == 'Assets') {
+            bridgeRendererNames = [];
+            routeRendererNames = [];
+        } else if (queryName == 'Asset Conditions') {
+            bridgeRendererNames = [
+                {name: 'Bridge Status', value: 'bridgeStatusRenderer'},
+                {name: 'NHS Class', value: 'bridgeFunctionalClassRenderer'}
+            ];
+            routeRendererNames = [
+                {name: 'Pavement Conditon', value: 'pavementConditionRenderer'},
+                {name: 'Lane Count', value: 'routeLaneCountRenderer'}
+            ];
+        } else if (queryName == 'Conditions of Specified Road / CDS"') {
+            bridgeRendererNames = [];
+            routeRendererNames = [];
+        } else if (queryName == 'Unstable Slopes') {
+            bridgeRendererNames = [];
+            routeRendererNames = [];
+        }
+
         var bridgeRenderer;
         var routeRenderer;
         if(queryName == 'Assets' || queryName == 'Unstable Slopes'){
@@ -165,15 +211,29 @@ tamis.Map = (function () {
             routeRenderer = pavementConditionRenderer;
         }
 
+        if(rendererType){
+            if(rendererType == 'Bridges'){
+                if(rendererName){
+                    selectedBridgeRenderer = rendererName;
+                    bridgeRenderer = eval(rendererName);
+                }
+            }else{
+                if(rendererName){
+                    selectedRouteRenderer = rendererName;
+                    routeRenderer = eval(rendererName);
+                }
+            }
+        }
+
         var rend = new esri.renderer.SimpleRenderer(polygonSymbol);
 
-        var geographyLayer = initializeFeatureCollectionLayer('geography', rend.toJson(), GEOMETRY_TYPE_POLYGON);
+        geographyLayer = initializeFeatureCollectionLayer('geography', rend.toJson(), GEOMETRY_TYPE_POLYGON);
 
-        var routeResultsLayer = initializeFeatureCollectionLayer(routeResultsLayerName, routeRenderer.toJson(), GEOMETRY_TYPE_POLYLINE);
+        routeResultsLayer = initializeFeatureCollectionLayer(routeResultsLayerName, routeRenderer.toJson(), GEOMETRY_TYPE_POLYLINE);
 
-        var bridgeResultsLayer = initializeFeatureCollectionLayer(bridgeResultsLayerName, bridgeRenderer.toJson(), GEOMETRY_TYPE_POINT);
+        bridgeResultsLayer = initializeFeatureCollectionLayer(bridgeResultsLayerName, bridgeRenderer.toJson(), GEOMETRY_TYPE_POINT);
 
-        var unstableSlopeResultsLayer = initializeFeatureCollectionLayer(unstableSlopeResultsLayerName, unstableSlopesRenderer.toJson(),
+        unstableSlopeResultsLayer = initializeFeatureCollectionLayer(unstableSlopeResultsLayerName, unstableSlopesRenderer.toJson(),
             GEOMETRY_TYPE_POINT);
 
         if(queryName == 'Unstable Slopes'){
@@ -182,7 +242,13 @@ tamis.Map = (function () {
                 {layer: routeResultsLayer, title: "Roads by NHS Class"}
             ]);
             buildLayerList([ unstableSlopeResultsLayer, routeResultsLayer, geographyLayer ]);
-        }else{
+        }else if(queryName == 'Conditions of Specified Road / CDS'){
+            legendDijit.refresh([
+                {layer: bridgeResultsLayer, title: "Bridges"},
+                {layer: routeResultsLayer, title: "Roads"}
+            ]);
+            buildLayerList([ bridgeResultsLayer, routeResultsLayer ]);
+        }else {
             legendDijit.refresh([
                 {layer: bridgeResultsLayer, title: "Bridges"},
                 {layer: routeResultsLayer, title: "Roads"}
@@ -264,17 +330,53 @@ tamis.Map = (function () {
                 label = 'Roads';
             } else if (layer.id == unstableSlopeResultsLayerName){
                 label = 'Unstable Slopes';
+            } else if (layer.id == 'geography'){
+                label = 'Geographic Areas';
             }
 
             if(label){
                 visible.push(layer.id);
-                items.push("<input type='checkbox' class='list_item' onclick='tamis.Map.updateLayerVisibility(this)'" +
-                (layer.visible ? "checked=checked" : "") + "' id='" + layer.id + "'' /><label for='" + layer.id + "'>" + label + "</label><br />");
+
+                var item = "<input type='checkbox' class='list_item' onclick='tamis.Map.updateLayerVisibility(this)'" +
+                    (layer.visible ? "checked=checked" : "") + "' id='" + layer.id + "'' /><label for='" + layer.id + "'>" + label + "</label>";
+
+                if(layer.id == 'BridgeFeatureResults' && bridgeRendererNames.length > 1){
+                    var optionString = $.map(bridgeRendererNames, function (renderer) {
+                        return "<option value='"+ renderer.value + "' " + (renderer.value == selectedBridgeRenderer ? "selected" : "") +" >" + renderer.name + "</option>";
+                    }).join('');
+                    var selectString = "&nbsp;<select type='Bridges' onchange='tamis.Map.updateRenderer(this);'>" + optionString + "</select>​";
+                    item = item + selectString;
+                }else if(layer.id == 'RouteFeatureResults' && routeRendererNames.length > 1){
+                    var optionString = $.map(routeRendererNames, function (renderer) {
+                        return "<option value='"+ renderer.value + "' " + (renderer.value == selectedRouteRenderer ? "selected" : "") +" >" + renderer.name + "</option>";
+                    }).join('');
+                    var selectString = "&nbsp;<select type='Roads' onchange='tamis.Map.updateRenderer(this);'>" + optionString + "</select>​";
+                    item = item + selectString;
+                }
+
+                item = item + '<br />';
+                items.push(item);
             }
 
         }
         var layerList = document.getElementById("layer_list");
         layerList.innerHTML = items.join(' ');
+    }
+
+    function updateRenderer(selector) {
+        var selectedRenderer = $(selector).find('option:selected').val();
+        var selectedRendererTitle = $(selector).find('option:selected').text();
+        var type = $(selector).attr('type');
+
+        map.destroy();
+        map = new esri.Map(mapId, {
+            basemap: "streets",
+            showInfoWindowOnClick: true
+        });
+
+        this.initializeLayers(selectedRenderer, type);
+
+        alert('Now symbolizing ' + type +' by ' + selectedRendererTitle);
     }
 
     function updateLayerVisibility(checkbox) {
@@ -288,7 +390,8 @@ tamis.Map = (function () {
         }, "legendDiv");
     }
 
-    function loadData(layers) {
+    function loadData() {
+        var layers = tamis.Map.layers;
         var features = [];
         $.each(layers, function (layerName, layerData) {
             features = features.concat(loadGeometry(layerData, layerName));
@@ -410,7 +513,10 @@ tamis.Map = (function () {
 
     return {
         initializeMap: initializeMap,
-        updateLayerVisibility: updateLayerVisibility
+        updateLayerVisibility: updateLayerVisibility,
+        updateRenderer: updateRenderer,
+        initializeLayers: initializeLayers,
+        loadData: loadData
     }
 
 }());
