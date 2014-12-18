@@ -82,6 +82,31 @@ define(
                         vals: ["Deck Area"]
                     },
                 }
-            }
+            },
+            'Unstable Slopes': {
+                'Unstable Slopes': {
+                    'Count of Unstable Slopes by Jurisdiction': {
+                        rows: ["Jurisdiction"],
+                        cols: [],
+                        rendererName: "Table",
+                        aggregatorName: "Count",
+                        vals: []
+                    },
+                    'Average Total Score by Jurisdiction and Mitigation Present': {
+                        rows: ["Jurisdiction"],
+                        cols: ["Mitigation Present"],
+                        rendererName: "Table",
+                        aggregatorName: "Average",
+                        vals: ["Total Score"]
+                    },
+                    'Average Weighted Score by Jurisdiction': {
+                        rows: ["Jurisdiction"],
+                        cols: [],
+                        rendererName: "Table",
+                        aggregatorName: "Average",
+                        vals: ["Weighted Total"]
+                    },
+                }
+            },
         };
     });

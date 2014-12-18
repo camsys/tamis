@@ -5,37 +5,59 @@ tamis.Map = (function () {
 
     /* Constants */
 
-    var fields = [
-        {key: 'NHS Class', startColor: 'lightblue', endColor: 'darkblue'},
-        {key: 'Pavement Condition', startColor: 'black', endColor: 'red'},
-        {key: 'totalscorebucket', startColor: 'black', endColor: 'red'},
-        {key: 'Status', startColor: 'green', endColor: 'blue'},
-        {key: 'Lanes', startColor: 'black', endColor: 'red'}
-    ];
-
     var queries =
     {
         "Assets": {
-            "BridgeFeatureResults":[],
-            "RouteFeatureResults": []
+            "BridgeFeatureResults":[
+                {key: 'NHS Class', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: true},
+                {key: 'AADT', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: false},
+            ],
+            "RouteFeatureResults": [
+                {key: 'NHS Class', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: true},
+                {key: 'AADT', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: false},
+            ]
         },
         "Asset Conditions": {
             "BridgeFeatureResults":[
                 {key: 'NHS Class', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: true},
                 {key: 'Status', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: false},
+                {key: 'AADT', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: false},
             ],
             "RouteFeatureResults": [
                 {key: 'NHS Class', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: true},
-                {key: 'Pavement Condition', type: 'Roads', startColor: 'black', endColor: 'red', default: false},
+                {key: 'Pavement Condition', type: 'Roads', default: false,
+                    colors: [{key: "Good", color: "green"},{key: "Fair", color: "yellow"},{key: "Poor", color: "red"},{key: "NA", color: "gray"}]
+                },
+                {key: 'AADT', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: false},
             ]
         },
         "Conditions of Specified Road / CDS": {
-            "BridgeFeatureResults":[],
-            "RouteFeatureResults": []
+            "BridgeFeatureResults":[
+                {key: 'NHS Class', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: true},
+                {key: 'Status', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: false},
+                {key: 'AADT', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: false},
+            ],
+            "RouteFeatureResults": [
+                {key: 'NHS Class', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: true},
+                {key: 'Pavement Condition', type: 'Roads', default: false,
+                    colors: [{key: "Good", color: "green"},{key: "Fair", color: "yellow"},{key: "Poor", color: "red"},{key: "NA", color: "gray"}]
+                },
+                {key: 'AADT', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: false},
+            ]
         },
         "Unstable Slopes": {
-            "UnstableSlopeFeatureResults":[],
-            "RouteFeatureResults": []
+            "UnstableSlopeFeatureResults":[
+                {key: 'Total Score', type: 'Slopes', startColor: 'lightblue', endColor: 'darkblue', default: true},
+                {key: 'Risk Score', type: 'Slopes', startColor: 'lightblue', endColor: 'darkblue', default: false},
+                {key: 'Hazard Score', type: 'Slopes', startColor: 'lightblue', endColor: 'darkblue', default: false},
+                {key: 'Weighted Total', type: 'Slopes', startColor: 'lightblue', endColor: 'darkblue', default: false},
+                {key: 'Mitigation Present', type: 'Slopes', default: false,
+                    colors: [{key: "True", color: "green"},{key: "False", color: "red"}]
+                },
+            ],
+            "RouteFeatureResults": [
+                {key: 'AADT', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: true},
+            ]
         }
     };
 
@@ -117,12 +139,21 @@ tamis.Map = (function () {
                     var field = fields[i];
                     var values = getFeatureValues(features, field.key);
                     if(values.length > 0){
-                        var colors = getColorRamp(values.length, field.startColor, field.endColor);
                         var valueRenderer = new esri.renderer.UniqueValueRenderer(null, field.key   );
-                        for(var j = 0; j < values.length; j++){
-                            var value = values[j];
-                            var symbol = getSymbol(layerName, colors[j]);
-                            valueRenderer.addValue(value, symbol);
+                        if(typeof(field.colors) != 'undefined'){
+                            var colors = field.colors;
+                            for(var j = 0; j < colors.length; j++){
+                                var color = field.colors[j];
+                                var symbol = getSymbol(layerName, color.color);
+                                valueRenderer.addValue(color.key, symbol);
+                            }
+                        }else{
+                            var colors = getColorRamp((values.length > 1 ? values.length: 2), field.startColor, field.endColor);
+                            for(var j = 0; j < values.length; j++){
+                                var value = values[j];
+                                var symbol = getSymbol(layerName, colors[j]);
+                                valueRenderer.addValue(value, symbol);
+                            }
                         }
                         var geometryType = getGeometryType(layerName);
                         var layer = initializeFeatureCollectionLayer(layerName + '_' + field.key, valueRenderer.toJson(), geometryType);
@@ -164,7 +195,8 @@ tamis.Map = (function () {
 
     function fixZindex(){
 
-        $.each(map.graphicsLayerIds, function (index, graphicsLayerId) {
+        var layerIds = map.graphicsLayerIds.slice();
+        $.each(layerIds, function (index, graphicsLayerId) {
             var layer = map.getLayer(graphicsLayerId);
             var index;
             if(layer.geometryType == GEOMETRY_TYPE_POLYGON){
@@ -330,7 +362,7 @@ tamis.Map = (function () {
                     var item = "<input type='checkbox' class='list_item' onclick='tamis.Map.updateLayerVisibility(this)'" +
                         (layer.visible ? "checked=checked" : "") + "' id='" + layer.id + "'' /><label for='" + layer.id + "'>" + label + "</label>";
                     if(optionString.length > 0){
-                        item += "&nbsp;<select type='Bridges' onchange='tamis.Map.updateRenderer(this);'>" + optionString + "</select>​";
+                        item += "<br /><select type='Bridges' onchange='tamis.Map.updateRenderer(this);'>" + optionString + "</select>​";
                     }
                     item += '<br />';
                     items.push(item);
@@ -775,7 +807,7 @@ tamis.Map = (function () {
     }
 
     return {
-        fields: fields,
+
         queries: queries,
         initializeMap: initializeMap,
         updateLayerVisibility: updateLayerVisibility,

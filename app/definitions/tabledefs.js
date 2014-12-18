@@ -94,6 +94,7 @@ define(
                         { title: 'Super Structure', data: 'SuperStructure'},
                         { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},
                         { title: 'End Mile', data: 'ToMP', format: '0,000.0000'},
+                        { title: 'AADT', data: 'aadt', format: '0,000.0000'},
                     ],
 
                     RouteFeatureResults: [
@@ -105,7 +106,8 @@ define(
                         { title: 'Lanes', data: 'NumberOfLanes'},
                         { title: 'Pavement Condition', data: 'PavementCond'},
                         { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},
-                        { title: 'End Mile', data: 'ToMP', format: '0,000.0000'}
+                        { title: 'End Mile', data: 'ToMP', format: '0,000.0000'},
+                        { title: 'AADT', data: 'aadt', format: '0,000.0000'},
                     ]
                 }
             },

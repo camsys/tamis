@@ -52,6 +52,13 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                 this.rawdata = [];
                 var that = this;
                 $.each(tabledef.dataKeys, function (index, dataKey) {
+                    if(appstate.queryName == 'Unstable Slopes'){
+                        if(dataKey == 'RouteFeatureResults'){
+                            return;
+                        }else{
+                            index--;
+                        }
+                    }
                     var sourcedata = appstate.queryResults[dataKey];
                     if(sourcedata){
                         var columndefs = pivotcolumns[dataKey];

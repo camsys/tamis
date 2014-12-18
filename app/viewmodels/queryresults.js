@@ -8,20 +8,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
             configuredTables: ko.observableArray([]),
 
             activate: function () {
-                var that = this;
-                return $.get("assets/json/appstate_q2.json",
-                    function (queryData) {
-                        var fields = Object.keys(queryData);
-                        $.each(fields, function (index, field) {
-                            appstate[field] = queryData[field]
-                        });
-
-                        that.realactivate();
-                    }
-                );
-            },
-
-            realactivate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 var configuredTables = [];
@@ -76,6 +62,21 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                                     $.each(Object.keys(row), function (index, attr) {
                                         feature[attr] = row[attr];
                                     });
+                                    if(typeof(feature.aadtbin) != 'undefined'){
+                                        feature.AADT = feature.aadtbin;
+                                    }
+                                    if(typeof(feature.riskbucket) != 'undefined'){
+                                        feature['Risk Score'] = feature.riskbucket;
+                                    }
+                                    if(typeof(feature.totalscorebucket) != 'undefined'){
+                                        feature['Total Score'] = feature.totalscorebucket;
+                                    }
+                                    if(typeof(feature.hazardscorebin) != 'undefined'){
+                                        feature['Hazard Score'] = feature.hazardscorebin;
+                                    }
+                                    if(typeof(feature.weightedtotalbin) != 'undefined'){
+                                        feature['Weighted Total'] = feature.weightedtotalbin;
+                                    }
                                     feature.id = row.id;
                                     feature.dataKey = dataKey;
                                 }

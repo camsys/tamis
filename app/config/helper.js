@@ -53,6 +53,18 @@ define(
                     feature.riskbucket = risk;
                 }
 
+                if(typeof(feature['WeightedTotal']) != 'undefined'){
+                    var risk = feature['WeightedTotal'];
+                    if(risk <= 0.3){
+                        risk = "0-0.3";
+                    }else if(risk <= 0.6){
+                        risk = "0.3-0.6";
+                    }else if(risk <= 1){
+                        risk = "0.6-1.0";
+                    }
+                    feature.weightedtotalbin = risk;
+                }
+
                 if(typeof(feature['TotalScore']) != 'undefined'){
                     var risk = feature['TotalScore'];
                     if(risk < 251){
@@ -63,6 +75,43 @@ define(
                         risk = "500+";
                     }
                     feature.totalscorebucket = risk;
+                }
+
+                if(typeof(feature['HazardScore']) != 'undefined'){
+                    var aadt = feature['HazardScore'];
+                    if(aadt < 251){
+                        aadt = "0-250";
+                    }else if(risk < 501){
+                        aadt = "251-500";
+                    }else {
+                        aadt = "500+";
+                    }
+                    feature.hazardscorebin = aadt;
+                }
+
+                if(typeof(feature['HazardScore']) != 'undefined'){
+                    var aadt = feature['HazardScore'];
+                    if(aadt < 251){
+                        aadt = "0-250";
+                    }else if(risk < 501){
+                        aadt = "251-500";
+                    }else {
+                        aadt = "500+";
+                    }
+                    feature.hazardscorebin = aadt;
+                }
+
+                feature.aadt = Math.floor(Math.random() * (800 - 0 + 1));
+                if(typeof(feature['aadt']) != 'undefined'){
+                    var aadt = feature['aadt'];
+                    if(aadt < 251){
+                        aadt = "0-250";
+                    }else if(risk < 501){
+                        aadt = "251-500";
+                    }else {
+                        aadt = "500+";
+                    }
+                    feature.aadtbin = aadt;
                 }
 
                 feature.count = 1;
