@@ -83,6 +83,50 @@ define(
                     },
                 }
             },
+
+            'Conditions of Specified Road / CDS': {
+                'Roads': {
+                    'Total Lane Miles by NHS Class, and Pavement Condition': {
+                        rows: ["Jurisdiction", "NHS Class"],
+                        cols: ["Pavement Condition"],
+                        rendererName: "Table",
+                        aggregatorName: "Sum",
+                        vals: ["Lane Miles"]
+                    },
+                    'Total Centerline Miles by NHS Class, and Pavement Condition': {
+                        rows: ["Jurisdiction", "NHS Class"],
+                        cols: ["Pavement Condition"],
+                        rendererName: "Table",
+                        aggregatorName: "Sum",
+                        vals: ["Centerline Miles"]
+                    },
+                },
+                'Bridges': {
+                    'Number of Bridges by NHS Class and Status': {
+                        rows: ["NHS Class"],
+                        cols: ["Status"],
+                        rendererName: "Table",
+                        aggregatorName: "Count Unique Values",
+                        vals: ["Bridge Name"]
+                    },
+                    'Number of Bridges by NHS Class and Deck Condition': {
+                        rows: ["NHS Class"],
+                        cols: ["Deck Condition"],
+                        rendererName: "Table",
+                        aggregatorName: "Count Unique Values",
+                        vals: ["Bridge Name"]
+                    },
+                    'Sum of Deck Area by NHS Class and Deck Condition': {
+                        rows: ["NHS Class"],
+                        cols: ["Deck Condition"],
+                        rendererName: "Table",
+                        aggregatorName: "Sum",
+                        vals: ["Deck Area"]
+                    },
+                }
+            },
+
+
             'Unstable Slopes': {
                 'Unstable Slopes': {
                     'Count of Unstable Slopes by Jurisdiction': {
