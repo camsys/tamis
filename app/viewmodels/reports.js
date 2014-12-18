@@ -8,7 +8,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
 
             activate: function () {
                 var that = this;
-                return $.get("assets/json/appstate_q3.json",
+                return $.get("assets/json/appstate_q5.json",
                     function (queryData) {
                         var fields = Object.keys(queryData);
                         $.each(fields, function (index, field) {

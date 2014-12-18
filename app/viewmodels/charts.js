@@ -6,19 +6,6 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             querydescription: querydescription,
 
             activate: function () {
-                var that = this;
-                return $.get("assets/json/appstate_q3.json",
-                    function (queryData) {
-                        var fields = Object.keys(queryData);
-                        $.each(fields, function (index, field) {
-                            appstate[field] = queryData[field]
-                        });
-                        that.realactivate();
-                    }
-                );
-            },
-
-            realactivate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 if (data && queryName) {

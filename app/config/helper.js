@@ -42,7 +42,7 @@ define(
                     if(risk < 81){
                         risk = "0-80";
                     }else if(risk < 161){
-                        risk = "81-160";
+                        risk = "081-160";
                     }else if(risk < 241){
                         risk = "161-240";
                     }else if(risk < 3211){

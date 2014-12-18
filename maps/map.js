@@ -5,13 +5,43 @@ tamis.Map = (function () {
 
     /* Constants */
 
+    var fields = [
+        {key: 'NHS Class', startColor: 'lightblue', endColor: 'darkblue'},
+        {key: 'Pavement Condition', startColor: 'black', endColor: 'red'},
+        {key: 'totalscorebucket', startColor: 'black', endColor: 'red'},
+        {key: 'Status', startColor: 'green', endColor: 'blue'},
+        {key: 'Lanes', startColor: 'black', endColor: 'red'}
+    ];
+
+    var queries =
+    {
+        "Assets": {
+            "BridgeFeatureResults":[],
+            "RouteFeatureResults": []
+        },
+        "Asset Conditions": {
+            "BridgeFeatureResults":[
+                {key: 'NHS Class', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: true},
+                {key: 'Status', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: false},
+            ],
+            "RouteFeatureResults": [
+                {key: 'NHS Class', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: true},
+                {key: 'Pavement Condition', type: 'Roads', startColor: 'black', endColor: 'red', default: false},
+            ]
+        },
+        "Conditions of Specified Road / CDS": {
+            "BridgeFeatureResults":[],
+            "RouteFeatureResults": []
+        },
+        "Unstable Slopes": {
+            "UnstableSlopeFeatureResults":[],
+            "RouteFeatureResults": []
+        }
+    };
+
     var GEOMETRY_TYPE_POINT = 'esriGeometryPoint';
     var GEOMETRY_TYPE_POLYLINE = 'esriGeometryPolyline';
     var GEOMETRY_TYPE_POLYGON = 'esriGeometryPolygon';
-
-    var bridgeResultsLayerName = "BridgeFeatureResults";
-    var routeResultsLayerName = "RouteFeatureResults";
-    var unstableSlopeResultsLayerName = "UnstableSlopeFeatureResults";
 
     var geometryKey = "Geometry";
 
@@ -22,34 +52,9 @@ tamis.Map = (function () {
 
     // Symbols
     var markerSymbol;
-    var redPolylineSymbol;
-    var pinkPolylineSymbol;
-    var orchidPolylineSymbol;
-    var purple1PolylineSymbol;
-    var seagreen1PolylineSymbol;
-    var cobaltgreenPolylineSymbol;
-    var yellow1PolylineSymbol;
     var polylineSymbol;
     var polygonSymbol;
-
-    var roadFunctionalClassRenderer;
-    var bridgeFunctionalClassRenderer;
-    var pavementConditionRenderer;
-    var deckConditionRenderer;
-    var bridgeStatusRenderer;
-    var unstableSlopesRenderer;
-    var routeLaneCountRenderer;
-
-    var geographyLayer;
-    var routeResultsLayer;
-    var bridgeResultsLayer;
-    var unstableSlopeResultsLayer;
-
-    var pointGraphic;
     var legendDijit;
-    var labels;
-
-    var queryName;
 
     var bridgeRendererNames = [];
     var routeRendererNames = [];
@@ -86,11 +91,8 @@ tamis.Map = (function () {
             tamis.Map.queryName = e.queryName;
             tamis.Map.layers = e.layers;
             setScalebar();
-            initializeSymbols();
-            initializeRenderers();
             initializeLegend();
-            initializeLayers();
-            loadData();
+            prepareFeatures();
         });
 
         parent.$("body").on("rowselect", function (e) {
@@ -98,164 +100,155 @@ tamis.Map = (function () {
         });
     }
 
-    function initializeSymbols() {
-        markerSymbol = new esri.symbol.SimpleMarkerSymbol();
-
-        polylineSymbol = new esri.symbol.SimpleLineSymbol(
-            esri.symbol.SimpleLineSymbol.STYLE_SOLID,
-            new dojo.Color([0, 0, 255]),
-            5
-        );
-
-        redPolylineSymbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255, 0, 0]), 5);
-        pinkPolylineSymbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255, 192, 203]), 5);
-        orchidPolylineSymbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([218, 112, 214]), 5);
-        purple1PolylineSymbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([155, 48, 255]), 5);
-        seagreen1PolylineSymbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([84, 255, 159]), 5);
-        cobaltgreenPolylineSymbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([61, 145, 640]), 5);
-        yellow1PolylineSymbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255, 255, 0]), 5);
-        lightBluePolylineSymbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255, 255, 0]), 5);
-
-        polygonSymbol = new esri.symbol.SimpleFillSymbol(
-            esri.symbol.SimpleFillSymbol.STYLE_SOLID,
-            new esri.symbol.SimpleLineSymbol(
-                esri.symbol.SimpleLineSymbol.STYLE_SOLID,
-                new dojo.Color([160, 32, 240]),
-                5
-            ),
-            new dojo.Color([100, 100, 100, 0.25])
-        );
-    }
-
-    function initializeRenderers() {
-
-
-        var greenSquareSymbol = new esri.symbol.SimpleMarkerSymbol();
-        greenSquareSymbol.style = esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE;
-        greenSquareSymbol.setSize(8);
-        greenSquareSymbol.setColor(new dojo.Color([84, 255, 159]));
-
-        var yellowSquareSymbol = new esri.symbol.SimpleMarkerSymbol();
-        yellowSquareSymbol.style = esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE;
-        yellowSquareSymbol.setSize(8);
-        yellowSquareSymbol.setColor(new dojo.Color([255,255,0,0.5]));
-
-        var redSquareSymbol = new esri.symbol.SimpleMarkerSymbol();
-        redSquareSymbol.style = esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE;
-        redSquareSymbol.setSize(8);
-        redSquareSymbol.setColor(new dojo.Color([255, 0, 0]));
-
-        roadFunctionalClassRenderer = new esri.renderer.UniqueValueRenderer(null, "NHS Class");
-        roadFunctionalClassRenderer.addValue("NHS", redPolylineSymbol);
-        roadFunctionalClassRenderer.addValue("NOT NHS", pinkPolylineSymbol);
-
-        pavementConditionRenderer = new esri.renderer.UniqueValueRenderer(null, "Pavement Condition");
-        pavementConditionRenderer.addValue("Good", seagreen1PolylineSymbol);
-        pavementConditionRenderer.addValue("Fair", yellow1PolylineSymbol);
-        pavementConditionRenderer.addValue("Poor", redPolylineSymbol);
-        pavementConditionRenderer.addValue("NA", purple1PolylineSymbol);
-
-        unstableSlopesRenderer = new esri.renderer.UniqueValueRenderer(null, "totalscorebucket");
-        unstableSlopesRenderer.addValue("0-250", greenSquareSymbol);
-        unstableSlopesRenderer.addValue("251-500", yellowSquareSymbol);
-        unstableSlopesRenderer.addValue("500+", redSquareSymbol);
-
-        bridgeStatusRenderer = new esri.renderer.UniqueValueRenderer(null, "Status");
-        bridgeStatusRenderer.addValue("Not Deficient", greenSquareSymbol);
-        bridgeStatusRenderer.addValue("Structurally Deficient", yellowSquareSymbol);
-        bridgeStatusRenderer.addValue("Functionally Obsolete", redSquareSymbol);
-
-        bridgeFunctionalClassRenderer = new esri.renderer.UniqueValueRenderer(null, "NHS Class");
-        bridgeFunctionalClassRenderer.addValue("NHS", greenSquareSymbol);
-        bridgeFunctionalClassRenderer.addValue("NOT NHS", redSquareSymbol);
-
-        routeLaneCountRenderer = new esri.renderer.UniqueValueRenderer(null, "Lanes");
-        routeLaneCountRenderer.addValue("1", seagreen1PolylineSymbol);
-        routeLaneCountRenderer.addValue("2", yellow1PolylineSymbol);
-        routeLaneCountRenderer.addValue("3", redPolylineSymbol);
-        routeLaneCountRenderer.addValue("4", purple1PolylineSymbol);
-        routeLaneCountRenderer.addValue("5", pinkPolylineSymbol);
-        routeLaneCountRenderer.addValue("6", orchidPolylineSymbol);
-    }
-
-    function initializeLayers(rendererName, rendererType) {
+    function prepareFeatures(){
+        var layers = tamis.Map.layers;
         var queryName = tamis.Map.queryName;
-
-        if (queryName == 'Assets') {
-            bridgeRendererNames = [];
-            routeRendererNames = [];
-        } else if (queryName == 'Asset Conditions') {
-            bridgeRendererNames = [
-                {name: 'Bridge Status', value: 'bridgeStatusRenderer'},
-                {name: 'NHS Class', value: 'bridgeFunctionalClassRenderer'}
-            ];
-            routeRendererNames = [
-                {name: 'Pavement Conditon', value: 'pavementConditionRenderer'},
-                {name: 'Lane Count', value: 'routeLaneCountRenderer'}
-            ];
-        } else if (queryName == 'Conditions of Specified Road / CDS"') {
-            bridgeRendererNames = [];
-            routeRendererNames = [];
-        } else if (queryName == 'Unstable Slopes') {
-            bridgeRendererNames = [];
-            routeRendererNames = [];
-        }
-
-        var bridgeRenderer;
-        var routeRenderer;
-        if(queryName == 'Assets' || queryName == 'Unstable Slopes'){
-            bridgeRenderer = bridgeFunctionalClassRenderer;
-            routeRenderer = roadFunctionalClassRenderer;
-        } else {
-            bridgeRenderer =  bridgeStatusRenderer;
-            routeRenderer = pavementConditionRenderer;
-        }
-
-        if(rendererType){
-            if(rendererType == 'Bridges'){
-                if(rendererName){
-                    selectedBridgeRenderer = rendererName;
-                    bridgeRenderer = eval(rendererName);
+        var querydef = tamis.Map.queries[queryName];
+        var layerLegend = [];
+        var layerList = [];
+        var featureGraphics = [];
+        var typeToLayerMap = {};
+        $.each(Object.keys(layers), function (index, layerName) {
+            var fields = querydef[layerName];
+            var layer = layers[layerName];
+            var features = layer.features;
+            if(layerName != 'geography'){
+                for(var i = 0; i < fields.length; i++){
+                    var field = fields[i];
+                    var values = getFeatureValues(features, field.key);
+                    if(values.length > 0){
+                        var colors = getColorRamp(values.length, field.startColor, field.endColor);
+                        var valueRenderer = new esri.renderer.UniqueValueRenderer(null, field.key   );
+                        for(var j = 0; j < values.length; j++){
+                            var value = values[j];
+                            var symbol = getSymbol(layerName, colors[j]);
+                            valueRenderer.addValue(value, symbol);
+                        }
+                        var geometryType = getGeometryType(layerName);
+                        var layer = initializeFeatureCollectionLayer(layerName + '_' + field.key, valueRenderer.toJson(), geometryType);
+                        layer.setVisibility(field.default);
+                        featureGraphics = featureGraphics.concat(loadGeometryForLayer(layer, features));
+                        layerLegend.push({layer: layer, title: field.type + ': ' + field.key});
+                        layerList.push(layer);
+                        if(typeof(typeToLayerMap[field.type]) == 'undefined'){
+                            typeToLayerMap[field.type] = [];
+                        }
+                        typeToLayerMap[field.type].push(layer);
+                    }
                 }
             }else{
-                if(rendererName){
-                    selectedRouteRenderer = rendererName;
-                    routeRenderer = eval(rendererName);
+                polygonSymbol = new esri.symbol.SimpleFillSymbol(
+                    esri.symbol.SimpleFillSymbol.STYLE_SOLID,
+                    new esri.symbol.SimpleLineSymbol(
+                        esri.symbol.SimpleLineSymbol.STYLE_SOLID,
+                        new dojo.Color([160, 32, 240]),
+                        5
+                    ),
+                    new dojo.Color([100, 100, 100, 0.25])
+                );
+
+                var layer = initializeFeatureCollectionLayer('geography', new esri.renderer.SimpleRenderer(polygonSymbol).toJson(), GEOMETRY_TYPE_POLYGON);
+                loadGeometryForLayer(layer, features)
+            }
+        });
+
+        tamis.Map.typeToLayerMap = typeToLayerMap;
+
+        legendDijit.refresh(layerLegend);
+        buildLayerList();
+        map.setExtent(esri.graphicsExtent(featureGraphics))
+
+        tamis.Map.layerInfos = layerLegend;
+        fixZindex();
+    }
+
+    function fixZindex(){
+
+        $.each(map.graphicsLayerIds, function (index, graphicsLayerId) {
+            var layer = map.getLayer(graphicsLayerId);
+            var index;
+            if(layer.geometryType == GEOMETRY_TYPE_POLYGON){
+                index = 0;
+            } else if(layer.geometryType == GEOMETRY_TYPE_POLYLINE){
+                index = 1;
+            } else if(layer.geometryType == GEOMETRY_TYPE_POINT){
+                index = 99999;
+            }
+            map.reorderLayer(layer, index);
+        })
+
+    }
+
+    function loadGeometryForLayer (layer, features) {
+        // Using the layer's renderer.
+        var isRendererDefined = true;
+
+        layer.clear();
+        layer.suspend();
+        var geometryType = layer.geometryType;
+        var graphics = [];
+        for (var i = 0; i < features.length; i++) {
+            var featureResult = features[i];
+            var geom = featureResult.geometry;
+            var newGraphic = createGraphic(geom, geometryType, featureResult, isRendererDefined, i);
+            if(newGraphic.geometry.type == 'polyline' && geometryType.toLowerCase().indexOf('point') > -1){
+                var point = newGraphic.geometry.getExtent().getCenter();
+                newGraphic.geometry = point;
+            }
+            newGraphic.visible = true;
+            graphics.push(newGraphic);
+        }
+
+        layer.applyEdits(graphics);
+        layer.resume();
+        layer.redraw();
+        return graphics;
+    }
+
+    function getSymbol(layerName, color){
+        var symbol;
+        if(layerName == 'RouteFeatureResults'){
+            symbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color(color), 5);
+        }else{
+            symbol = new esri.symbol.SimpleMarkerSymbol();
+            symbol.style = esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE;
+            symbol.setSize(12);
+            symbol.setColor(new dojo.Color(color));
+        }
+        return symbol;
+    }
+
+    function getGeometryType(layerName){
+        if(layerName == 'RouteFeatureResults'){
+            return GEOMETRY_TYPE_POLYLINE;
+        }else{
+            return GEOMETRY_TYPE_POINT;
+        }
+    }
+
+    function getColorRamp(numberOfItems, startColor, endColor){
+        var rainbow = new Rainbow();
+        rainbow.setNumberRange(1, numberOfItems);
+        rainbow.setSpectrum(startColor, endColor);
+        var colors = [];
+        for (var i = 1; i <= numberOfItems; i++) {
+            var hexColour = rainbow.colourAt(i);
+            colors.push('#' + hexColour);
+        }
+        return colors;
+    }
+
+    function getFeatureValues(features, fieldName){
+        var values = {};
+        $.each(features, function (index, feature) {
+            if(typeof(feature[fieldName]) != 'undefined'){
+                var value = feature[fieldName];
+                if(value && value.length > 0){
+                    values[value] = null;
                 }
             }
-        }
-
-        var rend = new esri.renderer.SimpleRenderer(polygonSymbol);
-
-        geographyLayer = initializeFeatureCollectionLayer('geography', rend.toJson(), GEOMETRY_TYPE_POLYGON);
-
-        routeResultsLayer = initializeFeatureCollectionLayer(routeResultsLayerName, routeRenderer.toJson(), GEOMETRY_TYPE_POLYLINE);
-
-        bridgeResultsLayer = initializeFeatureCollectionLayer(bridgeResultsLayerName, bridgeRenderer.toJson(), GEOMETRY_TYPE_POINT);
-
-        unstableSlopeResultsLayer = initializeFeatureCollectionLayer(unstableSlopeResultsLayerName, unstableSlopesRenderer.toJson(),
-            GEOMETRY_TYPE_POINT);
-
-        if(queryName == 'Unstable Slopes'){
-            legendDijit.refresh([
-                {layer: unstableSlopeResultsLayer, title: "Unstable Slopes by Total Score"},
-                {layer: routeResultsLayer, title: "Roads by NHS Class"}
-            ]);
-            buildLayerList([ unstableSlopeResultsLayer, routeResultsLayer, geographyLayer ]);
-        }else if(queryName == 'Conditions of Specified Road / CDS'){
-            legendDijit.refresh([
-                {layer: bridgeResultsLayer, title: "Bridges"},
-                {layer: routeResultsLayer, title: "Roads"}
-            ]);
-            buildLayerList([ bridgeResultsLayer, routeResultsLayer ]);
-        }else {
-            legendDijit.refresh([
-                {layer: bridgeResultsLayer, title: "Bridges"},
-                {layer: routeResultsLayer, title: "Roads"}
-            ]);
-            buildLayerList([ bridgeResultsLayer, routeResultsLayer, geographyLayer ]);
-        }
-
+        });
+        return Object.keys(values).sort();
     }
 
     function initializeFeatureCollectionLayer(layerName, layerRenderer, geometryType) {
@@ -318,69 +311,77 @@ tamis.Map = (function () {
         return infoElements.join('<br/>');
     }
 
-    function buildLayerList(layers) {
-        var visible = [];
+    function buildLayerList() {
+        var typeToLayerMap = tamis.Map.typeToLayerMap;
         var items = [];
-        for (var i = 0; i < layers.length; i++) {
-            var layer = layers[i];
-            var label = null;
-            if(layer.id == bridgeResultsLayerName){
-                label = 'Bridges';
-            } else if (layer.id == routeResultsLayerName){
-                label = 'Roads';
-            } else if (layer.id == unstableSlopeResultsLayerName){
-                label = 'Unstable Slopes';
-            } else if (layer.id == 'geography'){
-                label = 'Geographic Areas';
-            }
+        $.each(Object.keys(typeToLayerMap), function (index, type) {
 
-            if(label){
-                visible.push(layer.id);
+            var optionString = '';
 
-                var item = "<input type='checkbox' class='list_item' onclick='tamis.Map.updateLayerVisibility(this)'" +
-                    (layer.visible ? "checked=checked" : "") + "' id='" + layer.id + "'' /><label for='" + layer.id + "'>" + label + "</label>";
 
-                if(layer.id == 'BridgeFeatureResults' && bridgeRendererNames.length > 1){
-                    var optionString = $.map(bridgeRendererNames, function (renderer) {
-                        return "<option value='"+ renderer.value + "' " + (renderer.value == selectedBridgeRenderer ? "selected" : "") +" >" + renderer.name + "</option>";
-                    }).join('');
-                    var selectString = "&nbsp;<select type='Bridges' onchange='tamis.Map.updateRenderer(this);'>" + optionString + "</select>​";
-                    item = item + selectString;
-                }else if(layer.id == 'RouteFeatureResults' && routeRendererNames.length > 1){
-                    var optionString = $.map(routeRendererNames, function (renderer) {
-                        return "<option value='"+ renderer.value + "' " + (renderer.value == selectedRouteRenderer ? "selected" : "") +" >" + renderer.name + "</option>";
-                    }).join('');
-                    var selectString = "&nbsp;<select type='Roads' onchange='tamis.Map.updateRenderer(this);'>" + optionString + "</select>​";
-                    item = item + selectString;
+            $.each(typeToLayerMap[type], function (index, layer) {
+                var label = layer._titleForLegend;
+                optionString += "<option value='"+ layer.id + "' " + (layer.visible ? "selected" : "") +" >" + label + "</option>";
+            })
+
+            $.each(typeToLayerMap[type], function (index, layer) {
+                var label = layer._titleForLegend;
+                if(layer.visible){
+                    var item = "<input type='checkbox' class='list_item' onclick='tamis.Map.updateLayerVisibility(this)'" +
+                        (layer.visible ? "checked=checked" : "") + "' id='" + layer.id + "'' /><label for='" + layer.id + "'>" + label + "</label>";
+                    if(optionString.length > 0){
+                        item += "&nbsp;<select type='Bridges' onchange='tamis.Map.updateRenderer(this);'>" + optionString + "</select>​";
+                    }
+                    item += '<br />';
+                    items.push(item);
                 }
+            })
+        })
 
-                item = item + '<br />';
-                items.push(item);
-            }
-
-        }
         var layerList = document.getElementById("layer_list");
         layerList.innerHTML = items.join(' ');
     }
 
     function updateRenderer(selector) {
-        var selectedRenderer = $(selector).find('option:selected').val();
-        var selectedRendererTitle = $(selector).find('option:selected').text();
-        var type = $(selector).attr('type');
+        var layerId = $(selector).find('option:selected').val();
+        var typeToLayerMap = tamis.Map.typeToLayerMap;
+        var selectedType;
+        $.each(Object.keys(typeToLayerMap), function (index, type) {
+            $.each(typeToLayerMap[type], function (index, layer) {
+                if(layer.id == layerId){
+                    selectedType = type;
+                    return false;
+                }
+            })
+        })
 
-        map.destroy();
-        map = new esri.Map(mapId, {
-            basemap: "streets",
-            showInfoWindowOnClick: true
-        });
+        $.each(typeToLayerMap[selectedType], function (index, layer) {
+            if(layer.id == layerId){
+                layer.setVisibility(true);
+            }else{
+                layer.setVisibility(false);
+            }
+        })
 
-        this.initializeLayers(selectedRenderer, type);
+        buildLayerList();
+        updateLegend();
 
-        alert('Now symbolizing ' + type +' by ' + selectedRendererTitle);
     }
 
     function updateLayerVisibility(checkbox) {
         map.getLayer(checkbox.id).setVisibility(checkbox.checked);
+        updateLegend();
+    }
+
+    function updateLegend(){
+        var layerInfos = [];
+        $.each(tamis.Map.layerInfos, function (index, layerInfo) {
+            if(layerInfo.layer.visible == true){
+                layerInfos.push(layerInfo);
+            }
+        })
+        legendDijit.refresh(layerInfos);
+        fixZindex();
     }
 
     // The legend will automatically update when a layer of a supported type is added.
@@ -388,44 +389,6 @@ tamis.Map = (function () {
         legendDijit = new esri.dijit.Legend({
             map: map
         }, "legendDiv");
-    }
-
-    function loadData() {
-        var layers = tamis.Map.layers;
-        var features = [];
-        $.each(layers, function (layerName, layerData) {
-            features = features.concat(loadGeometry(layerData, layerName));
-        });
-        map.setExtent(esri.graphicsExtent(features))
-    }
-
-    function loadGeometry(featureResults, layerName) {
-        var layer = map.getLayer(layerName);
-        // Using the layer's renderer.
-        var isRendererDefined = true;
-
-        layer.clear();
-        layer.suspend();
-
-        var features = [];
-        //var geometryType = GEOMETRY_TYPE_POLYLINE;
-        var geometryType = layer.geometryType;
-        for (var i = 0; i < featureResults.features.length; i++) {
-            var featureResult = featureResults.features[i];
-            var geom = featureResult.geometry;
-            var newGraphic = createGraphic(geom, geometryType, featureResult, isRendererDefined, i);
-            if(newGraphic.geometry.type == 'polyline' && geometryType.toLowerCase().indexOf('point') > -1){
-                var point = newGraphic.geometry.getExtent().getCenter();
-                newGraphic.geometry = point;
-            }
-            newGraphic.visible = true;
-            features.push(newGraphic);
-        }
-
-        layer.applyEdits(features);
-        layer.resume();
-        layer.redraw();
-        return features;
     }
 
     /**
@@ -511,12 +474,313 @@ tamis.Map = (function () {
         });
     }
 
+    function Rainbow()
+    {
+        "use strict";
+        var gradients = null;
+        var minNum = 0;
+        var maxNum = 100;
+        var colours = ['ff0000', 'ffff00', '00ff00', '0000ff'];
+        setColours(colours);
+
+        function setColours (spectrum)
+        {
+            if (spectrum.length < 2) {
+                throw new Error('Rainbow must have two or more colours.');
+            } else {
+                var increment = (maxNum - minNum)/(spectrum.length - 1);
+                var firstGradient = new ColourGradient();
+                firstGradient.setGradient(spectrum[0], spectrum[1]);
+                firstGradient.setNumberRange(minNum, minNum + increment);
+                gradients = [ firstGradient ];
+
+                for (var i = 1; i < spectrum.length - 1; i++) {
+                    var colourGradient = new ColourGradient();
+                    colourGradient.setGradient(spectrum[i], spectrum[i + 1]);
+                    colourGradient.setNumberRange(minNum + increment * i, minNum + increment * (i + 1));
+                    gradients[i] = colourGradient;
+                }
+
+                colours = spectrum;
+            }
+        }
+
+        this.setSpectrum = function ()
+        {
+            setColours(arguments);
+            return this;
+        }
+
+        this.setSpectrumByArray = function (array)
+        {
+            setColours(array);
+            return this;
+        }
+
+        this.colourAt = function (number)
+        {
+            if (isNaN(number)) {
+                throw new TypeError(number + ' is not a number');
+            } else if (gradients.length === 1) {
+                return gradients[0].colourAt(number);
+            } else {
+                var segment = (maxNum - minNum)/(gradients.length);
+                var index = Math.min(Math.floor((Math.max(number, minNum) - minNum)/segment), gradients.length - 1);
+                return gradients[index].colourAt(number);
+            }
+        }
+
+        this.colorAt = this.colourAt;
+
+        this.setNumberRange = function (minNumber, maxNumber)
+        {
+            if (maxNumber > minNumber) {
+                minNum = minNumber;
+                maxNum = maxNumber;
+                setColours(colours);
+            } else {
+                throw new RangeError('maxNumber (' + maxNumber + ') is not greater than minNumber (' + minNumber + ')');
+            }
+            return this;
+        }
+    }
+
+    function ColourGradient()
+    {
+        "use strict";
+        var startColour = 'ff0000';
+        var endColour = '0000ff';
+        var minNum = 0;
+        var maxNum = 100;
+
+        this.setGradient = function (colourStart, colourEnd)
+        {
+            startColour = getHexColour(colourStart);
+            endColour = getHexColour(colourEnd);
+        }
+
+        this.setNumberRange = function (minNumber, maxNumber)
+        {
+            if (maxNumber > minNumber) {
+                minNum = minNumber;
+                maxNum = maxNumber;
+            } else {
+                throw new RangeError('maxNumber (' + maxNumber + ') is not greater than minNumber (' + minNumber + ')');
+            }
+        }
+
+        this.colourAt = function (number)
+        {
+            return calcHex(number, startColour.substring(0,2), endColour.substring(0,2))
+                + calcHex(number, startColour.substring(2,4), endColour.substring(2,4))
+                + calcHex(number, startColour.substring(4,6), endColour.substring(4,6));
+        }
+
+        function calcHex(number, channelStart_Base16, channelEnd_Base16)
+        {
+            var num = number;
+            if (num < minNum) {
+                num = minNum;
+            }
+            if (num > maxNum) {
+                num = maxNum;
+            }
+            var numRange = maxNum - minNum;
+            var cStart_Base10 = parseInt(channelStart_Base16, 16);
+            var cEnd_Base10 = parseInt(channelEnd_Base16, 16);
+            var cPerUnit = (cEnd_Base10 - cStart_Base10)/numRange;
+            var c_Base10 = Math.round(cPerUnit * (num - minNum) + cStart_Base10);
+            return formatHex(c_Base10.toString(16));
+        }
+
+        function formatHex(hex)
+        {
+            if (hex.length === 1) {
+                return '0' + hex;
+            } else {
+                return hex;
+            }
+        }
+
+        function isHexColour(string)
+        {
+            var regex = /^#?[0-9a-fA-F]{6}$/i;
+            return regex.test(string);
+        }
+
+        function getHexColour(string)
+        {
+            if (isHexColour(string)) {
+                return string.substring(string.length - 6, string.length);
+            } else {
+                var name = string.toLowerCase();
+                if (colourNames.hasOwnProperty(name)) {
+                    return colourNames[name];
+                }
+                throw new Error(string + ' is not a valid colour.');
+            }
+        }
+
+        // Extended list of CSS colornames s taken from
+        // http://www.w3.org/TR/css3-color/#svg-color
+        var colourNames = {
+            aliceblue: "F0F8FF",
+            antiquewhite: "FAEBD7",
+            aqua: "00FFFF",
+            aquamarine: "7FFFD4",
+            azure: "F0FFFF",
+            beige: "F5F5DC",
+            bisque: "FFE4C4",
+            black: "000000",
+            blanchedalmond: "FFEBCD",
+            blue: "0000FF",
+            blueviolet: "8A2BE2",
+            brown: "A52A2A",
+            burlywood: "DEB887",
+            cadetblue: "5F9EA0",
+            chartreuse: "7FFF00",
+            chocolate: "D2691E",
+            coral: "FF7F50",
+            cornflowerblue: "6495ED",
+            cornsilk: "FFF8DC",
+            crimson: "DC143C",
+            cyan: "00FFFF",
+            darkblue: "00008B",
+            darkcyan: "008B8B",
+            darkgoldenrod: "B8860B",
+            darkgray: "A9A9A9",
+            darkgreen: "006400",
+            darkgrey: "A9A9A9",
+            darkkhaki: "BDB76B",
+            darkmagenta: "8B008B",
+            darkolivegreen: "556B2F",
+            darkorange: "FF8C00",
+            darkorchid: "9932CC",
+            darkred: "8B0000",
+            darksalmon: "E9967A",
+            darkseagreen: "8FBC8F",
+            darkslateblue: "483D8B",
+            darkslategray: "2F4F4F",
+            darkslategrey: "2F4F4F",
+            darkturquoise: "00CED1",
+            darkviolet: "9400D3",
+            deeppink: "FF1493",
+            deepskyblue: "00BFFF",
+            dimgray: "696969",
+            dimgrey: "696969",
+            dodgerblue: "1E90FF",
+            firebrick: "B22222",
+            floralwhite: "FFFAF0",
+            forestgreen: "228B22",
+            fuchsia: "FF00FF",
+            gainsboro: "DCDCDC",
+            ghostwhite: "F8F8FF",
+            gold: "FFD700",
+            goldenrod: "DAA520",
+            gray: "808080",
+            green: "008000",
+            greenyellow: "ADFF2F",
+            grey: "808080",
+            honeydew: "F0FFF0",
+            hotpink: "FF69B4",
+            indianred: "CD5C5C",
+            indigo: "4B0082",
+            ivory: "FFFFF0",
+            khaki: "F0E68C",
+            lavender: "E6E6FA",
+            lavenderblush: "FFF0F5",
+            lawngreen: "7CFC00",
+            lemonchiffon: "FFFACD",
+            lightblue: "ADD8E6",
+            lightcoral: "F08080",
+            lightcyan: "E0FFFF",
+            lightgoldenrodyellow: "FAFAD2",
+            lightgray: "D3D3D3",
+            lightgreen: "90EE90",
+            lightgrey: "D3D3D3",
+            lightpink: "FFB6C1",
+            lightsalmon: "FFA07A",
+            lightseagreen: "20B2AA",
+            lightskyblue: "87CEFA",
+            lightslategray: "778899",
+            lightslategrey: "778899",
+            lightsteelblue: "B0C4DE",
+            lightyellow: "FFFFE0",
+            lime: "00FF00",
+            limegreen: "32CD32",
+            linen: "FAF0E6",
+            magenta: "FF00FF",
+            maroon: "800000",
+            mediumaquamarine: "66CDAA",
+            mediumblue: "0000CD",
+            mediumorchid: "BA55D3",
+            mediumpurple: "9370DB",
+            mediumseagreen: "3CB371",
+            mediumslateblue: "7B68EE",
+            mediumspringgreen: "00FA9A",
+            mediumturquoise: "48D1CC",
+            mediumvioletred: "C71585",
+            midnightblue: "191970",
+            mintcream: "F5FFFA",
+            mistyrose: "FFE4E1",
+            moccasin: "FFE4B5",
+            navajowhite: "FFDEAD",
+            navy: "000080",
+            oldlace: "FDF5E6",
+            olive: "808000",
+            olivedrab: "6B8E23",
+            orange: "FFA500",
+            orangered: "FF4500",
+            orchid: "DA70D6",
+            palegoldenrod: "EEE8AA",
+            palegreen: "98FB98",
+            paleturquoise: "AFEEEE",
+            palevioletred: "DB7093",
+            papayawhip: "FFEFD5",
+            peachpuff: "FFDAB9",
+            peru: "CD853F",
+            pink: "FFC0CB",
+            plum: "DDA0DD",
+            powderblue: "B0E0E6",
+            purple: "800080",
+            red: "FF0000",
+            rosybrown: "BC8F8F",
+            royalblue: "4169E1",
+            saddlebrown: "8B4513",
+            salmon: "FA8072",
+            sandybrown: "F4A460",
+            seagreen: "2E8B57",
+            seashell: "FFF5EE",
+            sienna: "A0522D",
+            silver: "C0C0C0",
+            skyblue: "87CEEB",
+            slateblue: "6A5ACD",
+            slategray: "708090",
+            slategrey: "708090",
+            snow: "FFFAFA",
+            springgreen: "00FF7F",
+            steelblue: "4682B4",
+            tan: "D2B48C",
+            teal: "008080",
+            thistle: "D8BFD8",
+            tomato: "FF6347",
+            turquoise: "40E0D0",
+            violet: "EE82EE",
+            wheat: "F5DEB3",
+            white: "FFFFFF",
+            whitesmoke: "F5F5F5",
+            yellow: "FFFF00",
+            yellowgreen: "9ACD32"
+        }
+    }
+
     return {
+        fields: fields,
+        queries: queries,
         initializeMap: initializeMap,
         updateLayerVisibility: updateLayerVisibility,
         updateRenderer: updateRenderer,
-        initializeLayers: initializeLayers,
-        loadData: loadData
+        Rainbow: Rainbow
     }
 
 }());

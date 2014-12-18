@@ -12,9 +12,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 this.selectedRoute(null);
                 this.cdsList([]);
                 this.selectedCds(null);
+                $('#selectRoute').val('');
             },
 
             activate: function () {
+
                 var that = this;
                 this.selectedRoute.subscribe(function (newValue) {
                     if (newValue) {
@@ -38,6 +40,38 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 });
                 var that = this;
                 that.routes(appstate.filterValues.routes);
+
+            },
+
+            bindingComplete: function () {
+
+                var that = this;
+
+                jQuery.fn.filterByText = function(textbox) {
+                    return this.each(function() {
+
+                        var select = this;
+                        var options = [];
+                        $(that.routes()).each(function() {
+                            options.push({value: this.Id, text: this.Name});
+                        });
+                        $(textbox).bind('change keyup', function() {
+
+                            var search = $(this).val().trim();
+                            var regex = new RegExp(search,"gi");
+
+                            $.each(options, function(i) {
+                                var option = options[i];
+                                if(option.text.match(regex) !== null) {
+                                    that.selectedRoute(option.value);
+                                    return false;
+                                }
+                            });
+                        });
+                    });
+                };
+
+                $('#selectRoute').filterByText($('#selectRouteFilter'), false);
             }
         };
     });
