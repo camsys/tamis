@@ -4,13 +4,40 @@
     </h1>
 </div>
 <article class="row">
-    <div class="col-md-7">
-        <p>Welcome to ADOT&PF's Transportation Asset Management Information System Proof of Concept (TAMIS POC). This tool is designed to illustrate the benefits of bringing together data from disparate ADOT&PF data sources to support integrated, spatially referenced queries with the aim of providing more holistic information for improved asset management decisions.</p>
-        <h3>Available Queries</h3>
-        <p>The TAMIS POC includes a number of pre-defined queries, each of which can be further tailored and customized by the user. These questions fall into several categories, as represented by the tabs on the right side of this screen. To familiarize yourself with the available queries, click on the tabs for a brief overview of the questions available in each category.</p>
-        <h3>Another header</h3>
-        <p>More text...</p>
+    <div class="col-md-6 portfolio-itemcol-md-6 portfolio-item">
+        <h3>Introducing TAMIS</h3>
+        <p>Welcome to ADOT&PF's Transportation Asset Management Information System Proof of Concept (TAMIS POC). This tool is designed to illustrate the potential benefits of bringing together data from disparate ADOT&PF data sources to support integrated, spatially referenced queries with the aim of providing more holistic information for improved asset management and other strategic decisions.</p>
+        <h3>Signing In</h3>
+        <p>The first time that you use the TAMIS POC, you will be asked to provide your name and email address before continuing to the next screen. The purpose of collecting this information is to allow ADOT&PF project sponsors to contact staff who have used the tool to solicit suggestions for improvements and additional functionality. After you have provided this information, you will not be asked to sign in when you use the tool again from the same computer.</p>
+        <h3>Workflow</h3>
+        <p>The TAMIS POC includes a number of pre-defined queries that integrate data from multiple sources to inform asset management and strategic planning decisions. Available panels are described on the right-hand panel of this page. The general workflow is to select, configure, and execute a query. It is then possible to view results in tabular and map form, and to generate summary charts and reports. Specific steps are as follows:</p>
+        <ul>
+            <li><b>Getting started.</b> After you are finished reviewing the information on this introduction page, click on the Let’s Get Started button on this page to begin. This will take you to the Query screen.</li>
+            <li><b>Selecting and executing a query.</b> On the Query screen, you'll begin by selecting the query you want to execute. After selecting the query, you will be led through a series of questions to filter the query results as desired. Once you have completed the questions, you can execute the query to proceed.</li>
+            <li><b>Viewing results.</b> After the query has executed, the application will transition to the Results screen, where you’ll be able  to view the results in both tabular and map form.</li>
+            <li><b>Viewing charts.</b> From the Results screen, you can click on the Charts tab if you want to view a series of charts providing visual summaries of the results.</li>
+            <li><b>Viewing predefined reports.</b> You can also click on the Reports tab if want to view a predefined report that summarizes the results of the query.</li>
+            <li><b>Creating ad-hoc reports.</b> Finally, you can click on the Explore tab for access to a pivot-table tool that allows you to generate ad-hoc reports based on the data returned from the query.</li>
+            <li><b>Running additional queries.</b> When you are done examining the results of one query, you can return to the Query tab to select, configure, and execute another query.</li>
+        </ul>
     </div>
+
+    <div class="col-md-6 portfolio-itemcol-md-6 portfolio-item">
+        <h3>Available Queries</h3>
+        <ul>
+            <li><b>ADOT&PF Assets.</b> This query allows users to look at road and/or bridge assets for which ADOT&PF has maintenance responsibility. The user can choose to filter results based on region, legislative district, and NHS classification.</li>
+            <li><b>ADOT&PF Asset Conditions.</b> This query allows the user to examine the current condition ratings of roads and/or bridges for which ADOT&PF has maintenance responsibility. The user can choose to filter results based on region, legislative district,  NHS classification, pavement condition, bridge status, and bridge deck condition.</li>
+            <li><b>Corridor Conditions.</b> This query allows the user to first specify a section of roadway (selecting a given route along with a beginning and ending mile point) and then provides information about the current condition of pavement and bridges that fall along the specified section.</li>
+            <li><b>Crash Statistics for STIP Projects.</b>  This query compiles crash statistics for sections of roadway associated with planned projects in the STIP. The user can filter results based on region or legislative district.</li>
+            <li><b>Unstable Slopes.</b> This query identifies road sections for which ADOT&PF has maintenance responsibility that may be at risk of closure based on proximity to unstable slopes. The user can choose to filter results based on region, legislative district, traffic volume, minimum total risk-hazard score, and whether or not mitigation measures have been implemented.</li>
+            <li><b>Creating ad-hoc reports.</b> Finally, you can click on the Explore tab for access to a pivot-table tool that allows you to generate ad-hoc reports based on the data returned from the query.</li>
+            <li><b>Running additional queries.</b> When you are done examining the results of one query, you can return to the Query tab to select, configure, and execute another query.</li>
+        </ul>
+
+        <p style="outline: 1px solid black; outline-offset: 3px"><b>This tool serves as a proof of concept and some of the data on which it relies are not up to date. Use of the TAMIS POC to inform current operational and strategic decisions is therefore not advised. For more information on the data used in the POC, click here. [pdf to be provided for link]</b></p>
+
+    </div>
+
 </article>
 <a class="btn btn-primary" data-bind="visible: hasCookie() == true" href="#/queryconfig">Let's Begin</a>
 <button class="btn btn-primary" data-bind="visible: hasCookie() == false, click: showLoginModal">Let's Begin</button>
