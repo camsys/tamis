@@ -14,8 +14,6 @@
                 <div class="tab-content">
                     <!-- ko foreach: tabs -->
                     <div class="tab-pane" data-bind="attr: { id: 'tab_' + $index() }, css: { active: $index() == 0 }">
-
-
                         <div class="row form-group" data-bind="visible: choices">
                             <label class="navbar-text" for="selectOrder">Predefined Pivots:
                                 <select id="selectOrder" class="form-control" data-bind="options: choices,
@@ -24,9 +22,10 @@
                             value: selectedpivot">
                                 </select>
                             </label>
-                        </div>
-
-                        <div data-bind="attr: { id: 'table_' + $index() }" style="margin: 30px;"></div>
+                            <label class="navbar-text"> &nbsp;
+                                <a class="form-control btn btn-primary" data-bind="click: $parent.print">Print</a>
+                            </label>                        </div>
+                        <div class="report-container" data-bind="attr: { id: 'table_' + $index() }" style="margin: 30px;"></div>
                     </div>
                     <!-- /ko -->
                 </div>

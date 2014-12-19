@@ -26,13 +26,13 @@ tamis.Map = (function () {
                 },
                 {key: 'AADT', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: false},
                 {key: 'Status', type: 'Bridges', default: false,
-                    colors: [{key: "Structurally Deficient ", color: "red"},{key: "Functionally Obsolete ", color: "yellow"},{key: "Not Deficient", color: "green"}]
+                    colors: [{key: "Structurally Deficient", color: "red"},{key: "Functionally Obsolete", color: "yellow"},{key: "Not Deficient", color: "green"}]
                 },
             ],
             "RouteFeatureResults": [
                 {key: 'NHS Class', type: 'Roads', startColor: 'darkblue', endColor: 'lightblue', default: true},
                 {key: 'Pavement Condition', type: 'Roads', default: false,
-                    colors: [{key: "Good", color: "green"},{key: "Fair", color: "yellow"},{key: "Poor", color: "red"},{key: "NA", color: "gray"}]
+                    colors: [{key: "Good", color: "green"},{key: "Fair", color: "yellow"},{key: "Poor", color: "red"}]
                 },
                 {key: 'AADT', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: false},
             ]
@@ -46,7 +46,7 @@ tamis.Map = (function () {
             "RouteFeatureResults": [
                 {key: 'NHS Class', type: 'Roads', startColor: 'darkblue', endColor: 'lightblue', default: true},
                 {key: 'Pavement Condition', type: 'Roads', default: false,
-                    colors: [{key: "Good", color: "green"},{key: "Fair", color: "yellow"},{key: "Poor", color: "red"},{key: "NA", color: "gray"}]
+                    colors: [{key: "Good", color: "green"},{key: "Fair", color: "yellow"},{key: "Poor", color: "red"}]
                 },
                 {key: 'AADT', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: false},
             ]
@@ -145,7 +145,9 @@ tamis.Map = (function () {
                     var field = fields[i];
                     var values = getFeatureValues(features, field.key);
                     if(values.length > 0){
-                        var valueRenderer = new esri.renderer.UniqueValueRenderer(null, field.key   );
+                        var symbol = getSymbol(layerName, "#708090");
+                        var valueRenderer = new esri.renderer.UniqueValueRenderer(symbol, field.key);
+                        valueRenderer.defaultLabel = 'No Data';
                         if(typeof(field.colors) != 'undefined'){
                             var colors = field.colors;
                             for(var j = 0; j < colors.length; j++){
@@ -153,6 +155,7 @@ tamis.Map = (function () {
                                 var symbol = getSymbol(layerName, color.color);
                                 valueRenderer.addValue(color.key, symbol);
                             }
+
                         }else{
                             var colors = getColorRamp((values.length > 1 ? values.length: 2), field.startColor, field.endColor);
                             for(var j = 0; j < values.length; j++){

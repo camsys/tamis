@@ -8,9 +8,9 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             username: ko.observable(),
             selectedpivots: ko.observable(),
 
-            /*activate: function () {
+            activate: function () {
                 var that = this;
-                return $.get("assets/json/appstate_q3.json",
+                return $.get("assets/json/appstate_q2.json",
                     function (queryData) {
                         var fields = Object.keys(queryData);
                         $.each(fields, function (index, field) {
@@ -22,8 +22,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                 );
             },
 
-            real*/
-            activate: function () {
+            realactivate: function () {
                 if(!appstate.queryName){
                     app.showMessage(config.noResultsMessage.message, config.noResultsMessage.title).then(function (dialogResult) {
                         router.navigate('queryconfig');
@@ -117,7 +116,25 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                 $("#tableholder_" + index).remove();
                 $("#table_" + index).append('<div id="tableholder_' + index + '"></div>');
                 $("#tableholder_" + index).pivotUI(data, pivotconfig);
-            }
+            },
+
+            print: function () {
+                var printOutput = $('<div></div>');
+
+                $('.nav-tabs li > a').each(function (index, tab) {
+                    var tabTitle = $(tab).find('span').text();
+                    printOutput.append('<div class="chart-printout">' + tabTitle + '</div>');
+                    var chartDivId = tab.href.split('#')[1];
+                    $('#' + chartDivId).find('.pvtRendererArea').each(function (index, chartContainer) {
+                        printOutput.append($(chartContainer).clone());
+                    });
+                });
+
+                var popupWin = window.open('', '_blank', 'width=800,height=600');
+                popupWin.document.open()
+                popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print()">' + printOutput.html() + '</html>');
+                popupWin.document.close();
+            },
 
         };
 
