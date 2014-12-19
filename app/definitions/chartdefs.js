@@ -4,7 +4,7 @@ define(
             'Assets': {
                 Roads: {
                     type: 'bar',
-                    headers: ['Jurisdiction', 'NHS Class', 'Centerline Miles', 'Lane Miles'],
+                    headers: ['Geographic Area', 'NHS Class', 'Centerline Miles', 'Lane Miles'],
                     fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles'],
                     levels: ['Jurisdiction', 'NHSClass'],
                     sums: ['Length', 'LaneMiles'],
@@ -15,13 +15,13 @@ define(
                         {name: 'Lane Miles', value: "LaneMiles"},
                     ],
                     levelOrders: [
-                        {name: "By Jurisdiction, then by NHS Class", value: ['Jurisdiction', 'NHSClass']},
-                        {name: "By NHS Class, then by Jurisdiction", value: ['NHSClass', 'Jurisdiction']}
+                        {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass']},
+                        {name: "By NHS Class, then by Geographic Area", value: ['NHSClass', 'Jurisdiction']}
                     ]
                 },
                 Bridges: {
                     type: 'bar',
-                    headers: ['Jurisdiction', 'NHS Class', 'Centerline Miles', 'Lane Miles', 'Count'],
+                    headers: ['Geographic Area', 'NHS Class', 'Centerline Miles', 'Lane Miles', 'Count'],
                     fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'count'],
                     levels: ['Jurisdiction', 'NHSClass'],
                     sums: ['Length', 'LaneMiles', 'count'],
@@ -33,8 +33,8 @@ define(
                         {name: 'Bridge Count', value: "count"},
                     ],
                     levelOrders: [
-                        {name: "By Jurisdiction, then by NHS Class", value: ['Jurisdiction', 'NHSClass']},
-                        {name: "By NHS Class, then by Jurisdiction", value: ['NHSClass', 'Jurisdiction']}
+                        {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass']},
+                        {name: "By NHS Class, then by Geographic Area", value: ['NHSClass', 'Jurisdiction']}
                     ]
                 }
             },
@@ -42,7 +42,7 @@ define(
                 Roads: {
                     type: 'bar',
                     bins: [{name: "Pavement Condition", value:'PavementCond'}],
-                    headers: ['Jurisdiction', 'NHS Class', 'Miles', 'Lane Miles', 'Pavement Condition', 'Count'],
+                    headers: ['Geographic Area', 'NHS Class', 'Miles', 'Lane Miles', 'Pavement Condition', 'Count'],
                     fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'PavementCond', 'count'],
                     levels: ['Jurisdiction', 'NHSClass', 'condition'],
                     sums: ['Length', 'LaneMiles'],
@@ -53,14 +53,14 @@ define(
                         {name: 'Lane Miles', value: "LaneMiles"},
                     ],
                     levelOrders: [
-                        {name: "By Jurisdiction, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'condition']},
+                        {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'condition']},
                         {name: "By NHS Class, then by Jurisdiction", value: ['NHSClass', 'Jurisdiction', 'condition']}
                     ]
                 },
                 Bridges: {
                     type: 'bar',
                     bins: [{name: "Deck Condition", value:'DeckCond'}],
-                    headers: ['Jurisdiction', 'NHS Class', 'Miles', 'Lane Miles', 'Deck Condition', 'Count'],
+                    headers: ['Geographic Area', 'NHS Class', 'Miles', 'Lane Miles', 'Deck Condition', 'Count'],
                     fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'DeckCond', 'count'],
                     levels: ['Jurisdiction', 'NHSClass', 'condition'],
                     sums: ['count'],
@@ -70,8 +70,8 @@ define(
                         {name: "Count", value: "count"},
                     ],
                     levelOrders: [
-                        {name: "By Jurisdiction, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'DeckCond']},
-                        {name: "By NHS Class, then by Jurisdiction", value: ['NHSClass', 'Jurisdiction', 'DeckCond']}
+                        {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'DeckCond']},
+                        {name: "By NHS Class, then by Geographic Area", value: ['NHSClass', 'Jurisdiction', 'DeckCond']}
                     ]
                 }
             },
@@ -107,7 +107,7 @@ define(
             'Unstable Slopes': {
                 'Unstable Slopes': {
                     type: 'bar',
-                    headers: ['Jurisdiction', 'Risk Score', 'Count'],
+                    headers: ['Geographic Area', 'Risk Score', 'Count'],
                     fields: ['Jurisdiction', 'riskbucket', 'count'],
                     levels: ['Jurisdiction', 'riskbucket'],
                     sums: ['count'],
@@ -118,7 +118,7 @@ define(
                         {name: "Count", value: "count"}
                     ],
                     levelOrders: [
-                        {name: "By Jurisdiction", value: ['Jurisdiction', 'riskbucket']}
+                        {name: "By Geographic Area", value: ['Jurisdiction', 'riskbucket']}
                     ]
                 }
             },

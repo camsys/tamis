@@ -9,22 +9,28 @@ tamis.Map = (function () {
     {
         "Assets": {
             "BridgeFeatureResults":[
-                {key: 'NHS Class', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: true},
+                {key: 'NHS Class', type: 'Bridges', startColor: 'darkblue', endColor: 'lightblue', default: true},
                 {key: 'AADT', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: false},
             ],
             "RouteFeatureResults": [
-                {key: 'NHS Class', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: true},
+                {key: 'NHS Class', type: 'Roads', startColor: 'darkblue', endColor: 'lightblue', default: true},
+                {key: 'Number of Lanes', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: false},
                 {key: 'AADT', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: false},
             ]
         },
         "Asset Conditions": {
             "BridgeFeatureResults":[
-                {key: 'NHS Class', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: true},
-                {key: 'Status', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: false},
+                {key: 'NHS Class', type: 'Bridges', startColor: 'darkblue', endColor: 'lightblue', default: true},
+                {key: 'Deck Condition', type: 'Bridges', default: false,
+                    colors: [{key: "Good", color: "green"},{key: "Fair", color: "yellow"},{key: "Poor", color: "red"}]
+                },
                 {key: 'AADT', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: false},
+                {key: 'Status', type: 'Bridges', default: false,
+                    colors: [{key: "Structurally Deficient ", color: "red"},{key: "Functionally Obsolete ", color: "yellow"},{key: "Not Deficient", color: "green"}]
+                },
             ],
             "RouteFeatureResults": [
-                {key: 'NHS Class', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: true},
+                {key: 'NHS Class', type: 'Roads', startColor: 'darkblue', endColor: 'lightblue', default: true},
                 {key: 'Pavement Condition', type: 'Roads', default: false,
                     colors: [{key: "Good", color: "green"},{key: "Fair", color: "yellow"},{key: "Poor", color: "red"},{key: "NA", color: "gray"}]
                 },
@@ -33,12 +39,12 @@ tamis.Map = (function () {
         },
         "Conditions of Specified Road / CDS": {
             "BridgeFeatureResults":[
-                {key: 'NHS Class', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: true},
+                {key: 'NHS Class', type: 'Bridges', startColor: 'darkblue', endColor: 'lightblue', default: true},
                 {key: 'Status', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: false},
                 {key: 'AADT', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: false},
             ],
             "RouteFeatureResults": [
-                {key: 'NHS Class', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: true},
+                {key: 'NHS Class', type: 'Roads', startColor: 'darkblue', endColor: 'lightblue', default: true},
                 {key: 'Pavement Condition', type: 'Roads', default: false,
                     colors: [{key: "Good", color: "green"},{key: "Fair", color: "yellow"},{key: "Poor", color: "red"},{key: "NA", color: "gray"}]
                 },

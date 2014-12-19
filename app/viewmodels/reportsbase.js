@@ -142,7 +142,11 @@ define(['plugins/http', 'durandal/app', 'knockout'],
                                 if (typeof(child[sum]) == 'undefined') {
                                     child[sum] = 0;
                                 }else{
-                                    child[sum] = Number(child[sum]).toFixed(2);
+                                    var num = Number(child[sum]).toFixed(2);
+                                    if(num % 1 === 0){
+                                       num = Number(child[sum]).toFixed(0);
+                                    }
+                                    child[sum] = num;
                                 }
                                 this.addValue(child, sum, row);
                             }
@@ -164,9 +168,6 @@ define(['plugins/http', 'durandal/app', 'knockout'],
                 child[sum] = Number(child[sum]).toFixed(2);
                 if (child.parent != null) {
                     this.addValue(child.parent, sum, row);
-                }
-                if(isNaN(child[sum])){
-                    console.log('x');
                 }
             }
         }

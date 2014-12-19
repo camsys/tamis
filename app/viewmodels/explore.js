@@ -8,6 +8,21 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             username: ko.observable(),
             selectedpivots: ko.observable(),
 
+            /*activate: function () {
+                var that = this;
+                return $.get("assets/json/appstate_q3.json",
+                    function (queryData) {
+                        var fields = Object.keys(queryData);
+                        $.each(fields, function (index, field) {
+                            appstate[field] = queryData[field]
+                        });
+
+                        that.realactivate();
+                    }
+                );
+            },
+
+            real*/
             activate: function () {
                 if(!appstate.queryName){
                     app.showMessage(config.noResultsMessage.message, config.noResultsMessage.title).then(function (dialogResult) {
@@ -15,20 +30,22 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                     });
                     return;
                 }
-                var reportdef = reportdefs[appstate.queryName];
+                this.reportdef = reportdefs[appstate.queryName];
                 this.pivotdefs = pivotdefs[appstate.queryName];
                 var tabs = [];
                 var that = this;
-                $.each(Object.keys(reportdef), function (index, tabname) {
-                    var tabChoices = [];
-                    if(that.pivotdefs){
-                        $.each(that.pivotdefs[tabname], function (k, v) {
-                            tabChoices.push({name: k})
-                        });
-                    }else{
-                        tabChoices = null;
+                $.each(Object.keys(this.reportdef), function (index, tabname) {
+                    if(appstate.queryResults[that.reportdef[tabname].dataKey]){
+                        var tabChoices = [];
+                        if(that.pivotdefs){
+                            $.each(that.pivotdefs[tabname], function (k, v) {
+                                tabChoices.push({name: k})
+                            });
+                        }else{
+                            tabChoices = null;
+                        }
+                        tabs.push({name: tabname, choices: tabChoices, selectedpivot: ko.observable()});
                     }
-                    tabs.push({name: tabname, choices: tabChoices, selectedpivot: ko.observable()});
                 });
                 this.tabs = tabs;
             },

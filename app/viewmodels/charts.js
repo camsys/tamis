@@ -5,7 +5,21 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             chartTabs: null,
             querydescription: querydescription,
 
-            activate: function () {
+            /*activate: function () {
+                var that = this;
+                return $.get("assets/json/appstate_q2.json",
+                    function (queryData) {
+                        var fields = Object.keys(queryData);
+                        $.each(fields, function (index, field) {
+                            appstate[field] = queryData[field]
+                        });
+
+                        that.realactivate();
+                    }
+                );
+            },
+
+            real*/activate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 if (data && queryName) {
@@ -27,15 +41,18 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             tabdef.graphMetrics = graphMetrics;
                         }
                         var featureData = appstate.queryResults[tabdef.dataKey];
-                        var chartTabSet = that.prepareChart(featureData, tabdef, index, tabname);
-                        chartTabSet.featureData = featureData;
-                        var selectedOrder = null;
-                        if(typeof(chartTabSet.tabdef.levelOrders) != 'undefined'){
-                            selectedOrder = chartTabSet.tabdef.levelOrders[0].name;
+                        if(featureData){
+                            var chartTabSet = that.prepareChart(featureData, tabdef, index, tabname);
+                            chartTabSet.featureData = featureData;
+                            var selectedOrder = null;
+                            if(typeof(chartTabSet.tabdef.levelOrders) != 'undefined'){
+                                selectedOrder = chartTabSet.tabdef.levelOrders[0].name;
+                            }
+                            chartTabSet.selectedOrder = ko.observable(selectedOrder);
+                            chartTabSet.selectedMetric = ko.observable(chartTabSet.tabdef.graphMetrics[0].name);
+                            that.chartTabs.push(chartTabSet);
                         }
-                        chartTabSet.selectedOrder = ko.observable(selectedOrder);
-                        chartTabSet.selectedMetric = ko.observable(chartTabSet.tabdef.graphMetrics[0].name);
-                        that.chartTabs.push(chartTabSet);
+
                     });
                 } else {
                     app.showMessage(config.noResultsMessage.message, config.noResultsMessage.title).then(function (dialogResult) {
@@ -324,7 +341,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                     summaryChart.level = topLevel;
                     var topleveltitle = chartTabPanel.tabdef.headers[chartTabPanel.tabdef.fields.indexOf(topLevel)];
                     topleveltitle = /s$/.test(topleveltitle) ? topleveltitle + "es" : topleveltitle + 's';
-                    summaryChart.text = "All " + topleveltitle;
+                    summaryChart.text = "All Selected " + topleveltitle;
                     summaryChart.id = outerIndex + "_" + chartTabPanel.length;
                     summaryChart.datapoints = []
 

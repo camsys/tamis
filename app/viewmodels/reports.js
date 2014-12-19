@@ -81,6 +81,14 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                 var summaryGrid = {
                     cells: [],
                     add: function (cell) {
+                        var number = parseFloat(cell.html);
+                        if(!isNaN(number)){
+                            number = Number(number).toFixed(2);
+                            if(number % 1 === 0){
+                                number = Number(number).toFixed(0);
+                            }
+                            cell.html = number;
+                        }
                         this.cells.push(cell);
                     }
                 }
@@ -176,10 +184,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                                 } else {
                                     var value = node[field] == null ? "&nbsp;" : node[field];
                                 }
-
-                                if (typeof value == 'number') {
-                                    value = value.toFixed(2);
-                                }
                                 table.add({
                                     html: value.toString()
                                 });
@@ -231,9 +235,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                                 if (reportdef.levels.indexOf(field) == -1) {
 
                                     var value = node[field] == null ? "&nbsp;" : node[field];
-                                    if (typeof value == 'number') {
-                                        value = value.toFixed(2);
-                                    }
                                     table.add({
                                         html: value.toString(),
                                         cellCls: 'subtotal'

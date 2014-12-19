@@ -6,28 +6,30 @@ define(
                 dataKeys: ['RouteFeatureResults', 'BridgeFeatureResults'],
                 columnDefs: {
                     BridgeFeatureResults: [
-                        { title: 'CDS', data: 'RouteId'},
-                        { title: 'Bridge Name', data: 'BridgeName'},
-                        { title: 'Route Name', data: 'RouteName'},
+                        { title: 'Geographic Area', data: 'Jurisdiction'},
                         { title: 'NHS Class', data: 'NHSClass'},
-                        { title: 'Lanes', data: 'NumberOfLanes'},
-                        { title: 'Jurisdiction', data: 'Jurisdiction'},
+                        { title: 'Bridge Name', data: 'BridgeName'},
+                        { title: 'CDS', data: 'RouteId'},
+                        { title: 'Route Name', data: 'RouteName'},
                         { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},
                         { title: 'End Mile', data: 'ToMP', format: '0,000.0000'},
+                        { title: 'Number of Lanes', data: 'NumberOfLanes'},
                         { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'},
                         { title: 'Lane Miles', data: 'LaneMiles', format: '0,000.0000'},
+                        { title: 'AADT', data: 'aadt', format: '0,000.0000'},
                     ],
 
                     RouteFeatureResults: [
+                        { title: 'Geographic Area', data: 'Jurisdiction'},
+                        { title: 'NHS Class', data: 'NHSClass'},
                         { title: 'CDS', data: 'RouteId'},
                         { title: 'Route Name', data: 'RouteName'},
-                        { title: 'NHS Class', data: 'NHSClass'},
-                        { title: 'Lanes', data: 'NumberOfLanes'},
-                        { title: 'Jurisdiction', data: 'Jurisdiction'},
                         { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},
                         { title: 'End Mile', data: 'ToMP', format: '0,000.0000'},
+                        { title: 'Number of Lanes', data: 'NumberOfLanes'},
                         { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'},
                         { title: 'Lane Miles', data: 'LaneMiles', format: '0,000.0000'},
+                        { title: 'AADT', data: 'aadt', format: '0,000.0000'},
                     ]
                 }
             },
@@ -37,37 +39,35 @@ define(
                 dataKeys: ['RouteFeatureResults', 'BridgeFeatureResults'],
                 columnDefs: {
                     BridgeFeatureResults: [
-                        { title: 'CDS', data: 'RouteId'},
-                        { title: 'Bridge Name', data: 'BridgeName'},
-                        { title: 'Route Name', data: 'RouteName'},
+                        { title: 'Geographic Area', data: 'Jurisdiction'},
                         { title: 'NHS Class', data: 'NHSClass'},
-                        { title: 'Lanes', data: 'NumberOfLanes'},
-                        { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'},
-                        { title: 'Lane Miles', data: 'LaneMiles'},
-                        { title: 'Jurisdiction', data: 'Jurisdiction'},
-                        { title: 'Structure Length', data: 'StructureLength'},
-                        { title: 'Status', data: 'Status'},
-                        { title: 'Deck Condition', data: 'DeckCond'},
-                        { title: 'Deck Width', data: 'DeckWidth'},
-                        { title: 'Structure Length', data: 'StructureLength'},
-                        { title: 'Sub Structure', data: 'SubStructure'},
-                        { title: 'Super Structure', data: 'SuperStructure'},
-                        { title: 'Deck Area', data: 'deckarea'},
+                        { title: 'Bridge Name', data: 'BridgeName'},
+                        { title: 'CDS', data: 'RouteId'},
+                        { title: 'Route Name', data: 'RouteName'},
                         { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},
                         { title: 'End Mile', data: 'ToMP', format: '0,000.0000'},
-
+                        { title: 'Number of Lanes', data: 'NumberOfLanes'},
+                        { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'},
+                        { title: 'Lane Miles', data: 'LaneMiles'},
+                        { title: 'AADT', data: 'aadt', format: '0,000.0000'},
+                        { title: 'Deck Area', data: 'deckarea'},
+                        { title: 'Deck Condition', data: 'DeckCond'},
+                        { title: 'Super Structure', data: 'SuperStructure'},
+                        { title: 'Sub Structure', data: 'SubStructure'},
+                        { title: 'Status', data: 'Status'},
                     ],
                     RouteFeatureResults: [
+                        { title: 'Geographic Area', data: 'Jurisdiction'},
+                        { title: 'NHS Class', data: 'NHSClass'},
                         { title: 'CDS', data: 'RouteId'},
                         { title: 'Route Name', data: 'RouteName'},
-                        { title: 'NHS Class', data: 'NHSClass'},
-                        { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'},
-                        { title: 'Lane Miles', data: 'LaneMiles'},
-                        { title: 'Lanes', data: 'NumberOfLanes'},
-                        { title: 'Jurisdiction', data: 'Jurisdiction'},
-                        { title: 'Pavement Condition', data: 'PavementCond'},
                         { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},
                         { title: 'End Mile', data: 'ToMP', format: '0,000.0000'},
+                        { title: 'Number of Lanes', data: 'NumberOfLanes'},
+                        { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'},
+                        { title: 'Lane Miles', data: 'LaneMiles'},
+                        { title: 'AADT', data: 'aadt'},
+                        { title: 'Pavement Condition', data: 'PavementCond'}
                     ]
                 }
             },
@@ -98,48 +98,46 @@ define(
                     ],
 
                     RouteFeatureResults: [
+                        { title: 'NHS Class', data: 'NHSClass'},
                         { title: 'CDS', data: 'RouteId'},
                         { title: 'Route Name', data: 'RouteName'},
-                        { title: 'NHS Class', data: 'NHSClass'},
-                        { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'},
-                        { title: 'Lane Miles', data: 'LaneMiles'},
-                        { title: 'Lanes', data: 'NumberOfLanes'},
-                        { title: 'Pavement Condition', data: 'PavementCond'},
                         { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},
                         { title: 'End Mile', data: 'ToMP', format: '0,000.0000'},
+                        { title: 'Number of Lanes', data: 'NumberOfLanes'},
+                        { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'},
+                        { title: 'Lane Miles', data: 'LaneMiles'},
                         { title: 'AADT', data: 'aadt', format: '0,000.0000'},
+                        { title: 'Pavement Condition', data: 'PavementCond'},
                     ]
                 }
             },
 
             'Unstable Slopes': {
-                tabs: ['Roads', 'Unstable Slopes'],
-                dataKeys: ['RouteFeatureResults', 'UnstableSlopeFeatureResults'],
+                tabs: ['Unstable Slopes', 'Roads'],
+                dataKeys: ['UnstableSlopeFeatureResults', 'RouteFeatureResults'],
                 columnDefs: {
-                RouteFeatureResults: [
+
+                    UnstableSlopeFeatureResults: [
+                        { title: 'Geographic Area', data: 'Jurisdiction'},
+                        { title: 'CDS', data: 'RouteId'},
+                        { title: 'Route Name', data: 'RouteName'},
+                        { title: 'Mitigation Present', data: 'MitigationPresent'},
+                        { title: 'Risk Score', data: 'RiskScore'},
+                        { title: 'Hazard Score', data: 'HazardScore'},
+                        { title: 'Total Score', data: 'TotalScore'},
+                        { title: 'Weighted Total', data: 'WeightedTotal'},
+                    ],
+
+                    RouteFeatureResults: [
                         { title: 'CDS', data: 'RouteId'},
                         { title: 'Route Name', data: 'RouteName'},
                         { title: 'NHS Class', data: 'NHSClass'},
                         { title: 'Lanes', data: 'NumberOfLanes'},
-                        { title: 'Jurisdiction', data: 'Jurisdiction'},
+                        { title: 'Geographic Area', data: 'Jurisdiction'},
                         { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},
                         { title: 'End Mile', data: 'ToMP', format: '0,000.0000'},
-                        { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'}
-                    ],
-
-                    UnstableSlopeFeatureResults: [
-                        { title: 'CDS', data: 'RouteId'},
-                        { title: 'Route Name', data: 'RouteName'},
                         { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'},
-                        { title: 'Jurisdiction', data: 'Jurisdiction'},
-                        { title: 'AADT', data: 'AADT'},
-                        { title: 'Hazard Score', data: 'HazardScore'},
-                        { title: 'Mitigation Present', data: 'MitigationPresent'},
-                        { title: 'Risk Score', data: 'RiskScore'},
-                        { title: 'Total Score', data: 'TotalScore'},
-                        { title: 'Weighted Total', data: 'WeightedTotal'},
-                        { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},
-                        { title: 'End Mile', data: 'ToMP', format: '0,000.0000'},
+                        { title: 'AADT', data: 'aadt', format: '0,000.0000'},
                     ]
                 }
             },

@@ -9,7 +9,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
             geoFilters: ko.observableArray([]),
             geographicTypes: [
                 {name: "Regions", value: "Region"},
-                {name: 'Assembly Districts', value: "HouseDistrict"}
+                {name: 'House Districts', value: "HouseDistrict"}
             ],
 
             resetObservables: function () {
@@ -25,7 +25,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 this.assetTree = {};
 
                 var that = this;
-                that.areaTree['Assembly Districts'] = appstate.filterValues.districts;
+                that.areaTree['House Districts'] = appstate.filterValues.districts;
                 that.areaTree['Regions'] = appstate.filterValues.regions;
 
                 var geoTreeNodes = [];

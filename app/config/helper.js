@@ -67,24 +67,24 @@ define(
 
                 if(typeof(feature['TotalScore']) != 'undefined'){
                     var risk = feature['TotalScore'];
-                    if(risk < 251){
-                        risk = "0-250";
-                    }else if(risk < 501){
-                        risk = "251-500";
+                    if(risk < 300){
+                        risk = "0 to 299";
+                    }else if(risk < 600){
+                        risk = "300 to 599";
                     }else {
-                        risk = "500+";
+                        risk = "600+";
                     }
                     feature.totalscorebucket = risk;
                 }
 
                 if(typeof(feature['HazardScore']) != 'undefined'){
                     var aadt = feature['HazardScore'];
-                    if(aadt < 251){
-                        aadt = "0-250";
-                    }else if(risk < 501){
-                        aadt = "251-500";
+                    if(aadt < 200){
+                        aadt = "0-299";
+                    }else if(risk < 400){
+                        aadt = "200 to 399";
                     }else {
-                        aadt = "500+";
+                        aadt = "400+";
                     }
                     feature.hazardscorebin = aadt;
                 }
@@ -101,15 +101,14 @@ define(
                     feature.hazardscorebin = aadt;
                 }
 
-                feature.aadt = Math.floor(Math.random() * (800 - 0 + 1));
-                if(typeof(feature['aadt']) != 'undefined'){
-                    var aadt = feature['aadt'];
-                    if(aadt < 251){
-                        aadt = "0-250";
-                    }else if(risk < 501){
-                        aadt = "251-500";
+                if(typeof(feature['AADT']) != 'undefined'){
+                    var aadt = feature['AADT'];
+                    if(aadt < 20000){
+                        aadt = "0 to 19,999";
+                    }else if(risk < 40000){
+                        aadt = "20,000 to 39,999";
                     }else {
-                        aadt = "500+";
+                        aadt = "40,000 +";
                     }
                     feature.aadtbin = aadt;
                 }

@@ -48,7 +48,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                             rowMap[row.ObjectId] = row;
                         });
 
-                        var columnDefs = tabledefs[appstate.queryName].columnDefs[dataKey]
+                        var columnDefs = tabledefs[appstate.queryName].columnDefs[dataKey];
+                        if(!columnDefs){
+                            return;
+                        }
                         parentEvent.labels[dataKey] = columnDefs;
 
                         var layer = appstate.layerMap[dataKey];
