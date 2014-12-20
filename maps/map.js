@@ -182,9 +182,9 @@ tamis.Map = (function () {
                     new esri.symbol.SimpleLineSymbol(
                         esri.symbol.SimpleLineSymbol.STYLE_SOLID,
                         new dojo.Color([160, 32, 240]),
-                        5
+                        2
                     ),
-                    new dojo.Color([100, 100, 100, 0.25])
+                    new dojo.Color([100, 100, 100, 0.10])
                 );
 
                 var layer = initializeFeatureCollectionLayer('geography', new esri.renderer.SimpleRenderer(polygonSymbol).toJson(), GEOMETRY_TYPE_POLYGON);

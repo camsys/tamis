@@ -15,8 +15,8 @@ define(
                         {name: 'Lane Miles', value: "LaneMiles"},
                     ],
                     levelOrders: [
-                        {name: "By Jurisdiction, then by NHS Class", value: ['Jurisdiction', 'NHSClass']},
-                        {name: "By NHS Class, then by Jurisdiction", value: ['NHSClass', 'Jurisdiction']}
+                        {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass']},
+                        {name: "By NHS Class, then by Geographic Area", value: ['NHSClass', 'Jurisdiction']}
                     ]
                 },
                 Bridges: {
@@ -33,8 +33,8 @@ define(
                         {name: 'Bridge Count', value: "count"},
                     ],
                     levelOrders: [
-                        {name: "By Jurisdiction, then by NHS Class", value: ['Jurisdiction', 'NHSClass']},
-                        {name: "By NHS Class, then by Jurisdiction", value: ['NHSClass', 'Jurisdiction']}
+                        {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass']},
+                        {name: "By NHS Class, then by Geographic Area", value: ['NHSClass', 'Jurisdiction']},
                     ]
                 }
             },
@@ -53,8 +53,8 @@ define(
                         {name: 'Lane Miles', value: "LaneMiles"},
                     ],
                     levelOrders: [
-                        {name: "By Jurisdiction, then by NHS Class", value: ['Jurisdiction', 'NHSClass']},
-                        {name: "By NHS Class, then by Jurisdiction", value: ['NHSClass', 'Jurisdiction']}
+                        {name: "By Jurisdiction, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'condition']},
+                        {name: "By NHS Class, then by Jurisdiction", value: ['NHSClass', 'Jurisdiction', 'condition']}
                     ]
                 },
                 Bridges: {
@@ -70,8 +70,8 @@ define(
                         {name: "Count", value: "count"},
                     ],
                     levelOrders: [
-                        {name: "By Jurisdiction, then by NHS Class", value: ['Jurisdiction', 'NHSClass']},
-                        {name: "By NHS Class, then by Jurisdiction", value: ['NHSClass', 'Jurisdiction']}
+                        {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'condition']},
+                        {name: "By NHS Class, then by Geographic Area", value: ['NHSClass', 'Jurisdiction', 'condition']}
                     ]
                 }
             },
@@ -90,7 +90,7 @@ define(
                         {name: 'Lane Miles', value: "LaneMiles"},
                     ],
                     levelOrders: [
-                        {name: "By NHS Class", value: ['NHSClass']}
+                        {name: "By NHS Class", value: ['NHSClass', 'condition']}
                     ]
                 },
                 Bridges: {
@@ -106,14 +106,14 @@ define(
                         {name: "Count", value: "count"},
                     ],
                     levelOrders: [
-                        {name: "By NHS Class", value: ['NHSClass']}
+                        {name: "By NHS Class", value: ['NHSClass', 'condition']}
                     ]
                 }
             },
             'Unstable Slopes': {
                 'Unstable Slopes': {
                     type: 'bar',
-                    headers: ['Jurisdiction', 'Risk Score', 'Count'],
+                    headers: ['Geographic Area', 'Risk Score', 'Count'],
                     fields: ['Jurisdiction', 'riskbucket', 'count'],
                     levels: ['Jurisdiction', 'riskbucket'],
                     sums: ['count'],
@@ -124,7 +124,7 @@ define(
                         {name: "Count", value: "count"}
                     ],
                     levelOrders: [
-                        {name: "By Jurisdiction", value: ['Jurisdiction', 'riskbucket']}
+                        {name: "By Geographic Area", value: ['Jurisdiction', 'riskbucket']}
                     ]
                 }
             },

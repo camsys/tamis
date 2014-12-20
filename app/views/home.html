@@ -1,14 +1,35 @@
 <div class="page-header">
     <h1>
        Welcome<span data-bind="visible: username, text: ' ' + username()"></span>!
+        <span style="float: right">
+            <a class="btn btn-primary" data-bind="visible: hasCookie() == true" href="#/queryconfig">Let's Get Started</a>
+            <button class="btn btn-primary" data-bind="visible: hasCookie() == false, click: showLoginModal">Let's Get Started</button>
+        </span>
     </h1>
 </div>
 <article class="row">
     <div class="col-md-6 portfolio-itemcol-md-6 portfolio-item">
         <h3>Introducing TAMIS</h3>
         <p>Welcome to ADOT&PF's Transportation Asset Management Information System Proof of Concept (TAMIS POC). This tool is designed to illustrate the potential benefits of bringing together data from disparate ADOT&PF data sources to support integrated, spatially referenced queries with the aim of providing more holistic information for improved asset management and other strategic decisions.</p>
+
+        <p style="outline: 1px solid black; outline-offset: 3px; background-color: lightyellow"><b><i>Note: This tool serves as a proof of concept and some of the data on which it relies are not up to date. Use of the TAMIS POC to inform current operational and strategic decisions is therefore not advised. For more information on the data used in the POC, click here. [pdf to be provided for link]</i></b></p>
+
+        <h3>Available Queries</h3>
+        <ul>
+            <li><b>ADOT&PF Assets.</b> This query allows users to look at road and/or bridge assets for which ADOT&PF has maintenance responsibility. The user can choose to filter results based on region, legislative district, and NHS classification.</li>
+            <li><b>ADOT&PF Asset Conditions.</b> This query allows the user to examine the current condition ratings of roads and/or bridges for which ADOT&PF has maintenance responsibility. The user can choose to filter results based on region, legislative district,  NHS classification, pavement condition, bridge status, and bridge deck condition.</li>
+            <li><b>Corridor Conditions.</b> This query allows the user to first specify a section of roadway (selecting a given route along with a beginning and ending mile point) and then provides information about the current condition of pavement and bridges that fall along the specified section.</li>
+            <li><b>Crash Statistics for STIP Projects.</b>  This query compiles crash statistics for sections of roadway associated with planned projects in the STIP. The user can filter results based on region or legislative district.</li>
+            <li><b>Unstable Slopes.</b> This query identifies road sections for which ADOT&PF has maintenance responsibility that may be at risk of closure based on proximity to unstable slopes. The user can choose to filter results based on region, legislative district, traffic volume, minimum total risk-hazard score, and whether or not mitigation measures have been implemented.</li>
+        </ul>
+
+
+    </div>
+
+    <div class="col-md-6 portfolio-itemcol-md-6 portfolio-item">
         <h3>Signing In</h3>
         <p>The first time that you use the TAMIS POC, you will be asked to provide your name and email address before continuing to the next screen. The purpose of collecting this information is to allow ADOT&PF project sponsors to contact staff who have used the tool to solicit suggestions for improvements and additional functionality. After you have provided this information, you will not be asked to sign in when you use the tool again from the same computer.</p>
+
         <h3>Workflow</h3>
         <p>The TAMIS POC includes a number of pre-defined queries that integrate data from multiple sources to inform asset management and strategic planning decisions. Available panels are described on the right-hand panel of this page. The general workflow is to select, configure, and execute a query. It is then possible to view results in tabular and map form, and to generate summary charts and reports. Specific steps are as follows:</p>
         <ul>
@@ -22,22 +43,5 @@
         </ul>
     </div>
 
-    <div class="col-md-6 portfolio-itemcol-md-6 portfolio-item">
-        <h3>Available Queries</h3>
-        <ul>
-            <li><b>ADOT&PF Assets.</b> This query allows users to look at road and/or bridge assets for which ADOT&PF has maintenance responsibility. The user can choose to filter results based on region, legislative district, and NHS classification.</li>
-            <li><b>ADOT&PF Asset Conditions.</b> This query allows the user to examine the current condition ratings of roads and/or bridges for which ADOT&PF has maintenance responsibility. The user can choose to filter results based on region, legislative district,  NHS classification, pavement condition, bridge status, and bridge deck condition.</li>
-            <li><b>Corridor Conditions.</b> This query allows the user to first specify a section of roadway (selecting a given route along with a beginning and ending mile point) and then provides information about the current condition of pavement and bridges that fall along the specified section.</li>
-            <li><b>Crash Statistics for STIP Projects.</b>  This query compiles crash statistics for sections of roadway associated with planned projects in the STIP. The user can filter results based on region or legislative district.</li>
-            <li><b>Unstable Slopes.</b> This query identifies road sections for which ADOT&PF has maintenance responsibility that may be at risk of closure based on proximity to unstable slopes. The user can choose to filter results based on region, legislative district, traffic volume, minimum total risk-hazard score, and whether or not mitigation measures have been implemented.</li>
-            <li><b>Creating ad-hoc reports.</b> Finally, you can click on the Explore tab for access to a pivot-table tool that allows you to generate ad-hoc reports based on the data returned from the query.</li>
-            <li><b>Running additional queries.</b> When you are done examining the results of one query, you can return to the Query tab to select, configure, and execute another query.</li>
-        </ul>
-
-        <p style="outline: 1px solid black; outline-offset: 3px"><b>This tool serves as a proof of concept and some of the data on which it relies are not up to date. Use of the TAMIS POC to inform current operational and strategic decisions is therefore not advised. For more information on the data used in the POC, click here. [pdf to be provided for link]</b></p>
-
-    </div>
-
 </article>
-<a class="btn btn-primary" data-bind="visible: hasCookie() == true" href="#/queryconfig">Let's Get Started</a>
-<button class="btn btn-primary" data-bind="visible: hasCookie() == false, click: showLoginModal">Let's Get Started</button>
+
