@@ -23,8 +23,8 @@ define(
                         rows: ["NHS Class"],
                         cols: ["Jurisdiction"],
                         rendererName: "Table",
-                        aggregatorName: "Count Unique Values",
-                        vals: ["Bridge Name"]
+                        aggregatorName: "Count",
+                        vals: []
                     },
                     'Total Centerline Miles by Jurisdiction and NHS Class': {
                         rows: ["NHS Class"],
@@ -64,15 +64,15 @@ define(
                         rows: ["Jurisdiction", "NHS Class"],
                         cols: ["Deck Condition"],
                         rendererName: "Table",
-                        aggregatorName: "Count Unique Values",
-                        vals: ["Bridge Name"]
+                        aggregatorName: "Count",
+                        vals: []
                     },
                     'Number of Bridges by Jurisdiction, NHS Class, and Bridge Status': {
                         rows: ["Jurisdiction", "NHS Class"],
                         cols: ["Status"],
                         rendererName: "Table",
-                        aggregatorName: "Count Unique Values",
-                        vals: ["Bridge Name"]
+                        aggregatorName: "Count",
+                        vals: []
                     },
                     'Sum of Deck Area by Jurisdiction, NHS Class, and Bridge Status': {
                         rows: ["Jurisdiction", "NHS Class"],
@@ -106,15 +106,15 @@ define(
                         rows: ["NHS Class"],
                         cols: ["Status"],
                         rendererName: "Table",
-                        aggregatorName: "Count Unique Values",
-                        vals: ["Bridge Name"]
+                        aggregatorName: "Count",
+                        vals: []
                     },
                     'Number of Bridges by NHS Class and Deck Condition': {
                         rows: ["NHS Class"],
                         cols: ["Deck Condition"],
                         rendererName: "Table",
-                        aggregatorName: "Count Unique Values",
-                        vals: ["Bridge Name"]
+                        aggregatorName: "Count",
+                        vals: []
                     },
                     'Sum of Deck Area by NHS Class and Deck Condition': {
                         rows: ["NHS Class"],
