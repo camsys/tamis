@@ -5,6 +5,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
             querydescription: querydescription,
             pivotTables: ko.observableArray([]),
             printable: true,
+            selectedLevelOrder: null,
 
             activate: function () {
                 this.resetObservables();
@@ -49,6 +50,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                     this.tabindex = index;
                     var that = this;
                     selectedOrder.subscribe(function (newValue) {
+                        rootscope.selectedLevelOrder = newValue;
                         $.each(that.levelOrders, function (index, levelOrder) {
                             if(levelOrder.name == newValue){
                                 that.tabdef.levels = levelOrder.value;
@@ -81,13 +83,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                 var summaryGrid = {
                     cells: [],
                     add: function (cell) {
-                        var number = parseFloat(cell.html);
-                        if(!isNaN(number)){
-                            number = Number(number).toFixed(2);
-                            if(number % 1 === 0){
-                                number = Number(number).toFixed(0);
+                        if(cell.html.indexOf('-') == -1){
+                            var number = parseFloat(cell.html);
+                            if(!isNaN(number)){
+                                number = Number(number).toFixed(2);
+                                if(number % 1 === 0){
+                                    number = Number(number).toFixed(0);
+                                }
+                                cell.html = number;
                             }
-                            cell.html = number;
                         }
                         this.cells.push(cell);
                     }
@@ -122,6 +126,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
 
                 var columnCount = tabdef.headers.length;
                 var orderTitle = tabdef.levelOrders[0].name;
+                if(this.selectedLevelOrder){
+                    orderTitle = this.selectedLevelOrder;
+                }
                 if(appstate.queryName == 'Asset Conditions'){
                     orderTitle = orderTitle + ', then by Condition'
                 }

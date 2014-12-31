@@ -66,7 +66,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                                         feature[attr] = row[attr];
                                     });
                                     if(typeof(feature.aadtbin) != 'undefined'){
-                                        feature.AADT = feature.aadtbin;
+                                        feature['AADT Summary'] = feature.aadtbin;
                                     }
                                     if(typeof(feature.riskbucket) != 'undefined'){
                                         feature['Risk Score'] = feature.riskbucket;

@@ -16,7 +16,7 @@ define(
                         { title: 'Number of Lanes', data: 'NumberOfLanes'},
                         { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'},
                         { title: 'Lane Miles', data: 'LaneMiles', format: '0,000.0000'},
-                        { title: 'AADT', data: 'aadt', format: '0,000.0000'},
+                        { title: 'AADT', data: 'AADT', format: '0,000.0000'},
                     ],
 
                     RouteFeatureResults: [
@@ -29,7 +29,7 @@ define(
                         { title: 'Number of Lanes', data: 'NumberOfLanes'},
                         { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'},
                         { title: 'Lane Miles', data: 'LaneMiles', format: '0,000.0000'},
-                        { title: 'AADT', data: 'aadt', format: '0,000.0000'},
+                        { title: 'AADT', data: 'AADT', format: '0,000.0000'},
                     ]
                 }
             },
@@ -49,7 +49,7 @@ define(
                         { title: 'Number of Lanes', data: 'NumberOfLanes'},
                         { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'},
                         { title: 'Lane Miles', data: 'LaneMiles'},
-                        { title: 'AADT', data: 'aadt', format: '0,000.0000'},
+                        { title: 'AADT', data: 'AADT', format: '0,000.0000'},
                         { title: 'Deck Area', data: 'deckarea'},
                         { title: 'Deck Condition', data: 'DeckCond'},
                         { title: 'Super Structure', data: 'SuperStructure'},
@@ -66,7 +66,7 @@ define(
                         { title: 'Number of Lanes', data: 'NumberOfLanes'},
                         { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'},
                         { title: 'Lane Miles', data: 'LaneMiles'},
-                        { title: 'AADT', data: 'aadt'},
+                        { title: 'AADT', data: 'AADT'},
                         { title: 'Pavement Condition', data: 'PavementCond'}
                     ]
                 }
@@ -94,7 +94,7 @@ define(
                         { title: 'Super Structure', data: 'SuperStructure'},
                         { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},
                         { title: 'End Mile', data: 'ToMP', format: '0,000.0000'},
-                        { title: 'AADT', data: 'aadt', format: '0,000.0000'},
+                        { title: 'AADT', data: 'AADT', format: '0,000.0000'},
                     ],
 
                     RouteFeatureResults: [
@@ -106,7 +106,7 @@ define(
                         { title: 'Number of Lanes', data: 'NumberOfLanes'},
                         { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'},
                         { title: 'Lane Miles', data: 'LaneMiles'},
-                        { title: 'AADT', data: 'aadt', format: '0,000.0000'},
+                        { title: 'AADT', data: 'AADT', format: '0,000.0000'},
                         { title: 'Pavement Condition', data: 'PavementCond'},
                     ]
                 }
@@ -121,11 +121,13 @@ define(
                         { title: 'Geographic Area', data: 'Jurisdiction'},
                         { title: 'CDS', data: 'RouteId'},
                         { title: 'Route Name', data: 'RouteName'},
+                        { title: 'Mile Point', data: 'FromMP'},
                         { title: 'Mitigation Present', data: 'MitigationPresent'},
                         { title: 'Risk Score', data: 'RiskScore'},
                         { title: 'Hazard Score', data: 'HazardScore'},
                         { title: 'Total Score', data: 'TotalScore'},
                         { title: 'Weighted Total', data: 'WeightedTotal'},
+                        { title: 'AADT', data: 'AADT', format: '0,000.0000'},
                     ],
 
                     RouteFeatureResults: [
@@ -137,7 +139,7 @@ define(
                         { title: 'Begin Mile', data: 'FromMP', format: '0,000.0000'},
                         { title: 'End Mile', data: 'ToMP', format: '0,000.0000'},
                         { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'},
-                        { title: 'AADT', data: 'aadt', format: '0,000.0000'},
+                        { title: 'AADT', data: 'AADT', format: '0,000.0000'},
                     ]
                 }
             },

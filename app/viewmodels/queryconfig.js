@@ -282,10 +282,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     });
                 }
 
-                if(this.slopeselector.mitigationNotPresentFilter()){
+                if(this.slopeselector.mitigationNotPresentFilter() && this.slopeselector.mitigationNotPresentFilter() == 'true'){
                     queryDescription.criteria.push({
-                        name: "Mitigation NOT present Filter",
-                        value: 'True'
+                        name: "Showing only slopes where mitigation NOT present",
+                        value: ''
                     });
                 }
 

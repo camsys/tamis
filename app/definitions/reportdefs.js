@@ -113,9 +113,9 @@ define(
             'Unstable Slopes': {
                 'Unstable Slopes': {
                     type: 'bar',
-                    headers: ['Geographic Area', 'Risk Score', 'Count'],
-                    fields: ['Jurisdiction', 'riskbucket', 'count'],
-                    levels: ['Jurisdiction', 'riskbucket'],
+                    headers: ['Geographic Area', 'Weighted Total Summary', 'Count'],
+                    fields: ['Jurisdiction', 'weightedtotalbin', 'count'],
+                    levels: ['Jurisdiction', 'weightedtotalbin'],
                     sums: ['count'],
                     averages: [],
                     tabs: ['Unstable Slopes'],
@@ -124,7 +124,7 @@ define(
                         {name: "Count", value: "count"}
                     ],
                     levelOrders: [
-                        {name: "By Geographic Area", value: ['Jurisdiction', 'riskbucket']}
+                        {name: "By Geographic Area", value: ['Jurisdiction', 'weightedtotalbin']}
                     ]
                 }
             },

@@ -39,16 +39,12 @@ define(
 
                 if(typeof(feature['RiskScore']) != 'undefined'){
                     var risk = feature['RiskScore'];
-                    if(risk < 81){
-                        risk = "0-80";
-                    }else if(risk < 161){
-                        risk = "081-160";
-                    }else if(risk < 241){
-                        risk = "161-240";
-                    }else if(risk < 3211){
-                        risk = "241-320";
-                    }else if(risk < 401){
-                        risk = "321-400";
+                    if(risk < 100){
+                        risk = "0-99";
+                    }else if(risk < 200){
+                        risk = "100-199";
+                    }else if(risk > 200){
+                        risk = "200+";
                     }
                     feature.riskbucket = risk;
                 }
@@ -71,7 +67,7 @@ define(
                         risk = "0 to 299";
                     }else if(risk < 600){
                         risk = "300 to 599";
-                    }else {
+                    }else if(risk > 600){
                         risk = "600+";
                     }
                     feature.totalscorebucket = risk;
@@ -80,23 +76,11 @@ define(
                 if(typeof(feature['HazardScore']) != 'undefined'){
                     var aadt = feature['HazardScore'];
                     if(aadt < 200){
-                        aadt = "0-299";
+                        aadt = "0-199";
                     }else if(risk < 400){
-                        aadt = "200 to 399";
-                    }else {
+                        aadt = "200-399";
+                    }else  if(risk > 400){
                         aadt = "400+";
-                    }
-                    feature.hazardscorebin = aadt;
-                }
-
-                if(typeof(feature['HazardScore']) != 'undefined'){
-                    var aadt = feature['HazardScore'];
-                    if(aadt < 251){
-                        aadt = "0-250";
-                    }else if(risk < 501){
-                        aadt = "251-500";
-                    }else {
-                        aadt = "500+";
                     }
                     feature.hazardscorebin = aadt;
                 }
@@ -107,7 +91,7 @@ define(
                         aadt = "0 to 19,999";
                     }else if(risk < 40000){
                         aadt = "20,000 to 39,999";
-                    }else {
+                    }else if(risk > 40000){
                         aadt = "40,000 +";
                     }
                     feature.aadtbin = aadt;

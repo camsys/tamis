@@ -78,7 +78,8 @@
                                 <li data-bind="fadeVisible: slopeselector.aadtFilter">Mininum AADT <span data-bind="text: slopeselector.aadtFilter"/></li>
                                 <li data-bind="fadeVisible: slopeselector.useScoreFilter() == 'false'">No hazard score filter</li>
                                 <li data-bind="fadeVisible: slopeselector.scoreFilter">Mininum hazard score <span data-bind="text: slopeselector.scoreFilter"/></li>
-                                <li data-bind="fadeVisible: slopeselector.mitigationNotPresentFilter">Show slopes ONLY where mitigation NOT present</li>
+                                <li data-bind="fadeVisible: (slopeselector.mitigationNotPresentFilter && slopeselector.mitigationNotPresentFilter() == 'true')">Show slopes ONLY where mitigation NOT present</li>
+                                <li data-bind="fadeVisible: (slopeselector.mitigationNotPresentFilter && slopeselector.mitigationNotPresentFilter() == 'false')">Show slopes regardless of mitigation</li>
 
 
                             </ul>

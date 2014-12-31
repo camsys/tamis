@@ -5,7 +5,7 @@
         activate: function () {
             router.map([
                 { route: '', moduleId: 'viewmodels/home', title: "Home", nav: true },
-                { route: 'queryconfig', moduleId: 'viewmodels/queryconfig', nav: true, title: "Select" },
+                { route: 'queryconfig', moduleId: 'viewmodels/queryconfig', nav: true, title: "Query" },
                 { route: 'queryresults', moduleId: 'viewmodels/queryresults', nav: true, title: "Results" },
                 { route: 'charts', moduleId: 'viewmodels/charts', nav: true, title: "Charts" },
                 { route: 'reports', moduleId: 'viewmodels/reports', nav: true, title: "Reports" },

@@ -5,21 +5,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             chartTabs: null,
             querydescription: querydescription,
 
-            /*activate: function () {
-                var that = this;
-                return $.get("assets/json/appstate_q2.json",
-                    function (queryData) {
-                        var fields = Object.keys(queryData);
-                        $.each(fields, function (index, field) {
-                            appstate[field] = queryData[field]
-                        });
-
-                        that.realactivate();
-                    }
-                );
-            },
-
-            real*/activate: function () {
+            activate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 if (data && queryName) {
@@ -269,7 +255,29 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             for (var i = 0; i < seriesArray.length; i++) {
                                 seriesArray[i].color = colors[conditions.indexOf(seriesArray[i].name)];
                             }
+                        }
 
+                        if (appstate.queryName == "Unstable Slopes") {
+                            that.chartTitle = 'Count by Weighted Score Summary of Unstable Slopes by Geographic Area and Mitigation Present (True/False) For ' + chartElement.text;
+
+                            var conditions = ["0-0.3", "0.3-0.6", "0.6-1.0"];
+                            var colors = ["yellow", "orange", "red"];
+
+                            var sorter = function compare(a, b) {
+                                a = conditions.indexOf(a.name);
+                                b = conditions.indexOf(b.name);
+                                if (a < b)
+                                    return -1;
+                                if (a > b)
+                                    return 1;
+                                return 0;
+                            }
+
+                            seriesArray.sort(sorter);
+
+                            for (var i = 0; i < seriesArray.length; i++) {
+                                seriesArray[i].color = colors[conditions.indexOf(seriesArray[i].name)];
+                            }
                         }
 
                         var chartConfig = {
