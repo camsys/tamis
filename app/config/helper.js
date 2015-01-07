@@ -74,24 +74,24 @@ define(
                 }
 
                 if(typeof(feature['HazardScore']) != 'undefined'){
-                    var aadt = feature['HazardScore'];
-                    if(aadt < 200){
-                        aadt = "0-199";
-                    }else if(risk < 400){
-                        aadt = "200-399";
-                    }else  if(risk > 400){
-                        aadt = "400+";
+                    var HazardScore = feature['HazardScore'];
+                    if(HazardScore < 200){
+                        HazardScore = "0-199";
+                    }else if(HazardScore < 400){
+                        HazardScore = "200-399";
+                    }else  if(HazardScore > 400){
+                        HazardScore = "400+";
                     }
-                    feature.hazardscorebin = aadt;
+                    feature.hazardscorebin = HazardScore;
                 }
 
                 if(typeof(feature['AADT']) != 'undefined'){
                     var aadt = feature['AADT'];
                     if(aadt < 20000){
                         aadt = "0 to 19,999";
-                    }else if(risk < 40000){
+                    }else if(aadt < 40000){
                         aadt = "20,000 to 39,999";
-                    }else if(risk > 40000){
+                    }else if(aadt > 40000){
                         aadt = "40,000 +";
                     }
                     feature.aadtbin = aadt;
