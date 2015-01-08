@@ -25,8 +25,8 @@ define(
                     feature.condition = feature['DeckCond'];
                 }
 
-                if(typeof(feature['PavementCond']) != 'undefined'){
-                    feature.condition = feature['PavementCond'];
+                if(typeof(feature['PSRSummary']) != 'undefined'){
+                    feature.condition = feature['PSRSummary'];
                 }
 
                 if(typeof(feature['BridgeName']) != 'undefined'){
@@ -95,6 +95,49 @@ define(
                         aadt = "40,000 +";
                     }
                     feature.aadtbin = aadt;
+                }
+
+
+                if(typeof(feature['DeckCond']) != 'undefined'){
+                    var DeckCond = feature['DeckCond'];
+                    if(DeckCond < 5){
+                        DeckCond = "Poor";
+                    }else if(DeckCond < 7){
+                        DeckCond = "Fair";
+                    }else if(DeckCond < 10){
+                        DeckCond = "Good";
+                    }else if(DeckCond == "N"){
+                        DeckCond = "N/A";
+                    }
+                    feature.deckbin = DeckCond;
+                }
+
+                if(typeof(feature['SubStructure']) != 'undefined'){
+                    var SubStructure = feature['SubStructure'];
+                    if(SubStructure < 5){
+                        SubStructure = "Poor";
+                    }else if(SubStructure < 7){
+                        SubStructure = "Fair";
+                    }else if(SubStructure < 10){
+                        SubStructure = "Good";
+                    }else if(SubStructure == "N"){
+                        SubStructure = "N/A";
+                    }
+                    feature.substructurebin = SubStructure;
+                }
+
+                if(typeof(feature['SuperStructure']) != 'undefined'){
+                    var SuperStructure = feature['SuperStructure'];
+                    if(SuperStructure < 5){
+                        SuperStructure = "Poor";
+                    }else if(SuperStructure < 7){
+                        SuperStructure = "Fair";
+                    }else if(SuperStructure < 10){
+                        SuperStructure = "Good";
+                    }else if(SuperStructure == "N"){
+                        SuperStructure = "N/A";
+                    }
+                    feature.superstructurebin = SuperStructure;
                 }
 
                 feature.count = 1;

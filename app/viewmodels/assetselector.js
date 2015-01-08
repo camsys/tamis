@@ -26,7 +26,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', '../config/appstat
                 that.filterValues.NHSClass = appstate.filterValues.NHSClass;
                 that.filterValues.PavementCondition = appstate.filterValues.PavementCondition;
                 that.filterValues.DeckCondition = appstate.filterValues.DeckCondition;
-                that.filterValues.bridge = appstate.filterValues.bridge;
+                that.filterValues.BridgeStatus = appstate.filterValues.BridgeStatus;
             },
 
             buildAssetTree: function (selectedQuery){
@@ -45,7 +45,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', '../config/appstat
                 if(selectedQuery == "Asset Conditions"){
                     $(that.filterValues.PavementCondition).each(function (index, filterValue) {
                         if(filterValue.Name){
-                            var node = {text: 'Pavement Condition: ' + filterValue.Name, value: 'pavement_' + filterValue.Value};
+                            var node = {text: 'PSR Summary: ' + filterValue.Name, value: 'pavement_' + filterValue.Value};
                             that.roadSelections.push(node);
                             that.filterMap[node.value] = filterValue;
                         }
@@ -59,7 +59,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', '../config/appstat
                         }
                     });
 
-                    $(that.filterValues.bridge).each(function (index, filterValue) {
+                    $(that.filterValues.BridgeStatus).each(function (index, filterValue) {
                         if(filterValue.Name){
                             var node ={text: 'Bridge Status: ' + filterValue.Name, value: 'bridge_' + filterValue.Value}
                             that.bridgeSelections.push(node);
@@ -69,9 +69,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', '../config/appstat
                 }
 
                 var sorter = function compare(a,b) {
-                    if (a.text < b.text)
+                    a = a.text.split(':')[0];
+                    b = b.text.split(':')[0];
+                    if (a < b)
                         return -1;
-                    if (a.text > b.text)
+                    if (a > b)
                         return 1;
                     return 0;
                 }

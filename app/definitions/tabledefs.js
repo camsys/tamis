@@ -51,10 +51,10 @@ define(
                         { title: 'Lane Miles', data: 'LaneMiles'},
                         { title: 'AADT', data: 'AADT', format: '0,000.0000'},
                         { title: 'Deck Area', data: 'deckarea'},
-                        { title: 'Deck Condition', data: 'DeckCond'},
-                        { title: 'Super Structure', data: 'SuperStructure'},
-                        { title: 'Sub Structure', data: 'SubStructure'},
                         { title: 'Status', data: 'Status'},
+                        { title: 'Deck Condition', data: 'DeckCond'},
+                        { title: 'Super Structure Condition', data: 'SuperStructure'},
+                        { title: 'Sub Structure Condition', data: 'SubStructure'},
                     ],
                     RouteFeatureResults: [
                         { title: 'Geographic Area', data: 'Jurisdiction'},
@@ -67,7 +67,9 @@ define(
                         { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'},
                         { title: 'Lane Miles', data: 'LaneMiles'},
                         { title: 'AADT', data: 'AADT'},
-                        { title: 'Pavement Condition', data: 'PavementCond'}
+                        { title: 'PSR', data: 'PSR'},
+                        { title: 'Mean IRI', data: 'MeanIRI'},
+                        { title: 'Rut Depth', data: 'FullRUT'}
                     ]
                 }
             },
@@ -107,7 +109,7 @@ define(
                         { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'},
                         { title: 'Lane Miles', data: 'LaneMiles'},
                         { title: 'AADT', data: 'AADT', format: '0,000.0000'},
-                        { title: 'Pavement Condition', data: 'PavementCond'},
+                        { title: 'PSR Summary', data: 'PSRSummary'},
                     ]
                 }
             },

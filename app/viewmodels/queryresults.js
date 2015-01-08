@@ -80,6 +80,25 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                                     if(typeof(feature.weightedtotalbin) != 'undefined'){
                                         feature['Weighted Total'] = feature.weightedtotalbin;
                                     }
+                                    if(typeof(feature.PSRSummary) != 'undefined'){
+                                        feature['PSR Summary'] = feature.PSRSummary;
+                                    }
+                                    if(typeof(feature.RoughnessSummary) != 'undefined'){
+                                        feature['Roughness Summary'] = feature.RoughnessSummary;
+                                    }
+                                    if(typeof(feature.RUTSummary) != 'undefined'){
+                                        feature['Rut Summary'] = feature.RUTSummary;
+                                    }
+                                    if(typeof(feature.deckbin) != 'undefined'){
+                                        feature['Deck Summary'] = feature.deckbin;
+                                    }
+                                    if(typeof(feature.substructurebin) != 'undefined'){
+                                        feature['Sub Structure Summary'] = feature.substructurebin;
+                                    }
+                                    if(typeof(feature.superstructurebin) != 'undefined'){
+                                        feature['Super Structure Summary'] = feature.superstructurebin;
+                                    }
+
                                     feature.id = row.id;
                                     feature.dataKey = dataKey;
                                 }

@@ -60,7 +60,43 @@ define(['../config/config'],
                         that.filterValues.NHSClass = response.FilterList;
                     }),
                     that.getPavement(function (response) {
-                        response.FilterList.sort(that.sorter);
+                        //response.FilterList.sort(that.sorter);
+
+                        response = {
+                            "FilterList": [
+                                {
+                                    "Value": "Very Good",
+                                    "Name": "Very Good",
+                                    "NumericValue": 0,
+                                    "ComparisonOperator": null
+                                },
+                                {
+                                    "Value": "Good",
+                                    "Name": "Good",
+                                    "NumericValue": 0,
+                                    "ComparisonOperator": null
+                                },
+                                {
+                                    "Value": "Fair",
+                                    "Name": "Fair",
+                                    "NumericValue": 0,
+                                    "ComparisonOperator": null
+                                },
+                                {
+                                    "Value": "Mediocre",
+                                    "Name": "Mediocre",
+                                    "NumericValue": 0,
+                                    "ComparisonOperator": null
+                                },
+
+                                {
+                                    "Value": "Poor",
+                                    "Name": "Poor",
+                                    "NumericValue": 0,
+                                    "ComparisonOperator": null
+                                }
+                            ]
+                        };
                         $(response.FilterList).each(function (index, filterValue) {
                             filterValue.type = 'PavementCondition'
                         });
@@ -74,7 +110,31 @@ define(['../config/config'],
                         that.filterValues.DeckCondition = response.FilterList;
                     }),
                     that.getBridgeStatus(function (response) {
-                        response.FilterList.sort(that.sorter);
+                        //response.FilterList.sort(that.sorter);
+
+                        response = {
+                            "FilterList": [
+                            {
+                                "Value": "Not Deficient",
+                                "Name": "Not Deficient",
+                                "NumericValue": 0,
+                                "ComparisonOperator": null
+                            },
+                            {
+                                "Value": "Functionally Obsolete",
+                                "Name": "Functionally Obsolete",
+                                "NumericValue": 0,
+                                "ComparisonOperator": null
+                            },
+                            {
+                                "Value": "Structurally Deficient",
+                                "Name": "Structurally Deficient",
+                                "NumericValue": 0,
+                                "ComparisonOperator": null
+                            }
+                        ]
+                        }
+
                         $(response.FilterList).each(function (index, filterValue) {
                             filterValue.type = 'BridgeStatus'
                         });

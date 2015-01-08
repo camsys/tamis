@@ -51,25 +51,25 @@ define(
             },
             'Asset Conditions': {
                 'Roads': {
-                    'Total Centerline Miles by Geographic Area, NHS Class, and Pavement Condition': {
+                    'Total Centerline Miles by Geographic Area, NHS Class, and PSR Summary': {
                         rows: ["Geographic Area", "NHS Class"],
-                        cols: ["Pavement Condition"],
+                        cols: ["PSR Summary"],
                         rendererName: "Table",
                         aggregatorName: "Sum",
                         vals: ["Centerline Miles"]
                     },
-                    'Total Lane Miles by Geographic Area, NHS Class, and Pavement Condition': {
+                    'Total Lane Miles by Geographic Area, NHS Class, and PSR Summary': {
                         rows: ["Geographic Area", "NHS Class"],
-                        cols: ["Pavement Condition"],
+                        cols: ["PSR Summary"],
                         rendererName: "Table",
                         aggregatorName: "Sum",
                         vals: ["Lane Miles"]
                     },
                 },
                 'Bridges': {
-                    'Number of Bridges by Geographic Area, NHS Class, and Deck Condition': {
+                    'Number of Bridges by Geographic Area, NHS Class, and Deck Summary': {
                         rows: ["Geographic Area", "NHS Class"],
-                        cols: ["Deck Condition"],
+                        cols: ["Deck Summary"],
                         rendererName: "Table",
                         aggregatorName: "Count",
                         vals: []
@@ -81,9 +81,9 @@ define(
                         aggregatorName: "Count",
                         vals: []
                     },
-                    'Sum of Deck Area by Geographic Area, NHS Class, and Bridge Status': {
+                    'Sum of Deck Area by Geographic Area, NHS Class, and Deck Condition': {
                         rows: ["Geographic Area", "NHS Class"],
-                        cols: ["Status"],
+                        cols: ["Deck Condition"],
                         rendererName: "Table",
                         aggregatorName: "Sum",
                         vals: ["Deck Area"]
@@ -93,16 +93,16 @@ define(
 
             'Conditions of Specified Road / CDS': {
                 'Roads': {
-                    'Total Lane Miles by NHS Class, and Pavement Condition': {
+                    'Total Lane Miles by NHS Class, and PSR Summary': {
                         rows: ["Geographic Area", "NHS Class"],
-                        cols: ["Pavement Condition"],
+                        cols: ["PSR Summary"],
                         rendererName: "Table",
                         aggregatorName: "Sum",
                         vals: ["Lane Miles"]
                     },
-                    'Total Centerline Miles by NHS Class, and Pavement Condition': {
+                    'Total Centerline Miles by NHS Class, and PSR Summary': {
                         rows: ["Geographic Area", "NHS Class"],
-                        cols: ["Pavement Condition"],
+                        cols: ["PSR Summary"],
                         rendererName: "Table",
                         aggregatorName: "Sum",
                         vals: ["Centerline Miles"]

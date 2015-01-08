@@ -130,7 +130,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                     orderTitle = this.selectedLevelOrder;
                 }
                 if(appstate.queryName == 'Asset Conditions'){
-                    orderTitle = orderTitle + ', then by Condition'
+                    if(title == 'Roads'){
+                        orderTitle = orderTitle + ', then by PSR Summary'
+                    }else{
+                        orderTitle = orderTitle + ', then by Status'
+                    }
                 }
                 var table = '<p class=\"reportheader\">ADOT&PF ' + title + ' ' + orderTitle;
                 table = table.concat('<table class="gridtable"><tbody><tr>');
@@ -183,7 +187,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                             html: node.text
                         });
                         $.each(reportdef.fields, function (index, field) {
-                            if (reportdef.levels.indexOf(field) == -1 && field != 'PavementCond') {
+                            if (reportdef.levels.indexOf(field) == -1 && field != 'PSRSummary') {
 
 
                                 if (reportdef.sums.indexOf(field) > -1 && node[field] == null) {

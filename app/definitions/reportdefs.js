@@ -4,7 +4,7 @@ define(
             'Assets': {
                 Roads: {
                     type: 'bar',
-                    headers: ['Jurisdiction', 'NHS Class', 'Centerline Miles', 'Lane Miles'],
+                    headers: ['Geographic Area', 'NHS Class', 'Centerline Miles', 'Lane Miles'],
                     fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles'],
                     levels: ['Jurisdiction', 'NHSClass'],
                     sums: ['Length', 'LaneMiles'],
@@ -21,7 +21,7 @@ define(
                 },
                 Bridges: {
                     type: 'bar',
-                    headers: ['Jurisdiction', 'NHS Class', 'Centerline Miles', 'Lane Miles', 'Count'],
+                    headers: ['Geographic Area', 'NHS Class', 'Centerline Miles', 'Lane Miles', 'Count'],
                     fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'count'],
                     levels: ['Jurisdiction', 'NHSClass'],
                     sums: ['Length', 'LaneMiles', 'count'],
@@ -41,8 +41,8 @@ define(
             'Asset Conditions': {
                 Roads: {
                     type: 'bar',
-                    bins: [{name: "Pavement Condition", value:'PavementCond'}],
-                    headers: ['Jurisdiction', 'NHS Class', 'Pavement Condition', 'Miles', 'Lane Miles'],
+                    bins: [{name: "PSR Summary", value:'PSRSummary'}],
+                    headers: ['Geographic Area', 'NHS Class', 'PSR Summary', 'Miles', 'Lane Miles'],
                     fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'condition'],
                     levels: ['Jurisdiction', 'NHSClass', 'condition'],
                     sums: ['Length', 'LaneMiles'],
@@ -53,16 +53,16 @@ define(
                         {name: 'Lane Miles', value: "LaneMiles"},
                     ],
                     levelOrders: [
-                        {name: "By Jurisdiction, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'condition']},
-                        {name: "By NHS Class, then by Jurisdiction", value: ['NHSClass', 'Jurisdiction', 'condition']}
+                        {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'condition']},
+                        {name: "By NHS Class, then by Geographic Area", value: ['NHSClass', 'Jurisdiction', 'condition']}
                     ]
                 },
                 Bridges: {
                     type: 'bar',
-                    bins: [{name: "Deck Condition", value:'DeckCond'}],
-                    headers: ['Jurisdiction', 'NHS Class', 'Deck Condition', 'Count'],
-                    fields: ['Jurisdiction', 'NHSClass', 'condition', 'count'],
-                    levels: ['Jurisdiction', 'NHSClass', 'condition'],
+                    bins: [{name: "Status", value:'Status'}],
+                    headers: ['Jurisdiction', 'NHS Class', 'Status', 'Count'],
+                    fields: ['Jurisdiction', 'NHSClass', 'Status', 'count'],
+                    levels: ['Jurisdiction', 'NHSClass', 'Status'],
                     sums: ['count'],
                     averages: [],
                     dataKey: 'BridgeFeatureResults',
@@ -70,16 +70,16 @@ define(
                         {name: "Count", value: "count"},
                     ],
                     levelOrders: [
-                        {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'condition']},
-                        {name: "By NHS Class, then by Geographic Area", value: ['NHSClass', 'Jurisdiction', 'condition']}
+                        {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'Status']},
+                        {name: "By NHS Class, then by Geographic Area", value: ['NHSClass', 'Jurisdiction', 'Status']}
                     ]
                 }
             },
             'Conditions of Specified Road / CDS': {
                 Roads: {
                     type: 'bar',
-                    bins: [{name: "Pavement Condition", value:'PavementCond'}],
-                    headers: ['NHS Class', 'Pavement Condition', 'Miles', 'Lane Miles'],
+                    bins: [{name: "PSR Summary", value:'PSRSummary'}],
+                    headers: ['NHS Class', 'PSR Summary', 'Miles', 'Lane Miles'],
                     fields: ['NHSClass', 'Length', 'LaneMiles', 'condition'],
                     levels: ['NHSClass', 'condition'],
                     sums: ['Length', 'LaneMiles'],

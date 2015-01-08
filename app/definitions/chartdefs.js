@@ -41,9 +41,9 @@ define(
             'Asset Conditions': {
                 Roads: {
                     type: 'bar',
-                    bins: [{name: "Pavement Condition", value:'PavementCond'}],
-                    headers: ['Geographic Area', 'NHS Class', 'Miles', 'Lane Miles', 'Pavement Condition', 'Count'],
-                    fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'PavementCond', 'count'],
+                    bins: [{name: "PSR Summary", value:'PSRSummary'}],
+                    headers: ['Geographic Area', 'NHS Class', 'Miles', 'Lane Miles', 'PSR Summary', 'Count'],
+                    fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'PSRSummary', 'count'],
                     levels: ['Jurisdiction', 'NHSClass', 'condition'],
                     sums: ['Length', 'LaneMiles'],
                     averages: [],
@@ -59,7 +59,7 @@ define(
                 },
                 Bridges: {
                     type: 'bar',
-                    bins: [{name: "Deck Condition", value:'DeckCond'}],
+                    bins: [{name: "Status", value:'Status'}],
                     headers: ['Geographic Area', 'NHS Class', 'Miles', 'Lane Miles', 'Deck Condition', 'Count'],
                     fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'DeckCond', 'count'],
                     levels: ['Jurisdiction', 'NHSClass', 'condition'],
@@ -78,7 +78,7 @@ define(
             'Conditions of Specified Road / CDS': {
                 Roads: {
                     type: 'bar',
-                    bins: [{name: "Pavement Condition", value: "condition"}],
+                    bins: [{name: "PSR Summary", value: "condition"}],
                     headers: ['Miles', 'Lane Miles'],
                     fields: ['Length', 'LaneMiles'],
                     levels: ['RouteName'],

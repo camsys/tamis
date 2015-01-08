@@ -8,7 +8,21 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             username: ko.observable(),
             selectedpivots: ko.observable(),
 
-            activate: function () {
+            /*activate: function () {
+                var that = this;
+                return $.get("assets/json/appstate_q2.json",
+                    function (queryData) {
+                        var fields = Object.keys(queryData);
+                        $.each(fields, function (index, field) {
+                            appstate[field] = queryData[field]
+                        });
+
+                        that.realactivate();
+                    }
+                );
+            },
+
+            real*/activate: function () {
                 if(!appstate.queryName){
                     app.showMessage(config.noResultsMessage.message, config.noResultsMessage.title).then(function (dialogResult) {
                         router.navigate('queryconfig');
