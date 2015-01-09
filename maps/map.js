@@ -52,16 +52,33 @@ tamis.Map = (function () {
         },
         "Conditions of Specified Road / CDS": {
             "BridgeFeatureResults":[
-                {key: 'NHS Class', type: 'Bridges', startColor: 'darkblue', endColor: 'lightblue', default: true},
-                {key: 'Status', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: false},
+                {key: 'Status', type: 'Bridges', default: true,
+                    colors: [{key: "Structurally Deficient", color: "red"},{key: "Functionally Obsolete", color: "yellow"},{key: "Not Deficient", color: "green"}]
+                },
+                {key: 'Deck Summary', type: 'Bridges', default: false,
+                    colors: [{key: "Good", color: "green"},{key: "Fair", color: "yellow"},{key: "Poor", color: "red"},{key: "Poor", color: "red"},{key: "N/A", color: "#D3D3D3"}]
+                },
+                {key: 'Super Structure Summary', type: 'Bridges', default: false,
+                    colors: [{key: "Good", color: "green"},{key: "Fair", color: "yellow"},{key: "Poor", color: "red"},{key: "Poor", color: "red"},{key: "N/A", color: "#D3D3D3"}]
+                },
+                {key: 'Sub Structure Summary', type: 'Bridges', default: false,
+                    colors: [{key: "Good", color: "green"},{key: "Fair", color: "yellow"},{key: "Poor", color: "red"},{key: "Poor", color: "red"},{key: "N/A", color: "#D3D3D3"}]
+                },
                 {key: 'AADT Summary', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: false},
+                {key: 'NHS Class', type: 'Bridges', startColor: 'darkblue', endColor: 'lightblue', default: false},
             ],
             "RouteFeatureResults": [
-                {key: 'NHS Class', type: 'Roads', startColor: 'darkblue', endColor: 'lightblue', default: true},
-                {key: 'PSR Summary', type: 'Roads', default: false,
-                    colors: [{key: "Good", color: "green"},{key: "Fair", color: "yellow"},{key: "Poor", color: "red"}]
+                {key: 'PSR Summary', type: 'Roads', default: true,
+                    colors: [{key: "Very Good", color: "green"}, {key: "Good", color: "#9ACD32"},{key: "Fair", color: "yellow"},{key: "Mediocre", color: "#FF8C00"},{key: "Poor", color: "red"}]
+                },
+                {key: 'Roughness Summary', type: 'Roads', default: false,
+                    colors: [{key: "Very Good", color: "green"}, {key: "Good", color: "#9ACD32"},{key: "Fair", color: "yellow"},{key: "Mediocre", color: "#FF8C00"},{key: "Poor", color: "red"}]
+                },
+                {key: 'Rut Summary', type: 'Roads', default: false,
+                    colors: [{key: "Very Good", color: "green"}, {key: "Good", color: "#9ACD32"},{key: "Fair", color: "yellow"},{key: "Mediocre", color: "#FF8C00"},{key: "Poor", color: "red"}]
                 },
                 {key: 'AADT Summary', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: false},
+                {key: 'NHS Class', type: 'Roads', startColor: 'darkblue', endColor: 'lightblue', default: false},
             ]
         },
         "Unstable Slopes": {

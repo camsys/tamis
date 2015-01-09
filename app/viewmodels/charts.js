@@ -203,22 +203,49 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             if (metric == 'LaneMiles') {
                                 that.chartTitle = 'Lane Miles by PSR Summary For ' + chartElement.text;
                             } else if (metric == 'count') {
-                                that.chartTitle = 'Count by Deck Condition For ' + chartElement.text;
+                                that.chartTitle = 'Count by Status For ' + chartElement.text;
                             } else {
                                 that.chartTitle = 'Centerline Miles by PSR Summary For ' + chartElement.text;
                             }
 
-                            var conditions = ["Poor", "Mediocre", "Fair", "Good", "Very Good", "NA"];
-                            var colors = ["red", "orange", "yellow", "yellowgreen", "green", "grey"];
+                            if (metric == 'count') {
+                                var conditions = ["Structurally Deficient", "Functionally Obsolete", "Not Deficient", "N/A"];
+                                var colors = ["red", "yellow", "green", "grey"];
 
-                            var sorter = function compare(a, b) {
-                                a = conditions.indexOf(a.name);
-                                b = conditions.indexOf(b.name);
-                                if (a < b)
-                                    return -1;
-                                if (a > b)
-                                    return 1;
-                                return 0;
+                                var sorter = function compare(a, b) {
+                                    a = conditions.indexOf(a.name);
+                                    b = conditions.indexOf(b.name);
+                                    if (a < b)
+                                        return -1;
+                                    if (a > b)
+                                        return 1;
+                                    return 0;
+                                }
+
+                                seriesArray.sort(sorter);
+
+                                for (var i = 0; i < seriesArray.length; i++) {
+                                    seriesArray[i].color = colors[conditions.indexOf(seriesArray[i].name)];
+                                }
+                            }else{
+                                var conditions = ["Poor", "Mediocre", "Fair", "Good", "Very Good", "N/A"];
+                                var colors = ["red", "orange", "yellow", "yellowgreen", "green", "grey"];
+
+                                var sorter = function compare(a, b) {
+                                    a = conditions.indexOf(a.name);
+                                    b = conditions.indexOf(b.name);
+                                    if (a < b)
+                                        return -1;
+                                    if (a > b)
+                                        return 1;
+                                    return 0;
+                                }
+
+                                seriesArray.sort(sorter);
+
+                                for (var i = 0; i < seriesArray.length; i++) {
+                                    seriesArray[i].color = colors[conditions.indexOf(seriesArray[i].name)];
+                                }
                             }
 
                             seriesArray.sort(sorter);
@@ -238,8 +265,8 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             }
 
                             if (metric == 'count') {
-                                var conditions = ["Structurally Deficient", "Functionally Obsolete", "Not Deficient", "NA"];
-                                var colors = ["red", "yellow", "green", "grey"];
+                                var conditions = ["Structurally Deficient", "Functionally Obsolete", "Not Deficient", "N/A", "No Data"];
+                                var colors = ["red", "yellow", "green", "grey", "lightgrey"];
 
                                 var sorter = function compare(a, b) {
                                     a = conditions.indexOf(a.name);
@@ -257,8 +284,8 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                                     seriesArray[i].color = colors[conditions.indexOf(seriesArray[i].name)];
                                 }
                             }else{
-                                var conditions = ["Poor", "Mediocre", "Fair", "Good", "Very Good", "NA"];
-                                var colors = ["red", "orange", "yellow", "yellowgreen", "green", "grey"];
+                                var conditions = ["Poor", "Mediocre", "Fair", "Good", "Very Good", "N/A", "No Data"];
+                                var colors = ["red", "orange", "yellow", "yellowgreen", "green", "grey", "lightgrey"];
 
                                 var sorter = function compare(a, b) {
                                     a = conditions.indexOf(a.name);

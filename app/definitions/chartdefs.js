@@ -86,13 +86,16 @@ define(
                     averages: [],
                     dataKey: 'RouteFeatureResults',
                     graphMetrics: [
-                        {name: "Centerline Miles", value: "Length"},
-                        {name: 'Lane Miles', value: "LaneMiles"},
+                        {name: "Centerline Miles by PSR Summary", value: "Length"},
+                        {name: 'Lane Miles by PSR Summary', value: "LaneMiles"},
+                    ],
+                    levelOrders: [
+                        {name: "By Specified Road / CDS", value: []},
                     ]
                 },
                 Bridges: {
                     type: 'bar',
-                    bins: [{name: "Deck Condition", value: "condition"}],
+                    bins: [{name: "Status", value: "Status"}],
                     headers: ['Miles', 'Lane Miles', 'Count'],
                     fields: ['Length', 'LaneMiles', 'count'],
                     levels: ['RouteName'],
@@ -100,7 +103,10 @@ define(
                     averages: [],
                     dataKey: 'BridgeFeatureResults',
                     graphMetrics: [
-                        {name: "Count", value: "count"},
+                        {name: "Count by Status", value: "count"},
+                    ],
+                    levelOrders: [
+                        {name: "By Specified Road / CDS", value: []},
                     ]
                 }
             },

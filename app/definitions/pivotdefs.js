@@ -93,43 +93,36 @@ define(
 
             'Conditions of Specified Road / CDS': {
                 'Roads': {
-                    'Total Lane Miles by NHS Class, and PSR Summary': {
-                        rows: ["Geographic Area", "NHS Class"],
-                        cols: ["PSR Summary"],
+                    'Total Lane Miles by PSR Summary and AADT Summary': {
+                        rows: ["PSR Summary"],
+                        cols: ["AADT Summary"],
                         rendererName: "Table",
                         aggregatorName: "Sum",
                         vals: ["Lane Miles"]
                     },
-                    'Total Centerline Miles by NHS Class, and PSR Summary': {
-                        rows: ["Geographic Area", "NHS Class"],
-                        cols: ["PSR Summary"],
+                    'Total Centerline Miles by PSR Summary and AADT Summary': {
+                        rows: ["PSR Summary"],
+                        cols: ["AADT Summary"],
                         rendererName: "Table",
                         aggregatorName: "Sum",
                         vals: ["Centerline Miles"]
                     },
                 },
                 'Bridges': {
-                    'Number of Bridges by NHS Class and Status': {
-                        rows: ["NHS Class"],
-                        cols: ["Status"],
+                    'Number of Bridges by Status and AADT Summary': {
+                        rows: ["Status"],
+                        cols: ["AADT Summary"],
                         rendererName: "Table",
                         aggregatorName: "Count",
                         vals: []
                     },
-                    'Number of Bridges by NHS Class and Deck Condition': {
-                        rows: ["NHS Class"],
-                        cols: ["Deck Condition"],
-                        rendererName: "Table",
-                        aggregatorName: "Count",
-                        vals: []
-                    },
-                    'Sum of Deck Area by NHS Class and Deck Condition': {
-                        rows: ["NHS Class"],
-                        cols: ["Deck Condition"],
+                    'Bridge Deck Area by Deck Summary and AADT Summary': {
+                        rows: ["Deck Summary"],
+                        cols: ["AADT Summary"],
                         rendererName: "Table",
                         aggregatorName: "Sum",
                         vals: ["Deck Area"]
-                    },
+                    }
                 }
             },
 

@@ -95,18 +95,19 @@ define(
                 },
                 Bridges: {
                     type: 'bar',
-                    bins: [{name: "Deck Condition", value:'DeckCond'}],
-                    headers: ['NHS Class', 'Deck Condition', 'Count'],
-                    fields: ['NHSClass', 'condition', 'count'],
-                    levels: ['NHSClass', 'condition'],
-                    sums: ['count'],
+                    bins: [{name: "Status", value:'Status'}],
+                    headers: ['NHS Class', 'Status', 'Count', 'Deck Area'],
+                    fields: ['NHSClass', 'Status', 'count', 'DeckArea'],
+                    levels: ['NHSClass', 'Status'],
+                    sums: ['count', 'DeckArea'],
                     averages: [],
                     dataKey: 'BridgeFeatureResults',
                     graphMetrics: [
                         {name: "Count", value: "count"},
+                        {name: 'Deck Area', value: "DeckArea"},
                     ],
                     levelOrders: [
-                        {name: "By NHS Class", value: ['NHSClass', 'condition']}
+                        {name: "By NHS Class", value: ['NHSClass', 'Status']}
                     ]
                 }
             },

@@ -108,6 +108,8 @@ define(
                         DeckCond = "Good";
                     }else if(DeckCond == "N"){
                         DeckCond = "N/A";
+                    }else{
+                        DeckCond = "No Data";
                     }
                     feature.deckbin = DeckCond;
                 }
@@ -122,6 +124,8 @@ define(
                         SubStructure = "Good";
                     }else if(SubStructure == "N"){
                         SubStructure = "N/A";
+                    }else{
+                        SubStructure = "No Data";
                     }
                     feature.substructurebin = SubStructure;
                 }
@@ -134,8 +138,8 @@ define(
                         SuperStructure = "Fair";
                     }else if(SuperStructure < 10){
                         SuperStructure = "Good";
-                    }else if(SuperStructure == "N"){
-                        SuperStructure = "N/A";
+                    }else{
+                        SuperStructure = "No Data";
                     }
                     feature.superstructurebin = SuperStructure;
                 }

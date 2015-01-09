@@ -136,7 +136,17 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                         orderTitle = orderTitle + ', then by Status'
                     }
                 }
-                var table = '<p class=\"reportheader\">ADOT&PF ' + title + ' ' + orderTitle;
+                var tableTitle = 'ADOT&PF ' + title + ' ' + orderTitle;
+
+                if(appstate.queryName == "Conditions of Specified Road / CDS"){
+                    if(title == 'Roads'){
+                        tableTitle = 'PSR Summary for ' + appstate.querydescription.criteria[0].value;
+                    }else{
+                        tableTitle = 'Bridge Status for ' + appstate.querydescription.criteria[0].value;
+                    }
+                }
+
+                var table = '<p class=\"reportheader\">' + tableTitle;
                 table = table.concat('<table class="gridtable"><tbody><tr>');
                 var rowcount = 0;
                 $.each(summaryGrid.cells, function (index, cell) {
