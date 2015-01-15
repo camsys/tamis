@@ -89,7 +89,13 @@
                                 <li data-bind="fadeVisible: (slopeselector.mitigationNotPresentFilter && slopeselector.mitigationNotPresentFilter() == 'true')">Show slopes ONLY where mitigation NOT present</li>
                                 <li data-bind="fadeVisible: (slopeselector.mitigationNotPresentFilter && slopeselector.mitigationNotPresentFilter() == 'false')">Show slopes regardless of mitigation</li>
                                 <li data-bind="fadeVisible: categoryselector.useCategoryFilter() == 'false'">No Category filter</li>
-                                <li data-bind="fadeVisible: categoryselector.selectedCategory">Category Filter: <span data-bind="text: categoryselector.selectedCategory"/></li>
+                                <li data-bind="visible: categoryselector.categoryFilters().length > 0">Work Categories selected:</li>
+                                <!-- ko foreach: categoryselector.categoryFilters -->
+                                <li style="padding-left:30px;">
+
+                                    <span data-bind="text: text"/>
+                                </li>
+                                <!-- /ko -->
                             </ul>
 
                             </ul>

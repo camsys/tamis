@@ -240,7 +240,7 @@ define(['../config/config'],
                 })
             },
             getFeatures : function(queryName, key, objectIdString, callback){
-                var featureUrl;
+                var featureUrl = null;
                 if(queryName == 'Assets'){
                     if(key == "RouteFeatureResults"){
                         featureUrl = config.roadFeaturesUrl;

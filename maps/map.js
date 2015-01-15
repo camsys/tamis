@@ -435,6 +435,8 @@ tamis.Map = (function () {
             })
 
             if(!typeVisible){
+                var layer = typeToLayerMap[type][0];
+                var label = layer._titleForLegend;
                 var item = "<input type='checkbox' class='list_item' onclick='tamis.Map.updateLayerVisibility(this)'" +
                     (layer.visible ? "checked=checked" : "") + "' id='" + layer.id + "'' /><label for='" + layer.id + "'>" + label + "</label>";
                 if (optionString.length > 0) {

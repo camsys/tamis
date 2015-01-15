@@ -295,10 +295,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     });
                 }
 
-                if(this.categoryselector.selectedCategory()){
-                    queryDescription.criteria.push({
-                        name: "Category Filter",
-                        value: this.categoryselector.selectedCategory()
+                if(this.categoryselector.categoryFilters().length > 0){
+                    $.each(this.categoryselector.categoryFilters(), function (k, v) {
+                        queryDescription.criteria.push({
+                            name: "Category Filter",
+                            value: v.text
+                        });
                     });
                 }
 

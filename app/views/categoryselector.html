@@ -16,11 +16,9 @@
      data-bind="fadeVisible: ($parent.geoselector.selectedGeographicType())
                                  && ($parent.geoselector.useGeographicFilter() == 'false' || $parent.geoselector.geoFilters().length > 0)
                                  && useCategoryFilter() == 'true'">
-    <label>Select a primary work category</label>
-    <select id="selectCds" name="selectCds" class="form-control"
-            data-bind="options: categories,
-                                        value: selectedCategory,
-                                        optionsCaption: 'Select...'">
-    </select>
+    <label class="control-label">Select primary work categories:</label>
+
+    <div id="categoryTree"
+         style="width: 500px; border: 2px solid; border-radius: 5px;"/>
 </div>
 
