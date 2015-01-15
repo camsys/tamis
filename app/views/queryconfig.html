@@ -21,11 +21,14 @@
 
                             <div data-bind="visible: (selectedQuery() != undefined && selectedQuery() != 'Conditions of Specified Road / CDS'), compose: { model: geoselector, preserveContext: true }"></div>
 
-                            <div data-bind="visible: ((geoselector.useGeographicFilter() == 'false' || geoselector.geoFilters().length > 0) && selectedQuery() != 'Unstable Slopes'),
+                            <div data-bind="visible: ((geoselector.useGeographicFilter() == 'false' || geoselector.geoFilters().length > 0) && selectedQuery() != 'Unstable Slopes' && selectedQuery() != 'Crash Analysis'),
                              compose: { model: assetselector, preserveContext: true }"></div>
 
                             <div data-bind="visible: ((geoselector.useGeographicFilter() == 'false' || geoselector.geoFilters().length > 0) && selectedQuery() == 'Unstable Slopes'),
                              compose: { model: slopeselector, preserveContext: true }"></div>
+
+                            <div data-bind="visible: ((geoselector.useGeographicFilter() == 'false' || geoselector.geoFilters().length > 0) && selectedQuery() == 'Crash Analysis'),
+                             compose: { model: categoryselector, preserveContext: true }"></div>
 
                            <div class="button-group"
                                  data-bind="fadeVisible: (geoselector.selectedGeographicType())
@@ -42,6 +45,11 @@
                             </div>
 
                             <div class="button-group" data-bind="fadeVisible: slopeselector.queryReady"style="padding-top: 20px">
+                                <a class="btn btn-primary" data-bind="click: executeQuery">Submit your query</a>
+                                <a class="btn btn-primary" data-bind="click: resetObservables">Reset query</a>
+                            </div>
+
+                            <div class="button-group" data-bind="fadeVisible: categoryselector.queryReady() == 'true'" style="padding-top: 20px">
                                 <a class="btn btn-primary" data-bind="click: executeQuery">Submit your query</a>
                                 <a class="btn btn-primary" data-bind="click: resetObservables">Reset query</a>
                             </div>
@@ -80,8 +88,8 @@
                                 <li data-bind="fadeVisible: slopeselector.scoreFilter">Mininum hazard score <span data-bind="text: slopeselector.scoreFilter"/></li>
                                 <li data-bind="fadeVisible: (slopeselector.mitigationNotPresentFilter && slopeselector.mitigationNotPresentFilter() == 'true')">Show slopes ONLY where mitigation NOT present</li>
                                 <li data-bind="fadeVisible: (slopeselector.mitigationNotPresentFilter && slopeselector.mitigationNotPresentFilter() == 'false')">Show slopes regardless of mitigation</li>
-
-
+                                <li data-bind="fadeVisible: categoryselector.useCategoryFilter() == 'false'">No Category filter</li>
+                                <li data-bind="fadeVisible: categoryselector.selectedCategory">Category Filter: <span data-bind="text: categoryselector.selectedCategory"/></li>
                             </ul>
 
                             </ul>

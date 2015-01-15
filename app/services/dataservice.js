@@ -109,6 +109,13 @@ define(['../config/config'],
                         });
                         that.filterValues.DeckCondition = response.FilterList;
                     }),
+                    that.getCategory(function (response) {
+                        response.FilterList.sort(that.sorter);
+                        $(response.FilterList).each(function (index, filterValue) {
+                            filterValue.type = 'WorkCategory'
+                        });
+                        that.filterValues.WorkCategory = response.FilterList;
+                    }),
                     that.getBridgeStatus(function (response) {
                         //response.FilterList.sort(that.sorter);
 
@@ -211,10 +218,21 @@ define(['../config/config'],
                 })
             },
 
+            getCategory : function(callback){
+                return $.ajax({
+                    url: config.categoryQueryUrl,
+                    jsonpCallback: 'callback7',
+                    dataType: "jsonp",
+                    success: function (response) {
+                        callback(response);
+                    }
+                })
+            },
+
             getBridgeStatus : function(callback){
                 return $.ajax({
                     url: config.bridgeStatusQueryUrl,
-                    jsonpCallback: 'callback7',
+                    jsonpCallback: 'callback8',
                     dataType: "jsonp",
                     success: function (response) {
                         callback(response);
@@ -234,6 +252,12 @@ define(['../config/config'],
                         featureUrl = config.roadFeaturesUrl;
                     } else if(key == "UnstableSlopeFeatureResults"){
                         featureUrl = config.slopesQueryUrl;
+                    }
+                }else if(queryName == 'Crash Analysis'){
+                    if(key == "CrashFeatureResults"){
+                        featureUrl = config.crashesQueryUrl;
+                    } else if(key == "ProjectFeatureResults"){
+                        featureUrl = config.projectsQueryUrl;
                     }
                 } else {
                     if(key == "RouteFeatureResults"){

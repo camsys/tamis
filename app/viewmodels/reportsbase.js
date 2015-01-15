@@ -109,6 +109,9 @@ define(['plugins/http', 'durandal/app', 'knockout'],
                 }
 
                 reportdef.sums = originalSums;
+                if(reportdef.dataKey == 'ProjectFeatureResults'){
+                    return root;
+                }
                 return root.children;
             },
 

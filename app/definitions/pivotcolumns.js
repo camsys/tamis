@@ -58,6 +58,21 @@
                     { title: 'Total Summary', data: 'totalscorebucket'},
                     { title: 'Weighted Score', data: 'WeightedTotal'},
                     { title: 'Weighted Summary', data: 'weightedtotalbin'},
+                ],
+
+                ProjectFeatureResults: [
+                    { title: 'Geographic Area', data: 'Jurisdiction'},
+                    { title: 'Program', data: 'Program'},
+                    { title: 'Primary Work Category', data: 'PrimWorkCategory'},
+                    { title: 'Number of Minor Crashes', data: 'MinorCrashes'},
+                    { title: 'Number of Major Crashes', data: 'MajorCrashes'},
+                    { title: 'Number of Fatal Crashes', data: 'FatalCrashes'},
+                    { title: 'Total Crashes', data: 'TotalCrashes'},
+                    { title: 'Total Major and Fatal Crashes', data: 'MajorFatalCrashes'},
+                    { title: 'Total Crashes Per VMT', data: 'TotalVMT'},
+                    { title: 'Major and Fatal Crashes Per VMT', data: 'MajorFatalVMT'},
+                    { title: 'Fatal Crashes Per VMT', data: 'FatalVMT'},
+
                 ]
             };
         });

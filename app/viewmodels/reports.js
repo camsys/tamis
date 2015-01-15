@@ -99,7 +99,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
 
                 var tree = reportsbase.buildTree(featureData, tabdef);
 
-                this.buildTable(tree, summaryGrid, tabdef);  //add the data to the table
+                if(tabdef.levels.length == 1){
+                    this.buildSingleLevelTable(tree, summaryGrid, tabdef);  //add the data to the table
+                }else{
+                    this.buildTable(tree, summaryGrid, tabdef);  //add the data to the table
+                }
+
+
 
                 if(tabdef.levels.length > 1) {
                     //add a summary section below that aggregates by the second dimension
@@ -135,7 +141,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                     }else{
                         orderTitle = orderTitle + ', then by Status'
                     }
+                }else if(appstate.queryName == 'Crash Analysis'){
+                    orderTitle = 'Crash Summary for STIP Project Alignments';
                 }
+
                 var tableTitle = 'ADOT&PF ' + title + ' ' + orderTitle;
 
                 if(appstate.queryName == "Conditions of Specified Road / CDS"){
@@ -161,7 +170,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                     }
                 });
 
-                table.concat('</tr></tbody></table>');
+                table = table.concat('</tr></tbody></table>');
                 return {
                     html: table.toString(),
                     title: title,
@@ -266,6 +275,50 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                             that.buildTable(node.children, table, reportdef);
                         }
                     }
+                });
+            },
+
+            buildSingleLevelTable: function (tree, table, reportdef) {
+                for (var i = 0; i < reportdef.headers.length; i++) {
+                    table.add({
+                        html: reportdef.headers[i],
+                        cellCls: 'header'
+                    });
+                }
+
+                for (var i = 0; i < reportdef.fields.length; i++) {
+                    var html = tree[reportdef.fields[i]];
+                    if(typeof(tree[tree[reportdef.fields[i]]]) == 'undefined'){
+                        if(reportdef.fields[i] == 'Jurisdiction'){
+                            html = 'Entire State';
+                        }
+                    }
+                    table.add({
+                        html: html,
+                        cellCls: 'subtotal'
+                    });
+                }
+
+                $.each(tree.children, function (index, node) {
+                    $.each(reportdef.fields, function (index, field) {
+
+                        if(index == 0){
+                            table.add({
+                                html: node.text,
+                                cellCls: 'subtotal'
+                            });
+                        }else{
+                            if (reportdef.sums.indexOf(field) > -1 && node[field] == null) {
+                                value = 0;
+                            } else {
+                                var value = node[field] == null ? "&nbsp;" : node[field];
+                            }
+                            table.add({
+                                html: value.toString(),
+                                cellCls: 'subtotal'
+                            });
+                        }
+                    });
                 });
             },
 

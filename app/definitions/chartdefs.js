@@ -67,7 +67,7 @@ define(
                     averages: [],
                     dataKey: 'BridgeFeatureResults',
                     graphMetrics: [
-                        {name: "Count", value: "count"},
+                        {name: "Count", value: "countx"},
                     ],
                     levelOrders: [
                         {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'DeckCond']},
@@ -129,6 +129,25 @@ define(
                     ]
                 }
             },
+
+            'Crash Analysis': {
+                'Projects': {
+                    type: 'bar',
+                    headers: ['Geographic Area','Minor Crashes','Major Crashes','Fatal Crashes'],
+                    fields: ['Jurisdiction','MinorCrashes','MajorCrashes','FatalCrashes'],
+                    levels: ['Jurisdiction'],
+                    sums: ['MinorCrashes','MajorCrashes','FatalCrashes'],
+                    averages: [],
+                    tabs: ['Projects'],
+                    dataKey: 'ProjectFeatureResults',
+                    graphMetrics: [
+                        {name: "Number of Crashes", value: "Number of Crashes"}
+                    ],
+                    levelOrders: [
+                        {name: "By Geographic Area", value: ['Jurisdiction']},
+                    ]
+                }
+            }
 
         };
     });

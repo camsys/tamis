@@ -1,8 +1,8 @@
 define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jquery-ui',
-        '../config/config', '../config/appstate', 'plugins/router', '../definitions/tabledefs',
+        '../config/config', '../config/appstate', 'plugins/router', '../definitions/tabledefs', './categoryselector',
         './geoselector', './assetselector', './routeselector', './slopeselector',  '../services/dataservice', '../config/helper'],
     function (http, app, ko, jstree, bootstrap, jqueryui,
-              config, appstate, router, tabledefs, geoselector,
+              config, appstate, router, tabledefs, categoryselector, geoselector,
               assetselector, routeselector, slopeselector, dataservice, helper) {
 
         return {
@@ -10,11 +10,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
             assetselector: assetselector,
             routeselector: routeselector,
             slopeselector: slopeselector,
+            categoryselector: categoryselector,
             displayName: 'Query Configuration',
             queries: [
                 {name: "Assets", value: "Assets", id: 1},
                 {name: "Asset Conditions", value: "Asset Conditions", id: 2},
                 {name: "Conditions of Specified Road / CDS", value: "Conditions of Specified Road / CDS", id: 3},
+                {name: "Crash Analysis", value: "Crash Analysis", id: 4},
                 {name: "Unstable Slopes", value: "Unstable Slopes", id: 5},
             ],
             selectedQuery: ko.observable(),
@@ -117,6 +119,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     query.Query.DisplayParameters = query.Query.DisplayParameters.concat(assetParams);
                 }
 
+                if(this.selectedQuery() == 'Crash Analysis'){
+                    var categoryParams = this.categoryselector.getQueryParams();
+                    query.Query.DisplayParameters = query.Query.DisplayParameters.concat(categoryParams);
+                }
+
                 if(this.routeselector.selectedCds()){
                     var cds = this.routeselector.selectedCds();
                     query = $.parseJSON('{"Query":{"DisplayParameters":[{"Name":"Jurisdictions","Selected":true,"RouteParameters":[{"Id":""}]},{"Name":"Roads","Selected":true,"AreaParameter":null,"FilterParameters":[{"Type":"NHSClass","Description":"Class","Filters":[],"MaxValues":0,"Selected":true}],"RouteParameters":[{"Id":""}]},{"Name":"Bridges","Selected":true,"AreaParameter":null,"FilterParameters":[{"Type":"NHSClass","Description":"Class","Filters":[],"MaxValues":0,"Selected":true}],"RouteParameters":[{"Id":""}]}],"Selection":3}}');
@@ -124,7 +131,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     query.Query.DisplayParameters[1].RouteParameters[0].Id = cds;
                     query.Query.DisplayParameters[2].RouteParameters[0].Id = cds;
                 }
-
 
                 var postBody = {};
                 postBody.serializedQueryParameters = JSON.stringify(query);
@@ -289,6 +295,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     });
                 }
 
+                if(this.categoryselector.selectedCategory()){
+                    queryDescription.criteria.push({
+                        name: "Category Filter",
+                        value: this.categoryselector.selectedCategory()
+                    });
+                }
 
                 return queryDescription;
             }

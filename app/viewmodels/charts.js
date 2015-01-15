@@ -28,7 +28,12 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                         }
                         var featureData = appstate.queryResults[tabdef.dataKey];
                         if(featureData){
-                            var chartTabSet = that.prepareChart(featureData, tabdef, index, tabname);
+                            var chartTabSet;
+                            if(tabname == 'Projects'){
+                                chartTabSet = that.prepareProjectsChart(featureData, tabdef, index, tabname);
+                            }else{
+                                chartTabSet = that.prepareChart(featureData, tabdef, index, tabname);
+                            }
                             chartTabSet.featureData = featureData;
                             var selectedOrder = null;
                             if(typeof(chartTabSet.tabdef.levelOrders) != 'undefined'){
@@ -101,6 +106,9 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             },
 
             renderCharts: function () {
+                if(this.chartTabs[0].title == 'Projects'){
+                    return this.renderProjectsCharts();
+                }
                 var that = this;
                 $.each(this.chartTabs, function (index, chartTab) {
 
@@ -423,6 +431,109 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                     });
                 }
                 return chartTabPanel;
+            },
+
+            prepareProjectsChart: function (featureData, tabdef, index, tabname) {
+                var tree = reportsbase.buildTree(featureData, tabdef);  //create the tree based on the levels defined in request
+                var chartTabPanel = {};
+                chartTabPanel.tabdef = tabdef;
+                chartTabPanel.id = index;
+                chartTabPanel.title = tabname;
+                chartTabPanel.charts = [];
+                var outerIndex = index;
+
+                var chart = {};
+                chart.level = tabdef.levels[0];
+                chart.text = "Entire State";
+
+                $.each(tabdef.sums, function (index, sum) {
+                    chart[sum] = tree[sum];
+                });
+
+                chart.id = outerIndex + "_" + index;
+                chartTabPanel.charts.push(chart);
+
+                $.each(tree.children, function (index, child) {
+                    chart = {};
+                    chart.level = tabdef.levels[0];
+                    chart.text = child.text;
+                    chart.id = outerIndex + "_" + (index + 1);
+                    $.each(tabdef.sums, function (index, sum) {
+                        chart[sum] = child[sum];
+                    });
+                    chartTabPanel.charts.push(chart);
+                });
+
+                return chartTabPanel;
+            },
+
+            renderProjectsCharts: function () {
+
+                $.each(this.chartTabs, function (index, chartTab) {
+
+                    var axisTitle = this.selectedMetric();
+                    var chartElements = chartTab.charts;
+                    var that = this;
+
+                    $.each(chartElements, function (index, chartElement) {
+
+                        var topleveltitle = that.tabdef.headers[that.tabdef.fields.indexOf(that.tabdef.levels[1])];
+
+                        that.chartElement = chartElement;
+
+                        var seriesArray = [];
+
+                        $.each(that.tabdef.sums, function (index, sum) {
+                            var series = {};
+                            series.name = that.tabdef.headers[that.tabdef.fields.indexOf(sum)];
+                            series.data = [parseInt(that.chartElement[sum])];
+                            seriesArray.push(series);
+                        });
+
+                        that.axisTitle = axisTitle;
+                        that.chartTitle = "Number of Crashes by Severity "
+                        + ' For ' + chartElement.text;
+
+                        var chartConfig = {
+                            chart: {
+                                type: 'column'
+                            },
+                            legend: {
+                                enabled: false,
+                            },
+                            title: {
+                                text: that.chartTitle
+                            },
+                            xAxis: {
+                                categories: [
+                                    "Crashes by Severity"
+                                ]
+                            },
+                            yAxis: {
+                                min: 0,
+                                title: {
+                                    text: that.axisTitle
+                                }
+                            },
+                            plotOptions: {
+                                column: {
+                                    pointPadding: 0.2,
+                                    borderWidth: 0
+                                }
+                            },
+                            series: seriesArray,
+
+                        };
+                        chartConfig.legend = {
+                            layout: 'vertical',
+                            align: 'right',
+                            verticalAlign: 'middle',
+                            borderWidth: 0
+                        };
+                        $("#chart_" + chartElement.id).highcharts(chartConfig);
+                    });
+                });
+
             },
 
             print: function () {

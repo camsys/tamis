@@ -152,5 +152,24 @@ define(
                     },
                 }
             },
-        };
+
+        'Crash Analysis': {
+                'Projects': {
+                    'Major and Fatal Crashes by Program by Geographic area': {
+                        rows: ["Geographic Area"],
+                        cols: ["Program"],
+                        rendererName: "Table",
+                        aggregatorName: "Sum",
+                        vals: ["Total Major and Fatal Crashes"]
+                    },
+                    'Total Crashes by Primary Work Category by Geographic area': {
+                        rows: ["Geographic Area"],
+                        cols: ["Primary Work Category"],
+                        rendererName: "Table",
+                        aggregatorName: "Sum",
+                        vals: ["Total Crashes"]
+                    },
+                }
+            }
+        }
     });

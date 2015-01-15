@@ -7,7 +7,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
             displayName: 'Query Results',
             configuredTables: ko.observableArray([]),
 
-             activate: function () {
+            activate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 var configuredTables = [];

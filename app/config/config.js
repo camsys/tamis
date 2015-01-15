@@ -9,6 +9,8 @@ define(
             pavementQueryUrl: 'http://swdev42.camsys.com/arcgis/rest/services/AKDOT/TAMIS/MapServer/exts/RouteEventOverlaySOE/GetFilterValues?FilterType=PSRSummary&f=json',
             deckQueryUrl: 'http://swdev42.camsys.com/arcgis/rest/services/AKDOT/TAMIS/MapServer/exts/RouteEventOverlaySOE/GetFilterValues?FilterType=DeckCondition&f=json',
             bridgeStatusQueryUrl: 'http://swdev42.camsys.com/arcgis/rest/services/AKDOT/TAMIS/MapServer/exts/RouteEventOverlaySOE/GetFilterValues?FilterType=BridgeStatus&f=json',
+            categoryQueryUrl: 'http://swdev42.camsys.com/arcgis/rest/services/AKDOT/TAMIS/MapServer/exts/RouteEventOverlaySOE/GetFilterValues?FilterType=PrimWorkCategory&f=json',
+
             runQueryUrl: '/tamisPilotQA/web/Query.aspx/RunQuery',
 
             bridgeFeaturesUrl: "http://swdev14.camsys.com/arcgis2/rest/services/AKDOT/TAMIS/MapServer/2/query",
@@ -21,6 +23,9 @@ define(
 
             regionPolyQueryUrl: 'http://swdev14.camsys.com/arcgis2/rest/services/AKDOT/TAMIS/MapServer/5/query',
             districtPolyQueryUrl: 'http://swdev14.camsys.com/arcgis2/rest/services/AKDOT/TAMIS/MapServer/6/query',
+
+            crashesQueryUrl: 'http://swdev14.camsys.com/arcgis2/rest/services/AKDOT/TAMIS/MapServer/8/query',
+            projectsQueryUrl: 'http://swdev14.camsys.com/arcgis2/rest/services/AKDOT/TAMIS/MapServer/9/query',
 
             noResultsMessage:{title: "Whoops!", message: "No data is available for display yet, run a query first."}
 

@@ -95,6 +95,34 @@ tamis.Map = (function () {
             "RouteFeatureResults": [
                 {key: 'AADT Summary', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: true},
             ]
+        },
+        "Crash Analysis": {
+            "CrashFeatureResults":[
+                {key: 'Crash Class', type: 'Crashes', default: true,
+                    colors: [{key: "Minor", color: "yellow"},{key: "Major", color: "#FF8C00"},{key: "Fatal", color: "red"}]
+                },
+            ],
+            "ProjectFeatureResults": [
+                {key: 'AADT Summary', type: 'Projects', startColor: 'lightblue', endColor: 'darkblue', default: true},
+                {key: 'Total Crash Summary', type: 'Projects', default: false,
+                    colors: [{key: "0", color: "green"},{key: "1-2", color: "yellow"},{key: "3+", color: "red"}]
+                },
+                {key: 'Major and Fatal Crash Summary', type: 'Projects', default: false,
+                    colors: [{key: "0", color: "green"},{key: "1", color: "yellow"},{key: "2+", color: "red"}]
+                },
+                {key: 'Fatal Crash Summary', type: 'Projects', default: false,
+                    colors: [{key: "0", color: "green"},{key: "1+", color: "red"}]
+                },
+                {key: 'Total Crashes per VMT Summary', type: 'Projects', default: false,
+                    colors: [{key: "0", color: "green"},{key: "0-0.0005", color: "yellow"},{key: "0.0005+", color: "red"}]
+                },
+                {key: 'Major and Fatal Crashes per VMT Summary', type: 'Projects', default: false,
+                    colors: [{key: "0", color: "green"},{key: "0-0.0002", color: "yellow"},{key: "0.0002+", color: "red"}]
+                },
+                {key: 'Fatal Crashes per VMT Summary', type: 'Projects', default: false,
+                    colors: [{key: "0", color: "green"},{key: "> 0", color: "red"}]
+                },
+            ]
         }
     };
 
@@ -114,12 +142,6 @@ tamis.Map = (function () {
     var polylineSymbol;
     var polygonSymbol;
     var legendDijit;
-
-    var bridgeRendererNames = [];
-    var routeRendererNames = [];
-
-    var selectedBridgeRenderer = '';
-    var selectedRouteRenderer = '';
 
     var layers;
 
@@ -280,7 +302,7 @@ tamis.Map = (function () {
 
     function getSymbol(layerName, color){
         var symbol;
-        if(layerName == 'RouteFeatureResults'){
+        if(layerName == 'RouteFeatureResults' || layerName == 'ProjectFeatureResults'){
             symbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color(color), 5);
         }else{
             symbol = new esri.symbol.SimpleMarkerSymbol();
@@ -292,7 +314,7 @@ tamis.Map = (function () {
     }
 
     function getGeometryType(layerName){
-        if(layerName == 'RouteFeatureResults'){
+        if(layerName == 'RouteFeatureResults' || layerName == 'ProjectFeatureResults'){
             return GEOMETRY_TYPE_POLYLINE;
         }else{
             return GEOMETRY_TYPE_POINT;
@@ -397,9 +419,11 @@ tamis.Map = (function () {
                 optionString += "<option value='" + layer.id + "' " + (layer.visible ? "selected" : "") + " >" + label + "</option>";
             })
 
+            var typeVisible = false;
             $.each(typeToLayerMap[type], function (index, layer) {
                 var label = layer._titleForLegend;
                 if (layer.visible) {
+                    typeVisible = true;
                     var item = "<input type='checkbox' class='list_item' onclick='tamis.Map.updateLayerVisibility(this)'" +
                         (layer.visible ? "checked=checked" : "") + "' id='" + layer.id + "'' /><label for='" + layer.id + "'>" + label + "</label>";
                     if (optionString.length > 0) {
@@ -409,6 +433,16 @@ tamis.Map = (function () {
                     items.push(item);
                 }
             })
+
+            if(!typeVisible){
+                var item = "<input type='checkbox' class='list_item' onclick='tamis.Map.updateLayerVisibility(this)'" +
+                    (layer.visible ? "checked=checked" : "") + "' id='" + layer.id + "'' /><label for='" + layer.id + "'>" + label + "</label>";
+                if (optionString.length > 0) {
+                    item += "<br /><select onchange='tamis.Map.updateRenderer(this);'>" + optionString + "</select>​";
+                }
+                item += '<br />';
+                items.push(item);
+            }
 
 
         })

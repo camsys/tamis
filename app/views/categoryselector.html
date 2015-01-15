@@ -1,0 +1,26 @@
+
+<div class="form-group"
+     data-bind="fadeVisible: ($parent.geoselector.selectedGeographicType())
+                                         && ($parent.geoselector.useGeographicFilter() == 'false' || $parent.geoselector.geoFilters().length > 0)">
+    <label class="control-label">Do you want to limit the results by primary work category?</label>
+
+    <div class="controls">
+        <input type="radio" name="resultsFilter" value="true"
+               data-bind="checked: useCategoryFilter">Yes</input>
+        <input type="radio" name="resultsFilter" value="false"
+               data-bind="checked: useCategoryFilter">No, show me everything</input>
+    </div>
+</div>
+
+<div class="form-group"
+     data-bind="fadeVisible: ($parent.geoselector.selectedGeographicType())
+                                 && ($parent.geoselector.useGeographicFilter() == 'false' || $parent.geoselector.geoFilters().length > 0)
+                                 && useCategoryFilter() == 'true'">
+    <label>Select a primary work category</label>
+    <select id="selectCds" name="selectCds" class="form-control"
+            data-bind="options: categories,
+                                        value: selectedCategory,
+                                        optionsCaption: 'Select...'">
+    </select>
+</div>
+
