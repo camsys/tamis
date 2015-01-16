@@ -444,7 +444,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
 
                 var chart = {};
                 chart.level = tabdef.levels[0];
-                chart.text = "Entire State";
+                chart.text = "All Selected Areas";
 
                 $.each(tabdef.sums, function (index, sum) {
                     chart[sum] = tree[sum];
@@ -490,8 +490,13 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             seriesArray.push(series);
                         });
 
+                        var colors = ["yellow", "orange", "red"];
+                        for (var i = 0; i < seriesArray.length; i++) {
+                            seriesArray[i].color = colors[i];
+                        }
+
                         that.axisTitle = axisTitle;
-                        that.chartTitle = "Number of Crashes by Severity "
+                        that.chartTitle = "Number of Crashes On Projects by Severity "
                         + ' For ' + chartElement.text;
 
                         var chartConfig = {

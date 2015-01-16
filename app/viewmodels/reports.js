@@ -290,7 +290,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                     var html = tree[reportdef.fields[i]];
                     if(typeof(tree[tree[reportdef.fields[i]]]) == 'undefined'){
                         if(reportdef.fields[i] == 'Jurisdiction'){
-                            html = 'Entire State';
+                            html = "All Selected Areas";
                         }
                     }
                     table.add({

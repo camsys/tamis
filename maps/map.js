@@ -103,8 +103,8 @@ tamis.Map = (function () {
                 },
             ],
             "ProjectFeatureResults": [
-                {key: 'AADT Summary', type: 'Projects', startColor: 'lightblue', endColor: 'darkblue', default: true},
-                {key: 'Total Crash Summary', type: 'Projects', default: false,
+
+                {key: 'Total Crash Summary', type: 'Projects', default: true,
                     colors: [{key: "0", color: "green"},{key: "1-2", color: "yellow"},{key: "3+", color: "red"}]
                 },
                 {key: 'Major and Fatal Crash Summary', type: 'Projects', default: false,
@@ -228,6 +228,8 @@ tamis.Map = (function () {
                             typeToLayerMap[field.type] = [];
                         }
                         typeToLayerMap[field.type].push(layer);
+                    }else{
+                        console.log('No values found for field ' + field.key);
                     }
                 }
             }else{
@@ -338,7 +340,7 @@ tamis.Map = (function () {
         $.each(features, function (index, feature) {
             if(typeof(feature[fieldName]) != 'undefined'){
                 var value = feature[fieldName];
-                if(value && value.length > 0){
+                if(value != null && value.toString().length > 0){
                     values[value] = null;
                 }
             }

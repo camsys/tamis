@@ -141,7 +141,7 @@ define(
                     tabs: ['Projects'],
                     dataKey: 'ProjectFeatureResults',
                     graphMetrics: [
-                        {name: "Number of Crashes", value: "Number of Crashes"}
+                        {name: "Crashes by Severity", value: "Crashes by Severity"}
                     ],
                     levelOrders: [
                         {name: "By Geographic Area", value: ['Jurisdiction']},

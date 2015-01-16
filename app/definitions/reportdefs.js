@@ -132,7 +132,7 @@ define(
             'Crash Analysis': {
                 'Projects': {
                     type: 'bar',
-                    headers: ['Region', 'Projects', 'Lane Miles', 'VMT', 'Crashes', 'Minor', 'Major', 'Fatal'],
+                    headers: ['Geographic Area', 'Projects', 'Lane Miles', 'VMT', 'Crashes', 'Minor', 'Major', 'Fatal'],
                     fields: ['Jurisdiction', 'count', 'LaneMiles', 'VMT', 'totalcrashes', 'MinorCrashes', 'MajorCrashes', 'FatalCrashes'],
                     levels: ['Jurisdiction'],
                     sums: ['count', 'LaneMiles', 'VMT', 'totalcrashes', 'MinorCrashes', 'MajorCrashes', 'FatalCrashes'],
