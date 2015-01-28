@@ -22,7 +22,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
             activate: function () {
 
                 this.areaTree = {};
-                this.assetTree = {};
 
                 var that = this;
                 that.areaTree['House Districts'] = appstate.filterValues.districts;
@@ -146,6 +145,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     geoValuesToSubmit = $.map(geoFilters, function (geoFilter, index) {
                         return {Value: geoFilter.original.selectionId, Name: geoFilter.original.text};
                     });
+                }else{
+                    for(var i = 0; i < this.geographicTypes.length; i++){
+                        if(this.geographicTypes[i].value == selectedGeographicType){
+                            geoValuesToSubmit = this.areaTree[this.geographicTypes[i].name];
+                        }
+                    }
                 }
 
                 geoParameter.AreaParameter.Areas = geoValuesToSubmit;
