@@ -26,7 +26,16 @@ define(
                 }
 
                 if(typeof(feature['PSRSummary']) != 'undefined'){
+                    if(feature['PSRSummary'].toString().length < 1) {
+                        feature['PSRSummary'] = "No Data"
+                    }
                     feature.condition = feature['PSRSummary'];
+                }
+
+                if(typeof(feature['Status']) != 'undefined'){
+                    if(feature['Status'].toString().length < 1) {
+                        feature['Status'] = "No Data"
+                    }
                 }
 
                 if(typeof(feature['BridgeName']) != 'undefined'){

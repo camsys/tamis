@@ -67,31 +67,18 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 this.queryComplete = false;
                 var that = this;
 
-                $('#assetTree').jstree({
-                    'plugins': ["checkbox"], 'core': {
-                        'data': that.assetselector.assetTreeNodes()
-                    }
-                }).on('changed.jstree', function (e, data) {
-                    that.updateAssetSelection(e, data)
-                });
-
-                this.selectedQuery.subscribe(function (newValue) {
-                    that.geoselector.selectedGeographicType(null);
-                    that.geoselector.useGeographicFilter(null);
-                    that.geoselector.geoFilters([]);
-                    that.assetselector.useAssetFilter(null);
-                    that.assetselector.assetFilters([]);
-                    that.assetselector.buildAssetTree(newValue);
-                    that.routeselector.resetObservables();
-                    that.slopeselector.resetObservables();
-                });
-
-                this.useAssetFilter.subscribe(function (newValue) {
-                    var oldValue = that.useAssetFilter();
-                    if (oldValue) {
-                        $("#assetTree").jstree("uncheck_all", true);
-                    }
-                }, null, "beforeChange");
+                if (!this.selectedQuerySub) {
+                    this.selectedQuerySub = this.selectedQuery.subscribe(function (newValue) {
+                        that.geoselector.selectedGeographicType(null);
+                        that.geoselector.useGeographicFilter(null);
+                        that.geoselector.geoFilters([]);
+                        that.assetselector.useAssetFilter(null);
+                        that.assetselector.assetFilters([]);
+                        that.assetselector.buildAssetTree(newValue);
+                        that.routeselector.resetObservables();
+                        that.slopeselector.resetObservables();
+                    });
+                }
             },
 
             executeQuery: function () {

@@ -236,8 +236,8 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                                     seriesArray[i].color = colors[conditions.indexOf(seriesArray[i].name)];
                                 }
                             }else{
-                                var conditions = ["Poor", "Mediocre", "Fair", "Good", "Very Good", "N/A"];
-                                var colors = ["red", "orange", "yellow", "yellowgreen", "green", "grey"];
+                                var conditions = ["Poor", "Mediocre", "Fair", "Good", "Very Good", "N/A", "No Data"];
+                                var colors = ["red", "orange", "yellow", "yellowgreen", "green", "grey", "lightgrey"];
 
                                 var sorter = function compare(a, b) {
                                     a = conditions.indexOf(a.name);

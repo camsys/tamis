@@ -67,7 +67,7 @@ define(
                     averages: [],
                     dataKey: 'BridgeFeatureResults',
                     graphMetrics: [
-                        {name: "Count", value: "countx"},
+                        {name: "Count", value: "count"},
                     ],
                     levelOrders: [
                         {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'DeckCond']},
