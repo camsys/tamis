@@ -53,6 +53,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                 var pivotdef = pivotdefs[appstate.queryName];
                 this.rawdata = [];
                 var that = this;
+                var tabIndex = 0;
                 $.each(tabledef.dataKeys, function (index, dataKey) {
                     if(appstate.queryName == 'Unstable Slopes'){
                         if(dataKey == 'RouteFeatureResults'){
@@ -88,8 +89,9 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             pivotconfig.derivedAttributes = that.derivedAttributes;
                         }
                         that.rawdata.push(targetdata);
-                        $("#table_" + index).append('<div id="tableholder_' + index + '"></div>');
-                        $("#tableholder_" + index).pivotUI(targetdata, pivotconfig);
+                        $("#table_" + tabIndex).append('<div id="tableholder_' + tabIndex + '"></div>');
+                        $("#tableholder_" + tabIndex).pivotUI(targetdata, pivotconfig);
+                        tabIndex++;
                     }
                 });
             },
