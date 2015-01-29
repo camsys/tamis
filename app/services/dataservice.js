@@ -98,7 +98,7 @@ define(['../config/config'],
                             ]
                         };
                         $(response.FilterList).each(function (index, filterValue) {
-                            filterValue.type = 'PavementCondition'
+                            filterValue.type = 'PSRSummary'
                         });
                         that.filterValues.PavementCondition = response.FilterList;
                     }),
