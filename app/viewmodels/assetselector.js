@@ -131,21 +131,18 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', '../config/appstat
                 });
                 that.assetTreeNodes(assetTreeNodes);
 
-                console.log("assetTree 1");
                 $("#assetTree").jstree("destroy");
                 $('#assetTree').jstree({'plugins': ["checkbox"], 'core': {
                     'data': that.assetTreeNodes()
                 }}).on('changed.jstree', function (e, data) {
                     that.updateAssetSelection(e, data)
                 });
-                console.log("assetTree 2");
                 this.useAssetFilter.subscribe(function (newValue) {
                     var oldValue = that.useAssetFilter();
                     if (oldValue) {
                         $("#assetTree").jstree("uncheck_all", true);
                     }
                 }, null, "beforeChange");
-                console.log("assetTree 3");
             },
 
             updateAssetSelection: function (e, data) {

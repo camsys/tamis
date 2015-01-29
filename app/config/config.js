@@ -27,7 +27,8 @@ define(
             crashesQueryUrl: 'http://swdev14.camsys.com/arcgis2/rest/services/AKDOT/TAMIS/MapServer/8/query',
             projectsQueryUrl: 'http://swdev14.camsys.com/arcgis2/rest/services/AKDOT/TAMIS/MapServer/9/query',
 
-            noResultsMessage:{title: "Whoops!", message: "No data is available for display yet, run a query first."}
+            noResultsMessage:{title: "Whoops!", message: "No data is available for display yet, run a query first."},
+            emptyResultsMessage:{title: "No data!", message: "Your query returned no results, try broadening your query parameters."}
 
         };
     });

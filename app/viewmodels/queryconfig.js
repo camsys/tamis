@@ -166,9 +166,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                         dataservice.getFeatures(that.selectedQuery(), k, objectIds.join(), that.createCallback(layerMap, k, that));
                     }
                 });
-                if (this.hasResults == false) {
-                    app.showMessage(config.noResultsMessage.message, config.noResultsMessage.title);
-                }
             },
 
             createCallback: function(layerMap, k, that) {
@@ -214,7 +211,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     }
                 })
                 if (hasResults == false) {
-                    app.showMessage(config.noResultsMessage.message, config.noResultsMessage.title);
+                    app.showMessage(config.emptyResultsMessage.message, config.emptyResultsMessage.title);
                 } else {
                     console.log(JSON.stringify(appstate));
                     router.navigate('queryresults');
