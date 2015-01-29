@@ -77,6 +77,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                         that.assetselector.buildAssetTree(newValue);
                         that.routeselector.resetObservables();
                         that.slopeselector.resetObservables();
+                        if(that.categoryselector.queryReady()){
+                            that.categoryselector.queryReady("false");
+                        }
+                        if(that.slopeselector.queryReady()){
+                            that.slopeselector.queryReady("false");
+                        }
                     });
                 }
             },
