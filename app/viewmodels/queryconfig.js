@@ -113,7 +113,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
 
                 if(this.routeselector.selectedCds()){
                     var cds = this.routeselector.selectedCds();
-                    query = $.parseJSON('{"Query":{"DisplayParameters":[{"Name":"Jurisdictions","Selected":true,"RouteParameters":[{"Id":""}]},{"Name":"Roads","Selected":true,"AreaParameter":null,"FilterParameters":[{"Type":"NHSClass","Description":"Class","Filters":[],"MaxValues":0,"Selected":true}],"RouteParameters":[{"Id":""}]},{"Name":"Bridges","Selected":true,"AreaParameter":null,"FilterParameters":[{"Type":"NHSClass","Description":"Class","Filters":[],"MaxValues":0,"Selected":true}],"RouteParameters":[{"Id":""}]}],"Selection":3}}');
+                    query = $.parseJSON('{"Query":{"DisplayParameters":[{"Name":"Jurisdictions","Selected":true,"RouteParameters":[{"Id":""}]},{"Name":"Roads","Selected":true,"AreaParameter":null,"FilterParameters":[{"Type":"NHSBoolean","Description":"Class","Filters":[],"MaxValues":0,"Selected":true}],"RouteParameters":[{"Id":""}]},{"Name":"Bridges","Selected":true,"AreaParameter":null,"FilterParameters":[{"Type":"NHSBoolean","Description":"Class","Filters":[],"MaxValues":0,"Selected":true}],"RouteParameters":[{"Id":""}]}],"Selection":3}}');
                     query.Query.DisplayParameters[0].RouteParameters[0].Id = cds;
                     query.Query.DisplayParameters[1].RouteParameters[0].Id = cds;
                     query.Query.DisplayParameters[2].RouteParameters[0].Id = cds;

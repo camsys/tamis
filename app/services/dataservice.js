@@ -55,7 +55,7 @@ define(['../config/config'],
                     that.getAssets(function (response) {
                         response.FilterList.sort(that.sorter);
                         $(response.FilterList).each(function (index, filterValue) {
-                            filterValue.type = 'NHSClass'
+                            filterValue.type = 'NHSBoolean'
                         });
                         that.filterValues.NHSClass = response.FilterList;
                     }),
