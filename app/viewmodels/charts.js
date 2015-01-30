@@ -45,6 +45,13 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                         }
 
                     });
+                    if(this.chartTabs.length == 0){
+                        app.showMessage("Your query results contain no data to chart.  Consider broadening your query parameters", "No data to chart")
+                            .then(function (dialogResult) {
+                                router.navigate('queryresults');
+                            });
+                        return;
+                    }
                 } else {
                     app.showMessage(config.noResultsMessage.message, config.noResultsMessage.title).then(function (dialogResult) {
                         router.navigate('queryconfig');
@@ -269,7 +276,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             } else if (metric == 'count') {
                                 that.chartTitle = 'Count by Status For ' + chartElement.text;
                             } else {
-                                that.chartTitle = 'Miles by PSR Summary For ' + chartElement.text;
+                                that.chartTitle = 'Centerline Miles by PSR Summary For ' + chartElement.text;
                             }
 
                             if (metric == 'count') {
