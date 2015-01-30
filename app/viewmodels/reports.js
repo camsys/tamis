@@ -35,6 +35,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                         }
                     });
                     this.pivotTables(this.configuredReports);
+                    if(this.configuredReports.length == 0){
+                        app.showMessage("Not enough data to report.  Consider broadening your query parameters", "Not enough data")
+                            .then(function (dialogResult) {
+                                router.navigate('queryresults');
+                            });
+                        return;
+                    }
                 } else {
                     app.showMessage(config.noResultsMessage.message, config.noResultsMessage.title).then(function (dialogResult) {
                         router.navigate('queryconfig');

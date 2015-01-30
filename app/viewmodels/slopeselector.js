@@ -80,6 +80,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 };
 
                 if(aadtFilter){
+                    aadtFilter = parseInt(aadtFilter);
                     slopeParameter.FilterParameters.push({"Type":"AADT","Filters":[{"NumericValue":aadtFilter,"ComparisonOperator":">="}]});
                     roadParameter.FilterParameters.push({"Type":"AADT","Filters":[{"NumericValue":aadtFilter,"ComparisonOperator":">="}]});
                 }

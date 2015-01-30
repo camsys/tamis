@@ -46,7 +46,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
 
                     });
                     if(this.chartTabs.length == 0){
-                        app.showMessage("Your query results contain no data to chart.  Consider broadening your query parameters", "No data to chart")
+                        app.showMessage("Not enough data to chart.  Consider broadening your query parameters", "Not enough data")
                             .then(function (dialogResult) {
                                 router.navigate('queryresults');
                             });

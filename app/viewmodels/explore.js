@@ -33,6 +33,13 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                     }
                 });
                 this.tabs = tabs;
+                if(this.tabs.length == 0){
+                    app.showMessage("Not enough data to explore.  Consider broadening your query parameters", "Not enough data")
+                        .then(function (dialogResult) {
+                            router.navigate('queryresults');
+                        });
+                    return;
+                }
             },
 
 
