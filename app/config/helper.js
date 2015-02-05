@@ -10,7 +10,41 @@ define(
                 }
             },
 
+            isNumeric: function( obj ) {
+                return !jQuery.isArray( obj ) && (obj - parseFloat( obj ) + 1) >= 0;
+            },
+
+            applySortableLabels: function(feature){
+                if(typeof(feature.Status) != 'undefined'){
+                    var status = feature.Status;
+                    if(status == 'Structurally Deficient'){
+                        feature.Status = '1 Structurally Deficient';
+                    } else if(status == 'Functionally Obsolete'){
+                        feature.Status = '2 Functionally Obsolete';
+                    } else if(status == 'Not Deficient'){
+                        feature.Status = '3 Not Deficient';
+                    }
+                }
+
+                if(typeof(feature.PSRSummary) != 'undefined'){
+                    var condition = feature.condition;
+                    if(condition == 'Poor'){
+                        feature.condition = '1 Poor';
+                    } else if(condition == 'Mediocre'){
+                        feature.condition = '2 Mediocre';
+                    } else if(condition == 'Fair'){
+                        feature.condition = '3 Fair';
+                    } else if(condition == 'Good'){
+                        feature.condition = '4 Good';
+                    } else if(condition == 'Very Good'){
+                        feature.condition = '5 Very Good';
+                    }
+                }
+
+            },
+
             processFeature: function(feature) {
+
                 if(typeof(feature['Length']) != 'undefined' && typeof(feature['NumberOfLanes']) ){
                     feature.LaneMiles = feature['Length'] * feature['NumberOfLanes']
                 } else {

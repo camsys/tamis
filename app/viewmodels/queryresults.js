@@ -19,6 +19,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                             var table = {};
                             table.title = tabname;
                             table.data = data[dataKey];
+                            $.each(table.data, function (index, feature){
+                                $.each(Object.keys(feature), function (k, v){
+                                    var value = feature[v];
+                                    var number = parseFloat(value);
+                                    if(!isNaN(number)){
+                                        feature[v] = parseFloat(number.toFixed(4));
+                                    }
+                                });
+                            });
                             table.columnDefs = tabledef.columnDefs[dataKey];
                             table.id = index;
                             $(table.data).each(function (index, row) {

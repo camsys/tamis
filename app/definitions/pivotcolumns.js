@@ -72,7 +72,6 @@
                     { title: 'Total Crashes Per VMT', data: 'TotalVMT'},
                     { title: 'Major and Fatal Crashes Per VMT', data: 'MajorFatalVMT'},
                     { title: 'Fatal Crashes Per VMT', data: 'FatalVMT'},
-
                 ]
             };
         });

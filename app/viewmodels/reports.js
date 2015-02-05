@@ -1,5 +1,5 @@
-define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'datatables', 'jquery-ui', './reportsbase', '../definitions/reportdefs', '../config/appstate', 'plugins/router', '../config/config', './querydescription'],
-    function (http, app, ko, jstree, bootstrap, datatables, jqueryui, reportsbase, reportdefs, appstate, router, config, querydescription) {
+define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'datatables', 'jquery-ui', './reportsbase', '../definitions/reportdefs', '../config/appstate', 'plugins/router', '../config/config', './querydescription', '../config/helper'],
+    function (http, app, ko, jstree, bootstrap, datatables, jqueryui, reportsbase, reportdefs, appstate, router, config, querydescription, helper) {
 
         return {
             querydescription: querydescription,
@@ -9,7 +9,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
 
             activate: function () {
                 this.resetObservables();
-                var data = appstate.queryResults;
+                var data = $.extend(true, {}, appstate.queryResults);
+                $.each(Object.keys(data), function (index, resultSet){
+                    $.each(data[resultSet], function (k, v){
+                        helper.applySortableLabels(v);
+                    });
+                });
+
                 var queryName = appstate.queryName;
                 if (data && queryName) {
                     this.reportdef = $.extend(true, {}, reportdefs[queryName]); //make a local copy of the report def since we'll be modifying it
@@ -91,13 +97,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                     cells: [],
                     add: function (cell) {
                         if(cell.html.indexOf('-') == -1){
-                            var number = parseFloat(cell.html);
-                            if(!isNaN(number)){
-                                number = Number(number).toFixed(2);
-                                if(number % 1 === 0){
-                                    number = Number(number).toFixed(0);
+                            if(helper.isNumeric(cell.html)){
+                                var number = parseFloat(cell.html);
+                                if(!isNaN(number)){
+                                    number = Number(number).toFixed(2);
+                                    if(number % 1 === 0){
+                                        number = Number(number).toFixed(0);
+                                    }
+                                    cell.html = number;
                                 }
-                                cell.html = number;
                             }
                         }
                         this.cells.push(cell);
