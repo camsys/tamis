@@ -105,22 +105,22 @@ tamis.Map = (function () {
             "ProjectFeatureResults": [
 
                 {key: 'Total Crash Summary', type: 'Projects', default: true,
-                    colors: [{key: "0", color: "green"},{key: "1-2", color: "yellow"},{key: "3+", color: "red"}]
+                    colors: [{key: "0", color: "green"},{key: "1-5", color: "yellow"},{key: "6+", color: "red"}]
                 },
                 {key: 'Major and Fatal Crash Summary', type: 'Projects', default: false,
-                    colors: [{key: "0", color: "green"},{key: "1", color: "yellow"},{key: "2+", color: "red"}]
+                    colors: [{key: "0", color: "green"},{key: "1-2", color: "yellow"},{key: "3+", color: "red"}]
                 },
                 {key: 'Fatal Crash Summary', type: 'Projects', default: false,
-                    colors: [{key: "0", color: "green"},{key: "1+", color: "red"}]
+                    colors: [{key: "0", color: "green"},{key: ">0", color: "red"}]
                 },
                 {key: 'Total Crashes per VMT Summary', type: 'Projects', default: false,
-                    colors: [{key: "0", color: "green"},{key: "0-0.0005", color: "yellow"},{key: "0.0005+", color: "red"}]
+                    colors: [{key: "0", color: "green"},{key: "0-0.001", color: "yellow"},{key: ">0.001", color: "red"}]
                 },
                 {key: 'Major and Fatal Crashes per VMT Summary', type: 'Projects', default: false,
-                    colors: [{key: "0", color: "green"},{key: "0-0.0002", color: "yellow"},{key: "0.0002+", color: "red"}]
+                    colors: [{key: "0", color: "green"},{key: "0-0.0005", color: "yellow"},{key: ">0.0005", color: "red"}]
                 },
                 {key: 'Fatal Crashes per VMT Summary', type: 'Projects', default: false,
-                    colors: [{key: "0", color: "green"},{key: "> 0", color: "red"}]
+                    colors: [{key: "0", color: "green"},{key: ">0", color: "red"}]
                 },
             ]
         }
