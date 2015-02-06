@@ -27,17 +27,80 @@ define(
                 }
 
                 if(typeof(feature.PSRSummary) != 'undefined'){
-                    var condition = feature.condition;
-                    if(condition == 'Poor'){
-                        feature.condition = '1 Poor';
-                    } else if(condition == 'Mediocre'){
-                        feature.condition = '2 Mediocre';
-                    } else if(condition == 'Fair'){
-                        feature.condition = '3 Fair';
-                    } else if(condition == 'Good'){
-                        feature.condition = '4 Good';
-                    } else if(condition == 'Very Good'){
-                        feature.condition = '5 Very Good';
+                    var PSRSummary = feature.PSRSummary;
+                    if(PSRSummary == 'Poor'){
+                        feature.PSRSummary = '1 Poor';
+                    } else if(PSRSummary == 'Mediocre'){
+                        feature.PSRSummary = '2 Mediocre';
+                    } else if(PSRSummary == 'Fair'){
+                        feature.PSRSummary = '3 Fair';
+                    } else if(PSRSummary == 'Good'){
+                        feature.PSRSummary = '4 Good';
+                    } else if(PSRSummary == 'Very Good'){
+                        feature.PSRSummary = '5 Very Good';
+                    }
+                }
+
+                if(typeof(feature.RUTSummary) != 'undefined'){
+                    var RUTSummary = feature.RUTSummary;
+                    if(RUTSummary == 'Poor'){
+                        feature.RUTSummary = '1 Poor';
+                    } else if(RUTSummary == 'Mediocre'){
+                        feature.RUTSummary = '2 Mediocre';
+                    } else if(RUTSummary == 'Fair'){
+                        feature.RUTSummary = '3 Fair';
+                    } else if(RUTSummary == 'Good'){
+                        feature.RUTSummary = '4 Good';
+                    } else if(RUTSummary == 'Very Good'){
+                        feature.RUTSummary = '5 Very Good';
+                    }
+                }
+
+                if(typeof(feature.RoughnessSummary) != 'undefined'){
+                    var RoughnessSummary = feature.RoughnessSummary;
+                    if(RoughnessSummary == 'Poor'){
+                        feature.RoughnessSummary = '1 Poor';
+                    } else if(RoughnessSummary == 'Mediocre'){
+                        feature.RoughnessSummary = '2 Mediocre';
+                    } else if(RoughnessSummary == 'Fair'){
+                        feature.RoughnessSummary = '3 Fair';
+                    } else if(RoughnessSummary == 'Good'){
+                        feature.RoughnessSummary = '4 Good';
+                    } else if(RoughnessSummary == 'Very Good'){
+                        feature.RoughnessSummary = '5 Very Good';
+                    }
+                }
+
+                if(typeof(feature.deckbin) != 'undefined'){
+                    var deckbin = feature.deckbin;
+                    if(deckbin == 'Poor'){
+                        feature.deckbin = '1 Poor';
+                    } else if(deckbin == 'Fair'){
+                        feature.deckbin = '2 Fair';
+                    } else if(deckbin == 'Good'){
+                        feature.deckbin = '3 Good';
+                    }
+                }
+
+                if(typeof(feature.substructurebin) != 'undefined'){
+                    var substructurebin = feature.substructurebin;
+                    if(substructurebin == 'Poor'){
+                        feature.substructurebin = '1 Poor';
+                    } else if(substructurebin == 'Fair'){
+                        feature.substructurebin = '2 Fair';
+                    } else if(substructurebin == 'Good'){
+                        feature.substructurebin = '3 Good';
+                    }
+                }
+
+                if(typeof(feature.superstructurebin) != 'undefined'){
+                    var superstructurebin = feature.superstructurebin;
+                    if(superstructurebin == 'Poor'){
+                        feature.superstructurebin = '1 Poor';
+                    } else if(superstructurebin == 'Fair'){
+                        feature.superstructurebin = '2 Fair';
+                    } else if(superstructurebin == 'Good'){
+                        feature.superstructurebin = '3 Good';
                     }
                 }
 
@@ -63,7 +126,7 @@ define(
                     if(feature['PSRSummary'].toString().length < 1) {
                         feature['PSRSummary'] = "No Data"
                     }
-                    feature.condition = feature['PSRSummary'];
+                    feature.PSRSummary = feature['PSRSummary'];
                 }
 
                 if(typeof(feature['Status']) != 'undefined'){
