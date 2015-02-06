@@ -194,42 +194,44 @@ define(
 
                     var TotalCrashes = MinorCrashes + MajorCrashes + FatalCrashes;
                     feature.totalcrashes= TotalCrashes;
-                    if(TotalCrashes > 0 && TotalCrashes < 3){
-                        TotalCrashes = "1-2";
-                    }else if(TotalCrashes > 2){
-                        TotalCrashes = "3+";
+                    if(TotalCrashes > 0 && TotalCrashes < 6){
+                        TotalCrashes = "1-5";
+                    }else if(TotalCrashes >= 6){
+                        TotalCrashes = "6+";
                     }
                     feature['Total Crash Summary'] = TotalCrashes;
 
                     TotalCrashes = MajorCrashes + FatalCrashes;
-                    if(TotalCrashes > 1){
-                        TotalCrashes = "2+";
+                    if(TotalCrashes >= 1 && TotalCrashes <= 2 ){
+                        TotalCrashes = "1-2";
+                    }else if(TotalCrashes >= 3 ){
+                        TotalCrashes = "3+";
                     }
                     feature['Major and Fatal Crash Summary'] = TotalCrashes;
 
                     TotalCrashes = FatalCrashes;
-                    if(TotalCrashes > 1){
-                        TotalCrashes = "1+";
+                    if(TotalCrashes > 0){
+                        TotalCrashes = ">0";
                     }
                     feature['Fatal Crash Summary'] = TotalCrashes;
 
                     TotalCrashes = MinorCrashes + MajorCrashes + FatalCrashes;
                     var VMT = feature['VMT'];
                     var crashesPerVmt = TotalCrashes / VMT;
-                    if(crashesPerVmt > 0 && crashesPerVmt <= 0.0005){
-                        crashesPerVmt = "0-0.0005";
-                    }else if(TotalCrashes > 0.0005){
-                        crashesPerVmt = "0.0005+";
+                    if(crashesPerVmt > 0 && crashesPerVmt <= 0.001){
+                        crashesPerVmt = "0-0.001";
+                    }else if(TotalCrashes > 0.001){
+                        crashesPerVmt = ">0.001";
                     }
                     feature['Total Crashes per VMT Summary'] = crashesPerVmt;
 
                     TotalCrashes = MajorCrashes + FatalCrashes;
                     var VMT = feature['VMT'];
                     var crashesPerVmt = TotalCrashes / VMT;
-                    if(crashesPerVmt > 0 && crashesPerVmt <= 0.0002){
-                        crashesPerVmt = "0-0.0002";
-                    }else if(TotalCrashes > 0.0002){
-                        crashesPerVmt = "0.0002+";
+                    if(crashesPerVmt > 0 && crashesPerVmt <= 0.0005){
+                        crashesPerVmt = "0-0.0005";
+                    }else if(TotalCrashes > 0.0005){
+                        crashesPerVmt = ">0.0005";
                     }
                     feature['Major and Fatal Crashes per VMT Summary'] = crashesPerVmt;
 
@@ -237,7 +239,7 @@ define(
                     var VMT = feature['VMT'];
                     var crashesPerVmt = TotalCrashes / VMT;
                     if(crashesPerVmt > 0){
-                        crashesPerVmt = "> 0";
+                        crashesPerVmt = ">0";
                     }
                     feature['Fatal Crashes per VMT Summary'] = crashesPerVmt;
                 }
