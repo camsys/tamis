@@ -127,6 +127,7 @@ define(
                         feature['PSRSummary'] = "No Data"
                     }
                     feature.PSRSummary = feature['PSRSummary'];
+                    feature.condition = feature['PSRSummary'];
                 }
 
                 if(typeof(feature['Status']) != 'undefined'){
