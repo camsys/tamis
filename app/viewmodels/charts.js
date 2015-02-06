@@ -5,7 +5,21 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             chartTabs: null,
             querydescription: querydescription,
 
-            activate: function () {
+            /*activate: function () {
+                var that = this;
+                return $.get("assets/json/appstate_q2.json",
+                    function (queryData) {
+                        var fields = Object.keys(queryData);
+                        $.each(fields, function (index, field) {
+                            appstate[field] = queryData[field]
+                        });
+
+                        that.realactivate();
+                    }
+                );
+            },
+
+            real*/activate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 if (data && queryName) {

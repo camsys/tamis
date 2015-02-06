@@ -7,21 +7,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
             printable: true,
             selectedLevelOrder: null,
 
-            /*activate: function () {
-                var that = this;
-                return $.get("assets/json/appstate_q2.json",
-                    function (queryData) {
-                        var fields = Object.keys(queryData);
-                        $.each(fields, function (index, field) {
-                            appstate[field] = queryData[field]
-                        });
-
-                        that.realactivate();
-                    }
-                );
-            },
-
-            real*/
             activate: function () {
                 this.resetObservables();
                 var data = $.extend(true, {}, appstate.queryResults);

@@ -44,7 +44,7 @@ define(
                     bins: [{name: "PSR Summary", value:'PSRSummary'}],
                     headers: ['Geographic Area', 'NHS Class', 'Miles', 'Lane Miles', 'PSR Summary', 'Count'],
                     fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'PSRSummary', 'count'],
-                    levels: ['Jurisdiction', 'NHSClass', 'condition'],
+                    levels: ['Jurisdiction', 'NHSClass', 'PSRSummary'],
                     sums: ['Length', 'LaneMiles'],
                     averages: [],
                     dataKey: 'RouteFeatureResults',
@@ -53,8 +53,8 @@ define(
                         {name: 'Lane Miles', value: "LaneMiles"},
                     ],
                     levelOrders: [
-                        {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'condition']},
-                        {name: "By NHS Class, then by Geographic Area", value: ['NHSClass', 'Jurisdiction', 'condition']}
+                        {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'PSRSummary']},
+                        {name: "By NHS Class, then by Geographic Area", value: ['NHSClass', 'Jurisdiction', 'PSRSummary']}
                     ]
                 },
                 Bridges: {
@@ -78,7 +78,7 @@ define(
             'Conditions of Specified Road / CDS': {
                 Roads: {
                     type: 'bar',
-                    bins: [{name: "PSR Summary", value: "condition"}],
+                    bins: [{name: "PSR Summary", value: "PSRSummary"}],
                     headers: ['Miles', 'Lane Miles'],
                     fields: ['Length', 'LaneMiles'],
                     levels: ['RouteName'],
