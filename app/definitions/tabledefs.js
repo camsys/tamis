@@ -164,7 +164,7 @@ define(
                         { title: 'VMT', data: 'VMT'},
                         { title: 'Number of Minor Crashes', data: 'MinorCrashes'},
                         { title: 'Number of Major Crashes', data: 'MajorCrashes'},
-                        { title: 'Number of Fatal Crashes', data: 'MajorFatalCrashes'},
+                        { title: 'Number of Fatal Crashes', data: 'FatalCrashes'},
                     ],
                     CrashFeatureResults: [
                         { title: 'Crash Class', data: 'CrashClass'},
