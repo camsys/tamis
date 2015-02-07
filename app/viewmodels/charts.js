@@ -6,7 +6,21 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             activeTabIndex: ko.observable(0),
             querydescription: querydescription,
 
-            activate: function () {
+           a/*ctivate: function () {
+                var that = this;
+                return $.get("assets/json/appstate_q4.json",
+                    function (queryData) {
+                        var fields = Object.keys(queryData);
+                        $.each(fields, function (index, field) {
+                            appstate[field] = queryData[field]
+                        });
+
+                        that.realactivate();
+                    }
+                );
+            },
+
+            real*/activate: function () {
                 this.activeTabIndex(0);
                 this.chartTabs([]);
                 var data = appstate.queryResults;
@@ -331,7 +345,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                         if (appstate.queryName == "Unstable Slopes") {
                             that.chartTitle = 'Count by Weighted Score Summary of Unstable Slopes by Geographic Area and Mitigation Present (True/False) For ' + chartElement.text;
 
-                            var conditions = ["0-0.3", "0.3-0.6", "0.6-1.0"];
+                            var conditions = ["0-0.2", "0.2-0.6", "0.6-1.0"];
                             var colors = ["yellow", "orange", "red"];
 
                             var sorter = function compare(a, b) {
@@ -482,7 +496,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
 
             renderProjectsCharts: function () {
 
-                $.each(this.chartTabs, function (index, chartTab) {
+                $.each(this.chartTabs(), function (index, chartTab) {
 
                     var axisTitle = this.selectedMetric();
                     var chartElements = chartTab.charts;
