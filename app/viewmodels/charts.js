@@ -8,6 +8,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
 
             activate: function () {
                 this.activeTabIndex(0);
+                this.chartTabs([]);
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 if (data && queryName) {
