@@ -139,6 +139,9 @@ define(
                     averages: [],
                     tabs: ['Crash Analysis'],
                     dataKey: 'ProjectFeatureResults',
+                    graphMetrics: [
+                        {name: "Count", value: "count"}
+                    ],
                     levelOrders: [
                         {name: "By Region", value: ['Jurisdiction']}
                     ]
