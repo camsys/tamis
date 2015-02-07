@@ -7,9 +7,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
             displayName: 'Query Results',
             configuredTables: ko.observableArray([]),
 
-            /*activate: function () {
+            activate: function () {
                 var that = this;
-                return $.get("assets/json/appstate_q4.json",
+                return $.get("assets/json/appstate_q1.json",
                     function (queryData) {
                         var fields = Object.keys(queryData);
                         $.each(fields, function (index, field) {
@@ -21,8 +21,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                 );
             },
 
-            real*/
-            activate: function () {
+            realactivate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 var configuredTables = [];
@@ -38,6 +37,18 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                             table.id = index;
                             $(table.data).each(function (index, row) {
                                 row.id = (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+                                $.each(Object.keys(row), function (k, v){
+                                    var value = row[v];
+                                    if(typeof(value) == 'string'){
+                                        if(value.indexOf(',') > -1){
+                                            return true;
+                                        }
+                                    }
+                                    var number = parseFloat(value);
+                                    if(!isNaN(number)){
+                                        row[v] = parseFloat(number.toFixed(4));
+                                    }
+                                });
                             });
                             configuredTables.push(table);
                         }
