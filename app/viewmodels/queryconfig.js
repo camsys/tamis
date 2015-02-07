@@ -206,6 +206,21 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 $(tabledef.dataKeys).each(function () {
                     if (appstate.queryResults[this] && appstate.queryResults[this].length > 0) {
 
+                        $.each(appstate.queryResults[this], function (index, feature){
+                            $.each(Object.keys(feature), function (k, v){
+                                var value = feature[v];
+                                if(typeof(value) == 'string'){
+                                    if(value.indexOf(',') > -1){
+                                        return true;
+                                    }
+                                }
+                                var number = parseFloat(value);
+                                if(!isNaN(number)){
+                                    feature[v] = parseFloat(number.toFixed(4));
+                                }
+                            });
+                        });
+
                         $.each(appstate.queryResults[this], function (index, feature) {
                             helper.processFeature(feature);
                         });

@@ -80,8 +80,8 @@ define(
                     type: 'bar',
                     bins: [{name: "PSR Summary", value:'PSRSummary'}],
                     headers: ['NHS Class', 'PSR Summary', 'Miles', 'Lane Miles'],
-                    fields: ['NHSClass', 'Length', 'LaneMiles', 'condition'],
-                    levels: ['NHSClass', 'condition'],
+                    fields: ['NHSClass', 'Length', 'LaneMiles', 'PSRSummary'],
+                    levels: ['NHSClass', 'PSRSummary'],
                     sums: ['Length', 'LaneMiles'],
                     averages: [],
                     dataKey: 'RouteFeatureResults',
@@ -90,7 +90,7 @@ define(
                         {name: 'Lane Miles', value: "LaneMiles"},
                     ],
                     levelOrders: [
-                        {name: "By NHS Class", value: ['NHSClass', 'condition']}
+                        {name: "By NHS Class", value: ['NHSClass', 'PSRSummary']}
                     ]
                 },
                 Bridges: {

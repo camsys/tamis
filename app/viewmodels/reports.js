@@ -245,8 +245,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                                     html: "&nbsp;"
                                 });
                             }
+                            var nextLevelIndex = reportdef.levels.indexOf(node.level) + 1;
+                            var levelFieldName = reportdef.levels[nextLevelIndex];
+                            var headerIndex = reportdef.fields.indexOf(levelFieldName);
+                            var subhead = reportdef.headers[headerIndex];
                             table.add({
-                                html: reportdef.headers[levelIndex + 1],
+                                html: subhead, //reportdef.headers[levelIndex + 1],
                                 colspan: reportdef.levels.length - levelIndex - 1,
                                 cellCls: 'header'
                             });

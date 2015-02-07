@@ -72,6 +72,12 @@
                     { title: 'Total Crashes Per VMT', data: 'TotalVMT'},
                     { title: 'Major and Fatal Crashes Per VMT', data: 'MajorFatalVMT'},
                     { title: 'Fatal Crashes Per VMT', data: 'FatalVMT'},
+                    { title: 'Total Crash Summary', data: 'Total Crash Summary'},
+                    { title: 'Major and Fatal Crash Summary', data: 'Major and Fatal Crash Summary'},
+                    { title: 'Fatal Crash Summary', data: 'Fatal Crash Summary'},
+                    { title: 'Total Crashes per VMT Summary', data: 'Total Crashes per VMT Summary'},
+                    { title: 'Major and Fatal Crashes per VMT Summary', data: 'Major and Fatal Crashes per VMT Summary'},
+                    { title: 'Fatal Crashes per VMT Summary', data: 'Fatal Crashes per VMT Summary'},
                 ]
-            };
+            }
         });

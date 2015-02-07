@@ -6,14 +6,14 @@
     <div class="row">
         <ul class="nav nav-tabs">
             <!-- ko foreach: chartTabs -->
-            <li data-bind="css: { active: $index() == 0 }">
+            <li data-bind="css: { active: $index() == $parent.activeTabIndex() }">
                 <a data-toggle="tab" data-bind="attr: { href: '#charttab_' + id }"><span data-bind="text: title"/></a>
             </li>
             <!-- /ko -->
         </ul>
         <div class="tab-content">
             <!-- ko foreach: chartTabs -->
-            <div class="tab-pane" data-bind="attr: { id: 'charttab_' + id }, css: { active: $index() == 0 }">
+            <div class="tab-pane" data-bind="attr: { id: 'charttab_' + id }, css: { active: $index() == $parent.activeTabIndex() }">
                 <div class="row form-group">
 
                     <label class="navbar-text" for="selectQuery">Selected measure:

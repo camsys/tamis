@@ -170,6 +170,6 @@ define(
                         { title: 'Crash Class', data: 'CrashClass'},
                     ]
                 }
-            },
+            }
         };
     });

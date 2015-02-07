@@ -2,30 +2,17 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
     function (system, http, app, ko, bootstrap, jqueryui, reportsbase, highcharts, appstate, chartdefs, router, config, querydescription) {
 
         return{
-            chartTabs: null,
+            chartTabs: ko.observableArray([]),
+            activeTabIndex: ko.observable(0),
             querydescription: querydescription,
 
-            /*activate: function () {
-                var that = this;
-                return $.get("assets/json/appstate_q2.json",
-                    function (queryData) {
-                        var fields = Object.keys(queryData);
-                        $.each(fields, function (index, field) {
-                            appstate[field] = queryData[field]
-                        });
-
-                        that.realactivate();
-                    }
-                );
-            },
-
-            real*/activate: function () {
+            activate: function () {
+                this.activeTabIndex(0);
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 if (data && queryName) {
                     this.chartsRawData = data;
                     this.chartdef = $.extend(true, {}, chartdefs[queryName]); //make a local copy of the report def since we'll be modifying it
-                    this.chartTabs = [];
                     var that = this;
                     $(Object.keys(that.chartdef)).each(function (index, tabname) {
                         var tabdef = that.chartdef[tabname];
@@ -59,7 +46,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                         }
 
                     });
-                    if(this.chartTabs.length == 0){
+                    if(this.chartTabs().length == 0){
                         app.showMessage("Not enough data to chart.  Consider broadening your query parameters", "Not enough data")
                             .then(function (dialogResult) {
                                 router.navigate('queryresults');
@@ -77,7 +64,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             //DOM is ready, populate the chart divs
             bindingComplete: function () {
                 var rootscope = this;
-                $.each(this.chartTabs, function (index, chart) {
+                $.each(this.chartTabs(), function (index, chart) {
                     this.tabindex = index;
                     var that = this;
                     chart.selectedOrder.subscribe(function (newValue) {
@@ -85,11 +72,13 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             if(levelOrder.name == newValue){
                                 that.tabdef.levels = levelOrder.value;
                                 var updatedChartTabSet = rootscope.prepareChart(that.featureData, that.tabdef, that.tabindex, that.title);
-                                var existingChartTabSet = rootscope.chartTabs[that.tabindex];
+                                var existingChartTabSet = rootscope.chartTabs()[that.tabindex];
                                 updatedChartTabSet.selectedOrder = existingChartTabSet.selectedOrder;
                                 updatedChartTabSet.selectedMetric = existingChartTabSet.selectedMetric;
                                 updatedChartTabSet.selectedOrder(newValue);
-                                rootscope.chartTabs[that.tabindex] = updatedChartTabSet;
+                                rootscope.chartTabs()[that.tabindex] = updatedChartTabSet;
+                                rootscope.activeTabIndex(that.tabindex);
+                                rootscope.chartTabs.valueHasMutated();
                             }
                         });
                         rootscope.renderCharts();
@@ -99,11 +88,13 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                         $.each(that.tabdef.graphMetrics, function (index, graphMetric) {
                             if(graphMetric.value == newValue){
                                 var updatedChartTabSet = rootscope.prepareChart(that.featureData, that.tabdef, that.tabindex, that.title);
-                                var existingChartTabSet = rootscope.chartTabs[that.tabindex];
+                                var existingChartTabSet = rootscope.chartTabs()[that.tabindex];
                                 updatedChartTabSet.selectedOrder = existingChartTabSet.selectedOrder;
                                 updatedChartTabSet.selectedMetric = existingChartTabSet.selectedMetric;
                                 updatedChartTabSet.selectedMetric(newValue);
-                                rootscope.chartTabs[that.tabindex] = updatedChartTabSet;
+                                rootscope.chartTabs()[that.tabindex] = updatedChartTabSet;
+                                rootscope.activeTabIndex(that.tabindex);
+                                rootscope.chartTabs.valueHasMutated();
                             }
                         });
                         rootscope.renderCharts();
@@ -127,11 +118,11 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             },
 
             renderCharts: function () {
-                if(this.chartTabs[0].title == 'Projects'){
+                if(this.chartTabs()[0].title == 'Projects'){
                     return this.renderProjectsCharts();
                 }
                 var that = this;
-                $.each(this.chartTabs, function (index, chartTab) {
+                $.each(this.chartTabs(), function (index, chartTab) {
 
                     var metricValue = this.selectedMetric();
 
@@ -392,10 +383,10 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             verticalAlign: 'middle',
                             borderWidth: 0
                         };
+
                         $("#chart_" + chartElement.id).highcharts(chartConfig);
                     });
                 });
-
             },
 
             prepareChart: function (featureData, tabdef, index, tabname) {
