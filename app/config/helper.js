@@ -158,10 +158,10 @@ define(
 
                 if(typeof(feature['WeightedTotal']) != 'undefined'){
                     var risk = feature['WeightedTotal'];
-                    if(risk <= 0.3){
-                        risk = "0-0.3";
+                    if(risk <= 0.2){
+                        risk = "0-0.2";
                     }else if(risk <= 0.6){
-                        risk = "0.3-0.6";
+                        risk = "0.2-0.6";
                     }else if(risk <= 1){
                         risk = "0.6-1.0";
                     }
