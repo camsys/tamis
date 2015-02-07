@@ -8,6 +8,20 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
             configuredTables: ko.observableArray([]),
 
             activate: function () {
+                var that = this;
+                return $.get("assets/json/appstate_q4.json",
+                    function (queryData) {
+                        var fields = Object.keys(queryData);
+                        $.each(fields, function (index, field) {
+                            appstate[field] = queryData[field]
+                        });
+
+                        that.realactivate();
+                    }
+                );
+            },
+
+            realactivate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 var configuredTables = [];
@@ -27,6 +41,18 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                                     var value = row[v];
                                     if(typeof(value) == 'string'){
                                         if(value.indexOf(',') > -1){
+                                            return true;
+                                        }
+                                        if(value.indexOf('>') > -1){
+                                            return true;
+                                        }
+                                        if(value.indexOf('-') > -1){
+                                            return true;
+                                        }
+                                        if(value.indexOf('+') > -1){
+                                            return true;
+                                        }
+                                        if(value.indexOf('') > -1){
                                             return true;
                                         }
                                     }
