@@ -6,7 +6,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             activeTabIndex: ko.observable(0),
             querydescription: querydescription,
 
-           a/*ctivate: function () {
+           /*activate: function () {
                 var that = this;
                 return $.get("assets/json/appstate_q4.json",
                     function (queryData) {
