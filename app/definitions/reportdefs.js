@@ -42,7 +42,7 @@ define(
                 Roads: {
                     type: 'bar',
                     bins: [{name: "Roughness Summary", value:'Roughness Summary'}],
-                    headers: ['Geographic Area', 'NHS Class', 'PSR Summary', 'Miles', 'Lane Miles'],
+                    headers: ['Geographic Area', 'NHS Class', 'Length', 'Lane Miles', 'Roughness Summary'],
                     fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'Roughness Summary'],
                     levels: ['Jurisdiction', 'NHSClass', 'Roughness Summary'],
                     sums: ['Length', 'LaneMiles'],
