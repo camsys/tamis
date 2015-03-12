@@ -21,11 +21,11 @@ tamis.Map = (function () {
         },
         "Asset Conditions": {
             "BridgeFeatureResults":[
-                {key: 'Minimum Condition Summary', type: 'Bridges', default: true,
-                    colors: [{key: "Good (7 to 9)", color: "green"},{key: "Fair (5 to 6)", color: "yellow"},{key: "Poor (0 to 4)", color: "red"},{key: "N/A", color: "#D3D3D3"}]
-                },
-                {key: 'Status', type: 'Bridges', default: false,
+                {key: 'Status', type: 'Bridges', default: true,
                     colors: [{key: "Structurally Deficient", color: "red"},{key: "Functionally Obsolete", color: "yellow"},{key: "Not Deficient", color: "green"}]
+                },
+                {key: 'Minimum Condition Summary', type: 'Bridges', default: false,
+                    colors: [{key: "Good (7 to 9)", color: "green"},{key: "Fair (5 to 6)", color: "yellow"},{key: "Poor (0 to 4)", color: "red"},{key: "N/A", color: "#D3D3D3"}]
                 },
                 {key: 'Deck Summary', type: 'Bridges', default: false,
                     colors: [{key: "Very Good (0 to 0.2)", color: "green"},{key: "Good (0.2 to 0.33)", color: "yellow"},{key: "Fair (0.33 to 0.5)", color: "red"},{key: "N/A", color: "#D3D3D3"}]
