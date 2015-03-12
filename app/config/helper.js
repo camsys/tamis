@@ -341,7 +341,7 @@ define(
                     TotalCrashes = MinorCrashes + MajorCrashes + FatalCrashes;
 
                     feature['VMT'] = VMT;
-                    var crashesPerVmt = TotalCrashes / VMT;
+                    var crashesPerVmt = TotalCrashes / multiplier;
                     if(crashesPerVmt > 0 && crashesPerVmt <= 0.001){
                         crashesPerVmt = "0-0.001";
                     }else if(TotalCrashes > 0.001){
@@ -349,11 +349,11 @@ define(
                     }else{
                         crashesPerVmt = "0-0.001";
                     }
-                    feature['Total Crashes per VMT Summary'] = crashesPerVmt;
+                    feature['Total Crashes per 100M VMT Summary'] = crashesPerVmt;
 
                     TotalCrashes = MajorCrashes + FatalCrashes;
 
-                    var crashesPerVmt = TotalCrashes / VMT;
+                    var crashesPerVmt = TotalCrashes / multiplier;
                     if(crashesPerVmt > 0 && crashesPerVmt <= 0.0005){
                         crashesPerVmt = "> 0 and <= 0.0005";
                     }else if(TotalCrashes > 0.0005){
@@ -361,15 +361,15 @@ define(
                     }else{
                         crashesPerVmt = "0";
                     }
-                    feature['Major and Fatal Crashes per VMT Summary'] = crashesPerVmt;
+                    feature['Major and Fatal Crashes per 100M VMT Summary'] = crashesPerVmt;
 
                     TotalCrashes = FatalCrashes;
                     var VMT = feature['VMT'];
-                    var crashesPerVmt = TotalCrashes / VMT;
+                    var crashesPerVmt = TotalCrashes / multiplier;
                     if(crashesPerVmt > 0){
                         crashesPerVmt = "> 0";
                     }
-                    feature['Fatal Crashes per VMT Summary'] = crashesPerVmt;
+                    feature['Fatal Crashes per 100M VMT Summary'] = crashesPerVmt;
                 }
 
                 if(typeof(feature.PSRSummary) != 'undefined'){

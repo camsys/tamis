@@ -6,21 +6,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
             activeTabIndex: ko.observable(0),
             querydescription: querydescription,
 
-           /*activate: function () {
-                var that = this;
-                return $.get("assets/json/appstate_q4.json",
-                    function (queryData) {
-                        var fields = Object.keys(queryData);
-                        $.each(fields, function (index, field) {
-                            appstate[field] = queryData[field]
-                        });
-
-                        that.realactivate();
-                    }
-                );
-            },
-
-            real*/activate: function () {
+           activate: function () {
                 this.activeTabIndex(0);
                 this.chartTabs([]);
                 var data = appstate.queryResults;

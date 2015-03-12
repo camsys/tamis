@@ -148,14 +148,14 @@ define(
 
         'Project Crash Analysis': {
                 'Projects': {
-                    'Major and Fatal Crashes by Program by Geographic area': {
+                    'Major and Fatal Crash Summary by Geographic area': {
                         rows: ["Geographic Area"],
                         cols: ["Major and Fatal Crash Summary"],
                         rendererName: "Table",
                         aggregatorName: "Count",
                         vals: []
                     },
-                    'Total Crashes by Primary Work Category by Geographic area': {
+                    'Major and Fatal Crashes per 100M VMT by Geographic area': {
                         rows: ["Geographic Area"],
                         cols: ["Major and Fatal Crashes per 100M VMT"],
                         rendererName: "Table",

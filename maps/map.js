@@ -117,7 +117,7 @@ tamis.Map = (function () {
                 {key: 'Major and Fatal Crash Summary', type: 'Projects', default: true,
                     colors: [{key: "0 major or fatal crashes", color: "green"},{key: "1 major crash", color: "yellow"},{key: "2+ major crashes or 1+ fatal crashes", color: "red"}]
                 },
-                {key: 'Major and Fatal Crashes per VMT Summary', type: 'Projects', default: false,
+                {key: 'Major and Fatal Crashes per 100M VMT Summary', type: 'Projects', default: false,
                     colors: [{key: "0", color: "green"},{key: "0-0.0005", color: "yellow"},{key: ">0.0005", color: "red"}]
                 },
             ]
