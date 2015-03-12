@@ -41,10 +41,10 @@ define(
             'Asset Conditions': {
                 Roads: {
                     type: 'bar',
-                    bins: [{name: "PSR Summary", value:'PSRSummary'}],
+                    bins: [{name: "Roughness Summary", value:'Roughness Summary'}],
                     headers: ['Geographic Area', 'NHS Class', 'PSR Summary', 'Miles', 'Lane Miles'],
-                    fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'PSRSummary'],
-                    levels: ['Jurisdiction', 'NHSClass', 'PSRSummary'],
+                    fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'Roughness Summary'],
+                    levels: ['Jurisdiction', 'NHSClass', 'Roughness Summary'],
                     sums: ['Length', 'LaneMiles'],
                     averages: [],
                     dataKey: 'RouteFeatureResults',
@@ -53,16 +53,16 @@ define(
                         {name: 'Lane Miles', value: "LaneMiles"},
                     ],
                     levelOrders: [
-                        {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'PSRSummary']},
-                        {name: "By NHS Class, then by Geographic Area", value: ['NHSClass', 'Jurisdiction', 'PSRSummary']}
+                        {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'Roughness Summary']},
+                        {name: "By NHS Class, then by Geographic Area", value: ['NHSClass', 'Jurisdiction', 'Roughness Summary']}
                     ]
                 },
                 Bridges: {
                     type: 'bar',
-                    bins: [{name: "Status", value:'Status'}],
-                    headers: ['Jurisdiction', 'NHS Class', 'Status', 'Count'],
-                    fields: ['Jurisdiction', 'NHSClass', 'Status', 'count'],
-                    levels: ['Jurisdiction', 'NHSClass', 'Status'],
+                    bins: [{name: "Minimum Condition Summary", value:'Minimum Condition Summary'}],
+                    headers: ['Jurisdiction', 'NHS Class', 'Minimum Condition Summary', 'Count'],
+                    fields: ['Jurisdiction', 'NHSClass', 'Minimum Condition Summary', 'count'],
+                    levels: ['Jurisdiction', 'NHSClass', 'Minimum Condition Summary'],
                     sums: ['count'],
                     averages: [],
                     dataKey: 'BridgeFeatureResults',
@@ -70,18 +70,18 @@ define(
                         {name: "Count", value: "count"},
                     ],
                     levelOrders: [
-                        {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'Status']},
-                        {name: "By NHS Class, then by Geographic Area", value: ['NHSClass', 'Jurisdiction', 'Status']}
+                        {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'Minimum Condition Summary']},
+                        {name: "By NHS Class, then by Geographic Area", value: ['NHSClass', 'Jurisdiction', 'Minimum Condition Summary']}
                     ]
                 }
             },
             'Conditions of Specified Road / CDS': {
                 Roads: {
                     type: 'bar',
-                    bins: [{name: "PSR Summary", value:'PSRSummary'}],
+                    bins: [{name: "Roughness Summary", value:'RoughnessSummary'}],
                     headers: ['NHS Class', 'PSR Summary', 'Miles', 'Lane Miles'],
-                    fields: ['NHSClass', 'Length', 'LaneMiles', 'PSRSummary'],
-                    levels: ['NHSClass', 'PSRSummary'],
+                    fields: ['NHSClass', 'Length', 'LaneMiles', 'Roughness Summary'],
+                    levels: ['NHSClass', 'Roughness Summary'],
                     sums: ['Length', 'LaneMiles'],
                     averages: [],
                     dataKey: 'RouteFeatureResults',
@@ -90,15 +90,15 @@ define(
                         {name: 'Lane Miles', value: "LaneMiles"},
                     ],
                     levelOrders: [
-                        {name: "By NHS Class", value: ['NHSClass', 'PSRSummary']}
+                        {name: "By NHS Class", value: ['NHSClass', 'Roughness Summary']}
                     ]
                 },
                 Bridges: {
                     type: 'bar',
-                    bins: [{name: "Status", value:'Status'}],
+                    bins: [{name: "Minimum Condition Summary", value:'Minimum Condition Summary'}],
                     headers: ['NHS Class', 'Status', 'Count', 'Deck Area'],
-                    fields: ['NHSClass', 'Status', 'count', 'DeckArea'],
-                    levels: ['NHSClass', 'Status'],
+                    fields: ['NHSClass', 'Minimum Condition Summary', 'count', 'DeckArea'],
+                    levels: ['NHSClass', 'Minimum Condition Summary'],
                     sums: ['count', 'DeckArea'],
                     averages: [],
                     dataKey: 'BridgeFeatureResults',
@@ -107,16 +107,16 @@ define(
                         {name: 'Deck Area', value: "DeckArea"},
                     ],
                     levelOrders: [
-                        {name: "By NHS Class", value: ['NHSClass', 'Status']}
+                        {name: "By Minimum Condition Summary", value: ['NHSClass', 'Minimum Condition Summary']}
                     ]
                 }
             },
             'Unstable Slopes': {
                 'Unstable Slopes': {
                     type: 'bar',
-                    headers: ['Geographic Area', 'Weighted Total Summary', 'Count'],
-                    fields: ['Jurisdiction', 'weightedtotalbin', 'count'],
-                    levels: ['Jurisdiction', 'weightedtotalbin'],
+                    headers: ['Geographic Area', 'Total Score Summary', 'Count'],
+                    fields: ['Jurisdiction', 'totalscorebucket', 'count'],
+                    levels: ['Jurisdiction', 'totalscorebucket'],
                     sums: ['count'],
                     averages: [],
                     tabs: ['Unstable Slopes'],
@@ -125,19 +125,19 @@ define(
                         {name: "Count", value: "count"}
                     ],
                     levelOrders: [
-                        {name: "By Geographic Area", value: ['Jurisdiction', 'weightedtotalbin']}
+                        {name: "By Geographic Area", value: ['Jurisdiction', 'totalscorebucket']}
                     ]
                 }
             },
-            'Crash Analysis': {
+            'Project Crash Analysis': {
                 'Projects': {
                     type: 'bar',
-                    headers: ['Geographic Area', 'Projects', 'Lane Miles', 'VMT', 'Crashes', 'Minor', 'Major', 'Fatal'],
-                    fields: ['Jurisdiction', 'count', 'LaneMiles', 'VMT', 'totalcrashes', 'MinorCrashes', 'MajorCrashes', 'FatalCrashes'],
+                    headers: ['Geographic Area', 'Projects', 'Lane Miles', 'VMT', 'Crashes', 'PDO Crashes','Minor', 'Major', 'Fatal'],
+                    fields: ['Jurisdiction', 'count', 'LaneMiles', 'VMT', 'totalcrashes', 'PDOCrashes','MinorCrashes', 'MajorCrashes', 'FatalCrashes'],
                     levels: ['Jurisdiction'],
-                    sums: ['count', 'LaneMiles', 'VMT', 'totalcrashes', 'MinorCrashes', 'MajorCrashes', 'FatalCrashes'],
+                    sums: ['count', 'LaneMiles', 'VMT', 'totalcrashes','PDOCrashes', 'MinorCrashes', 'MajorCrashes', 'FatalCrashes'],
                     averages: [],
-                    tabs: ['Crash Analysis'],
+                    tabs: ['Project Crash Analysis'],
                     dataKey: 'ProjectFeatureResults',
                     graphMetrics: [
                         {name: "Count", value: "count"}

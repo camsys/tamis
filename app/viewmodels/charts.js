@@ -236,11 +236,11 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
 
                         if (appstate.queryName == "Conditions of Specified Road / CDS") {
                             if (metric == 'LaneMiles') {
-                                that.chartTitle = 'Lane Miles by PSR Summary For ' + chartElement.text;
+                                that.chartTitle = 'Lane Miles by Roughness Summary For ' + chartElement.text;
                             } else if (metric == 'count') {
                                 that.chartTitle = 'Count by Status For ' + chartElement.text;
                             } else {
-                                that.chartTitle = 'Centerline Miles by PSR Summary For ' + chartElement.text;
+                                that.chartTitle = 'Centerline Miles by Roughness Summary For ' + chartElement.text;
                             }
 
                             if (metric == 'count') {
@@ -319,7 +319,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                                     seriesArray[i].color = colors[conditions.indexOf(seriesArray[i].name)];
                                 }
                             }else{
-                                var conditions = ["Poor", "Mediocre", "Fair", "Good", "Very Good", "N/A", "No Data"];
+                                var conditions = ["Poor (> 170)", "Mediocre (120 to 170)", "Fair (95 to 119)", "Good (60 to 94)", "Very Good (< 60)", "N/A", "No Data"];
                                 var colors = ["red", "orange", "yellow", "yellowgreen", "green", "grey", "lightgrey"];
 
                                 var sorter = function compare(a, b) {
@@ -335,6 +335,10 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                                 seriesArray.sort(sorter);
 
                                 for (var i = 0; i < seriesArray.length; i++) {
+                                    if(conditions.indexOf(seriesArray[i].name) < 0){
+                                            seriesArray[i].name = "No Data";
+                                    }
+
                                     seriesArray[i].color = colors[conditions.indexOf(seriesArray[i].name)];
                                 }
                             }
@@ -343,10 +347,10 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                         }
 
                         if (appstate.queryName == "Unstable Slopes") {
-                            that.chartTitle = 'Count by Weighted Score Summary of Unstable Slopes by Geographic Area and Mitigation Present (True/False) For ' + chartElement.text;
+                            that.chartTitle = 'Count by Total Score Summary of Unstable Slopes by Geographic Area and Mitigation Present (True/False) For ' + chartElement.text;
 
-                            var conditions = ["0-0.2", "0.2-0.6", "0.6-1.0"];
-                            var colors = ["yellow", "orange", "red"];
+                            var conditions = ["0 to 224", "225 to 449", "450+"];
+                            var colors = ["green", "yellow", "red"];
 
                             var sorter = function compare(a, b) {
                                 a = conditions.indexOf(a.name);
@@ -517,7 +521,7 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             seriesArray.push(series);
                         });
 
-                        var colors = ["yellow", "orange", "red"];
+                        var colors = ["green", "yellow", "orange", "red"];
                         for (var i = 0; i < seriesArray.length; i++) {
                             seriesArray[i].color = colors[i];
                         }

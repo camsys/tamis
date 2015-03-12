@@ -16,7 +16,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                 {name: "Assets", value: "Assets", id: 1},
                 {name: "Asset Conditions", value: "Asset Conditions", id: 2},
                 {name: "Conditions of Specified Road / CDS", value: "Conditions of Specified Road / CDS", id: 3},
-                {name: "Crash Analysis", value: "Crash Analysis", id: 4},
+                {name: "Project Crash Analysis", value: "Project Crash Analysis", id: 4},
                 {name: "Unstable Slopes", value: "Unstable Slopes", id: 5},
             ],
             selectedQuery: ko.observable(),
@@ -112,7 +112,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     query.Query.DisplayParameters = query.Query.DisplayParameters.concat(assetParams);
                 }
 
-                if(this.selectedQuery() == 'Crash Analysis'){
+                if(this.selectedQuery() == 'Project Crash Analysis'){
                     var categoryParams = this.categoryselector.getQueryParams();
                     query.Query.DisplayParameters = query.Query.DisplayParameters.concat(categoryParams);
                 }

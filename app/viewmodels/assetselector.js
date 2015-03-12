@@ -66,13 +66,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', '../config/appstat
                 });
 
                 if(selectedQuery == "Asset Conditions"){
-                    $(that.filterValues.PavementCondition).each(function (index, filterValue) {
+                    /*$(that.filterValues.PavementCondition).each(function (index, filterValue) {
                         if(filterValue.Name){
                             var node = {text: 'PSR Summary: ' + filterValue.Name, value: 'pavement_' + filterValue.Value};
                             that.roadSelections.push(node);
                             that.filterMap[node.value] = filterValue;
                         }
-                    });
+                    });*/
 
                     $(that.filterValues.DeckCondition).each(function (index, filterValue) {
                         if(filterValue.Name){

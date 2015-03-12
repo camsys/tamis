@@ -52,6 +52,7 @@ define(
                         { title: 'AADT', data: 'AADT'},
                         { title: 'Deck Area', data: 'deckarea'},
                         { title: 'Status', data: 'Status'},
+                        { title: 'Minimum Condition', data: 'Minimum Condition'},
                         { title: 'Deck Condition', data: 'DeckCond'},
                         { title: 'Super Structure Condition', data: 'SuperStructure'},
                         { title: 'Sub Structure Condition', data: 'SubStructure'},
@@ -91,6 +92,7 @@ define(
                         { title: 'AADT', data: 'AADT'},
                         { title: 'Deck Area', data: 'deckarea'},
                         { title: 'Status', data: 'Status'},
+                        { title: 'Minimum Condition', data: 'Minimum Condition'},
                         { title: 'Deck Condition', data: 'DeckCond'},
                         { title: 'Super Structure Condition', data: 'SuperStructure'},
                         { title: 'Sub Structure Condition', data: 'SubStructure'},
@@ -128,7 +130,6 @@ define(
                         { title: 'Risk Score', data: 'RiskScore'},
                         { title: 'Hazard Score', data: 'HazardScore'},
                         { title: 'Total Score', data: 'TotalScore'},
-                        { title: 'Weighted Total', data: 'WeightedTotal'},
                         { title: 'AADT', data: 'AADT'},
                     ],
 
@@ -146,8 +147,8 @@ define(
                 }
             },
 
-            'Crash Analysis': {
-                tabs: ['Projects'],
+            'Project Crash Analysis': {
+                tabs: ['Project Segments'],
                 dataKeys: ['ProjectFeatureResults'],
                 columnDefs: {
                     ProjectFeatureResults: [
@@ -162,9 +163,10 @@ define(
                         { title: 'Number Of Lanes', data: 'NumberOfLanes'},
                         { title: 'AADT', data: 'AADT'},
                         { title: 'VMT', data: 'VMT'},
-                        { title: 'Number of Minor Crashes', data: 'MinorCrashes'},
-                        { title: 'Number of Major Crashes', data: 'MajorCrashes'},
-                        { title: 'Number of Fatal Crashes', data: 'FatalCrashes'},
+                        { title: 'PDO Crashes', data: 'PDOCrashes'},
+                        { title: 'Minor Crashes', data: 'MinorCrashes'},
+                        { title: 'Major Crashes', data: 'MajorCrashes'},
+                        { title: 'Fatal Crashes', data: 'FatalCrashes'},
                     ],
                     CrashFeatureResults: [
                         { title: 'Crash Class', data: 'CrashClass'},

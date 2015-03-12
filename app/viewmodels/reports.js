@@ -152,11 +152,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
                 }
                 if(appstate.queryName == 'Asset Conditions'){
                     if(title == 'Roads'){
-                        orderTitle = orderTitle + ', then by PSR Summary'
+                        orderTitle = orderTitle + ', then by Roughness Summary'
                     }else{
-                        orderTitle = orderTitle + ', then by Status'
+                        orderTitle = orderTitle + ', then by Minimum Condition Summary'
                     }
-                }else if(appstate.queryName == 'Crash Analysis'){
+                }else if(appstate.queryName == 'Project Crash Analysis'){
                     orderTitle = 'Crash Summary for STIP Project Alignments';
                 }
 
@@ -164,9 +164,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'data
 
                 if(appstate.queryName == "Conditions of Specified Road / CDS"){
                     if(title == 'Roads'){
-                        tableTitle = 'PSR Summary for ' + appstate.querydescription.criteria[0].value;
+                        tableTitle = 'Roughness Summary for ' + appstate.querydescription.criteria[0].value;
                     }else{
-                        tableTitle = 'Bridge Status for ' + appstate.querydescription.criteria[0].value;
+                        tableTitle = 'Minimum Condition Summary for ' + appstate.querydescription.criteria[0].value;
                     }
                 }
 

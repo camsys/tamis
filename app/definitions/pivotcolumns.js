@@ -20,6 +20,8 @@
                     { title: 'Sub Structure Summary', data: 'substructurebin'},
                     { title: 'Deck Condition', data: 'DeckCond'},
                     { title: 'Deck Summary', data: 'deckbin'},
+                    { title: 'Minimum Condition Summary', data: 'Minimum Condition Summary'},
+                    { title: 'Minimum Condition', data: 'Minimum Condition'},
                 ],
 
                 RouteFeatureResults: [
@@ -31,7 +33,7 @@
                     { title: 'PSR', data: 'PSR'},
                     { title: 'PSR Summary', data: 'PSRSummary'},
                     { title: 'Mean IRI', data: 'MeanIRI'},
-                    { title: 'Roughness Summary', data: 'RoughnessSummary'},
+                    { title: 'Roughness Summary', data: 'Roughness Summary'},
                     { title: 'Rut Depth', data: 'FullRUT'},
                     { title: 'Rut Summary', data: 'RUTSummary'},
                     { title: 'Centerline Miles', data: 'Length', format: '0,000.0000'},
@@ -56,28 +58,19 @@
                     { title: 'Hazard Summary', data: 'hazardscorebin'},
                     { title: 'Total Score', data: 'TotalScore'},
                     { title: 'Total Summary', data: 'totalscorebucket'},
-                    { title: 'Weighted Score', data: 'WeightedTotal'},
-                    { title: 'Weighted Summary', data: 'weightedtotalbin'},
                 ],
 
                 ProjectFeatureResults: [
                     { title: 'Geographic Area', data: 'Jurisdiction'},
                     { title: 'Program', data: 'Program'},
                     { title: 'Primary Work Category', data: 'PrimWorkCategory'},
-                    { title: 'Number of Minor Crashes', data: 'MinorCrashes'},
-                    { title: 'Number of Major Crashes', data: 'MajorCrashes'},
-                    { title: 'Number of Fatal Crashes', data: 'FatalCrashes'},
+                    { title: 'PDO Crashes', data: 'PDOCrashes'},
+                    { title: 'Minor Crashes', data: 'MinorCrashes'},
+                    { title: 'Major Crashes', data: 'MajorCrashes'},
+                    { title: 'Fatal Crashes', data: 'FatalCrashes'},
                     { title: 'Total Crashes', data: 'TotalCrashes'},
-                    { title: 'Total Major and Fatal Crashes', data: 'MajorFatalCrashes'},
-                    { title: 'Total Crashes Per VMT', data: 'TotalVMT'},
-                    { title: 'Major and Fatal Crashes Per VMT', data: 'MajorFatalVMT'},
-                    { title: 'Fatal Crashes Per VMT', data: 'FatalVMT'},
-                    { title: 'Total Crash Summary', data: 'Total Crash Summary'},
                     { title: 'Major and Fatal Crash Summary', data: 'Major and Fatal Crash Summary'},
-                    { title: 'Fatal Crash Summary', data: 'Fatal Crash Summary'},
-                    { title: 'Total Crashes per VMT Summary', data: 'Total Crashes per VMT Summary'},
-                    { title: 'Major and Fatal Crashes per VMT Summary', data: 'Major and Fatal Crashes per VMT Summary'},
-                    { title: 'Fatal Crashes per VMT Summary', data: 'Fatal Crashes per VMT Summary'},
+                    { title: 'Major and Fatal Crashes per 100M VMT', data: 'Major and Fatal Crashes per 100M VMT'},
                 ]
             }
         });

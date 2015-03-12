@@ -41,10 +41,10 @@ define(
             'Asset Conditions': {
                 Roads: {
                     type: 'bar',
-                    bins: [{name: "PSR Summary", value:'PSRSummary'}],
+                    bins: [{name: "Roughness Summary", value:'Roughness Summary'}],
                     headers: ['Geographic Area', 'NHS Class', 'Miles', 'Lane Miles', 'PSR Summary', 'Count'],
-                    fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'PSRSummary', 'count'],
-                    levels: ['Jurisdiction', 'NHSClass', 'PSRSummary'],
+                    fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'Roughness Summary', 'count'],
+                    levels: ['Jurisdiction', 'NHSClass', 'Roughness Summary'],
                     sums: ['Length', 'LaneMiles'],
                     averages: [],
                     dataKey: 'RouteFeatureResults',
@@ -53,8 +53,8 @@ define(
                         {name: 'Lane Miles', value: "LaneMiles"},
                     ],
                     levelOrders: [
-                        {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'PSRSummary']},
-                        {name: "By NHS Class, then by Geographic Area", value: ['NHSClass', 'Jurisdiction', 'PSRSummary']}
+                        {name: "By Geographic Area, then by NHS Class", value: ['Jurisdiction', 'NHSClass', 'Roughness Summary']},
+                        {name: "By NHS Class, then by Geographic Area", value: ['NHSClass', 'Jurisdiction', 'Roughness Summary']}
                     ]
                 },
                 Bridges: {
@@ -78,7 +78,7 @@ define(
             'Conditions of Specified Road / CDS': {
                 Roads: {
                     type: 'bar',
-                    bins: [{name: "PSR Summary", value: "PSRSummary"}],
+                    bins: [{name: "Roughness Summary", value: "RoughnessSummary"}],
                     headers: ['Miles', 'Lane Miles'],
                     fields: ['Length', 'LaneMiles'],
                     levels: ['RouteName'],
@@ -86,8 +86,8 @@ define(
                     averages: [],
                     dataKey: 'RouteFeatureResults',
                     graphMetrics: [
-                        {name: "Centerline Miles by PSR Summary", value: "Length"},
-                        {name: 'Lane Miles by PSR Summary', value: "LaneMiles"},
+                        {name: "Centerline Miles by Roughness Summary", value: "Length"},
+                        {name: 'Lane Miles by Roughness Summary', value: "LaneMiles"},
                     ],
                     levelOrders: [
                         {name: "By Specified Road / CDS", value: []},
@@ -95,7 +95,7 @@ define(
                 },
                 Bridges: {
                     type: 'bar',
-                    bins: [{name: "Status", value: "Status"}],
+                    bins: [{name: "Minimum Condition Summary", value: "Minimum Condition Summary"}],
                     headers: ['Miles', 'Lane Miles', 'Count'],
                     fields: ['Length', 'LaneMiles', 'count'],
                     levels: ['RouteName'],
@@ -113,8 +113,8 @@ define(
             'Unstable Slopes': {
                 'Unstable Slopes': {
                     type: 'bar',
-                    bins: [{name: "Weighted Score Summary", value:'weightedtotalbin'}],
-                    headers: ['Geographic Area', 'Risk Summary', 'Count', 'Hazard Summary', 'Total Summary', 'Weighted Total', 'Mitigation Present'],
+                    bins: [{name: "Total Score Summary", value:'totalscorebucket'}],
+                    headers: ['Geographic Area', 'Risk Summary', 'Count', 'Hazard Summary', 'Total Score Summary', 'Weighted Total', 'Mitigation Present'],
                     fields: ['Jurisdiction', 'riskbucket', 'count', 'hazardscorebin', 'totalscorebucket', 'weightedtotalbin', 'MitigationPresent'],
                     levels: ['Jurisdiction', 'MitigationPresent'],
                     sums: ['count'],
@@ -125,18 +125,18 @@ define(
                         {name: "Count", value: "count"}
                     ],
                     levelOrders: [
-                        {name: "By Geographic Area and Mitigation Present", value: ['Jurisdiction', 'weightedtotalbin']},
+                        {name: "By Geographic Area and Mitigation Present", value: ['Jurisdiction', 'totalscorebucket']},
                     ]
                 }
             },
 
-            'Crash Analysis': {
+            'Project Crash Analysis': {
                 'Projects': {
                     type: 'bar',
-                    headers: ['Geographic Area','Minor Crashes','Major Crashes','Fatal Crashes'],
-                    fields: ['Jurisdiction','MinorCrashes','MajorCrashes','FatalCrashes'],
+                    headers: ['Geographic Area','PDO Crashes','Minor Crashes','Major Crashes','Fatal Crashes'],
+                    fields: ['Jurisdiction','PDOCrashes','MinorCrashes','MajorCrashes','FatalCrashes'],
                     levels: ['Jurisdiction'],
-                    sums: ['MinorCrashes','MajorCrashes','FatalCrashes'],
+                    sums: ['PDOCrashes','MinorCrashes','MajorCrashes','FatalCrashes'],
                     averages: [],
                     tabs: ['Projects'],
                     dataKey: 'ProjectFeatureResults',
@@ -148,6 +148,5 @@ define(
                     ]
                 }
             }
-
         };
     });

@@ -253,7 +253,7 @@ define(['../config/config'],
                     } else if(key == "UnstableSlopeFeatureResults"){
                         featureUrl = config.slopesQueryUrl;
                     }
-                }else if(queryName == 'Crash Analysis'){
+                }else if(queryName == 'Project Crash Analysis'){
                     if(key == "CrashFeatureResults"){
                         featureUrl = config.crashesQueryUrl;
                     } else if(key == "ProjectFeatureResults"){

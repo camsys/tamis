@@ -21,30 +21,33 @@ tamis.Map = (function () {
         },
         "Asset Conditions": {
             "BridgeFeatureResults":[
-                {key: 'Status', type: 'Bridges', default: true,
+                {key: 'Minimum Condition Summary', type: 'Bridges', default: true,
+                    colors: [{key: "Good (7 to 9)", color: "green"},{key: "Fair (5 to 6)", color: "yellow"},{key: "Poor (0 to 4)", color: "red"},{key: "N/A", color: "#D3D3D3"}]
+                },
+                {key: 'Status', type: 'Bridges', default: false,
                     colors: [{key: "Structurally Deficient", color: "red"},{key: "Functionally Obsolete", color: "yellow"},{key: "Not Deficient", color: "green"}]
                 },
                 {key: 'Deck Summary', type: 'Bridges', default: false,
-                    colors: [{key: "Good", color: "green"},{key: "Fair", color: "yellow"},{key: "Poor", color: "red"},{key: "Poor", color: "red"},{key: "N/A", color: "#D3D3D3"}]
+                    colors: [{key: "Very Good (0 to 0.2)", color: "green"},{key: "Good (0.2 to 0.33)", color: "yellow"},{key: "Fair (0.33 to 0.5)", color: "red"},{key: "N/A", color: "#D3D3D3"}]
                 },
                 {key: 'Super Structure Summary', type: 'Bridges', default: false,
-                    colors: [{key: "Good", color: "green"},{key: "Fair", color: "yellow"},{key: "Poor", color: "red"},{key: "Poor", color: "red"},{key: "N/A", color: "#D3D3D3"}]
+                    colors: [{key: "Very Good (0 to 0.2)", color: "green"},{key: "Good (0.2 to 0.33)", color: "yellow"},{key: "Fair (0.33 to 0.5)", color: "red"},{key: "N/A", color: "#D3D3D3"}]
                 },
                 {key: 'Sub Structure Summary', type: 'Bridges', default: false,
-                    colors: [{key: "Good", color: "green"},{key: "Fair", color: "yellow"},{key: "Poor", color: "red"},{key: "Poor", color: "red"},{key: "N/A", color: "#D3D3D3"}]
+                    colors: [{key: "Very Good (0 to 0.2)", color: "green"},{key: "Good (0.2 to 0.33)", color: "yellow"},{key: "Fair (0.33 to 0.5)", color: "red"},{key: "N/A", color: "#D3D3D3"}]
                 },
                 {key: 'AADT Summary', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: false},
                 {key: 'NHS Class', type: 'Bridges', startColor: 'darkblue', endColor: 'lightblue', default: false},
             ],
             "RouteFeatureResults": [
-                {key: 'PSR Summary', type: 'Roads', default: true,
-                    colors: [{key: "Very Good", color: "green"}, {key: "Good", color: "#9ACD32"},{key: "Fair", color: "yellow"},{key: "Mediocre", color: "#FF8C00"},{key: "Poor", color: "red"}]
+                {key: 'Roughness Summary', type: 'Roads', default: true,
+                    colors: [{key: "Very Good (< 60)", color: "green"}, {key: "Good (60 to 94)", color: "#9ACD32"},{key: "Fair (95 to 119)", color: "yellow"},{key: "Mediocre (120 to 170)", color: "#FF8C00"},{key: "Poor (> 170)", color: "red"}]
                 },
-                {key: 'Roughness Summary', type: 'Roads', default: false,
-                    colors: [{key: "Very Good", color: "green"}, {key: "Good", color: "#9ACD32"},{key: "Fair", color: "yellow"},{key: "Mediocre", color: "#FF8C00"},{key: "Poor", color: "red"}]
+                {key: 'PSR Summary', type: 'Roads', default: false,
+                    colors: [{key: "Very Good (>= 4.0)", color: "green"}, {key: "Good (>= 3.5 to < 4.0)", color: "#9ACD32"},{key: "Fair (>= 3.0 to < 3.5)", color: "yellow"},{key: "Mediocre (>=2.6 to < 3.0)", color: "#FF8C00"},{key: "Poor (< 2.6)", color: "red"}]
                 },
                 {key: 'Rut Summary', type: 'Roads', default: false,
-                    colors: [{key: "Very Good", color: "green"}, {key: "Good", color: "#9ACD32"},{key: "Fair", color: "yellow"},{key: "Mediocre", color: "#FF8C00"},{key: "Poor", color: "red"}]
+                    colors: [{key: "Very Good (0 to 0.2)", color: "green"}, {key: "Good (0.2 to 0.33)", color: "#9ACD32"},{key: "Fair (0.33 to 0.5)", color: "yellow"},{key: "Mediocre (0.5 to 0.75)", color: "#FF8C00"},{key: "Poor (> 0.75)", color: "red"}]
                 },
                 {key: 'AADT Summary', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: false},
                 {key: 'NHS Class', type: 'Roads', startColor: 'darkblue', endColor: 'lightblue', default: false},
@@ -52,26 +55,29 @@ tamis.Map = (function () {
         },
         "Conditions of Specified Road / CDS": {
             "BridgeFeatureResults":[
-                {key: 'Status', type: 'Bridges', default: true,
+                {key: 'Minimum Condition Summary', type: 'Bridges', default: true,
+                    colors: [{key: "Good (7 to 9)", color: "green"},{key: "Fair (5 to 6)", color: "yellow"},{key: "Poor (0 to 4)", color: "red"},{key: "N/A", color: "#D3D3D3"}]
+                },
+                {key: 'Status', type: 'Bridges', default: false,
                     colors: [{key: "Structurally Deficient", color: "red"},{key: "Functionally Obsolete", color: "yellow"},{key: "Not Deficient", color: "green"}]
                 },
                 {key: 'Deck Summary', type: 'Bridges', default: false,
-                    colors: [{key: "Good", color: "green"},{key: "Fair", color: "yellow"},{key: "Poor", color: "red"},{key: "Poor", color: "red"},{key: "N/A", color: "#D3D3D3"}]
+                    colors: [{key: "Very Good (0 to 0.2)", color: "green"},{key: "Good (0.2 to 0.33)", color: "yellow"},{key: "Fair (0.33 to 0.5)", color: "red"},{key: "N/A", color: "#D3D3D3"}]
                 },
                 {key: 'Super Structure Summary', type: 'Bridges', default: false,
-                    colors: [{key: "Good", color: "green"},{key: "Fair", color: "yellow"},{key: "Poor", color: "red"},{key: "Poor", color: "red"},{key: "N/A", color: "#D3D3D3"}]
+                    colors: [{key: "Very Good (0 to 0.2)", color: "green"},{key: "Good (0.2 to 0.33)", color: "yellow"},{key: "Fair (0.33 to 0.5)", color: "red"},{key: "N/A", color: "#D3D3D3"}]
                 },
                 {key: 'Sub Structure Summary', type: 'Bridges', default: false,
-                    colors: [{key: "Good", color: "green"},{key: "Fair", color: "yellow"},{key: "Poor", color: "red"},{key: "Poor", color: "red"},{key: "N/A", color: "#D3D3D3"}]
+                    colors: [{key: "Very Good (0 to 0.2)", color: "green"},{key: "Good (0.2 to 0.33)", color: "yellow"},{key: "Fair (0.33 to 0.5)", color: "red"},{key: "N/A", color: "#D3D3D3"}]
                 },
                 {key: 'AADT Summary', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: false},
                 {key: 'NHS Class', type: 'Bridges', startColor: 'darkblue', endColor: 'lightblue', default: false},
             ],
             "RouteFeatureResults": [
-                {key: 'PSR Summary', type: 'Roads', default: true,
+                {key: 'Roughness Summary', type: 'Roads', default: true,
                     colors: [{key: "Very Good", color: "green"}, {key: "Good", color: "#9ACD32"},{key: "Fair", color: "yellow"},{key: "Mediocre", color: "#FF8C00"},{key: "Poor", color: "red"}]
                 },
-                {key: 'Roughness Summary', type: 'Roads', default: false,
+                {key: 'PSR Summary', type: 'Roads', default: false,
                     colors: [{key: "Very Good", color: "green"}, {key: "Good", color: "#9ACD32"},{key: "Fair", color: "yellow"},{key: "Mediocre", color: "#FF8C00"},{key: "Poor", color: "red"}]
                 },
                 {key: 'Rut Summary', type: 'Roads', default: false,
@@ -83,10 +89,15 @@ tamis.Map = (function () {
         },
         "Unstable Slopes": {
             "UnstableSlopeFeatureResults":[
-                {key: 'Risk Score', type: 'Slopes', startColor: 'yellow', endColor: 'red', default: false},
-                {key: 'Hazard Score', type: 'Slopes', startColor: 'yellow', endColor: 'red', default: false},
-                {key: 'Total Score', type: 'Slopes', startColor: 'yellow', endColor: 'red', default: true},
-                {key: 'Weighted Total', type: 'Slopes', startColor: 'yellow', endColor: 'red', default: false},
+                {key: 'Total Score', type: 'Slopes', default: true,
+                    colors: [{key: "0 to 224", color: "green"},{key: "225 to 449", color: "yellow"},{key: "450+", color: "red"}]
+                },
+                {key: 'Risk Score', type: 'Slopes', default: false,
+                    colors: [{key: "0-74", color: "green"},{key: "75-149", color: "yellow"},{key: "150+", color: "red"}]
+                },
+                {key: 'Hazard Score', type: 'Slopes', default: false,
+                    colors: [{key: "0 to 149", color: "green"},{key: "150 to 299", color: "yellow"},{key: "300+", color: "red"}]
+                },
                 {key: 'Mitigation Present', type: 'Slopes', default: false,
                     colors: [{key: "True", color: "green"},{key: "False", color: "red"}]
                 },
@@ -96,31 +107,18 @@ tamis.Map = (function () {
                 {key: 'AADT Summary', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: true},
             ]
         },
-        "Crash Analysis": {
+        "Project Crash Analysis": {
             "CrashFeatureResults":[
                 {key: 'Crash Class', type: 'Crashes', default: true,
-                    colors: [{key: "Minor", color: "yellow"},{key: "Major", color: "#FF8C00"},{key: "Fatal", color: "red"}]
+                    colors: [{key: "PDO", color: "green"},{key: "Minor", color: "yellow"},{key: "Major", color: "#FF8C00"},{key: "Fatal", color: "red"}]
                 },
             ],
             "ProjectFeatureResults": [
-
-                {key: 'Total Crash Summary', type: 'Projects', default: true,
-                    colors: [{key: "0", color: "green"},{key: "1-5", color: "yellow"},{key: "6+", color: "red"}]
-                },
-                {key: 'Major and Fatal Crash Summary', type: 'Projects', default: false,
-                    colors: [{key: "0", color: "green"},{key: "1-2", color: "yellow"},{key: "3+", color: "red"}]
-                },
-                {key: 'Fatal Crash Summary', type: 'Projects', default: false,
-                    colors: [{key: "0", color: "green"},{key: ">0", color: "red"}]
-                },
-                {key: 'Total Crashes per VMT Summary', type: 'Projects', default: false,
-                    colors: [{key: "0", color: "green"},{key: "0-0.001", color: "yellow"},{key: ">0.001", color: "red"}]
+                {key: 'Major and Fatal Crash Summary', type: 'Projects', default: true,
+                    colors: [{key: "0 major or fatal crashes", color: "green"},{key: "1 major crash", color: "yellow"},{key: "2+ major crashes or 1+ fatal crashes", color: "red"}]
                 },
                 {key: 'Major and Fatal Crashes per VMT Summary', type: 'Projects', default: false,
                     colors: [{key: "0", color: "green"},{key: "0-0.0005", color: "yellow"},{key: ">0.0005", color: "red"}]
-                },
-                {key: 'Fatal Crashes per VMT Summary', type: 'Projects', default: false,
-                    colors: [{key: "0", color: "green"},{key: ">0", color: "red"}]
                 },
             ]
         }

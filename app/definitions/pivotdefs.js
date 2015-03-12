@@ -51,16 +51,16 @@ define(
             },
             'Asset Conditions': {
                 'Roads': {
-                    'Total Centerline Miles by Geographic Area, NHS Class, and PSR Summary': {
+                    'Total Centerline Miles by Geographic Area, NHS Class, and Roughness Summary': {
                         rows: ["Geographic Area", "NHS Class"],
-                        cols: ["PSR Summary"],
+                        cols: ["Roughness Summary"],
                         rendererName: "Table",
                         aggregatorName: "Sum",
                         vals: ["Centerline Miles"]
                     },
-                    'Total Lane Miles by Geographic Area, NHS Class, and PSR Summary': {
+                    'Total Lane Miles by Geographic Area, NHS Class, and Roughness Summary': {
                         rows: ["Geographic Area", "NHS Class"],
-                        cols: ["PSR Summary"],
+                        cols: ["Roughness Summary"],
                         rendererName: "Table",
                         aggregatorName: "Sum",
                         vals: ["Lane Miles"]
@@ -74,9 +74,9 @@ define(
                         aggregatorName: "Count",
                         vals: []
                     },
-                    'Number of Bridges by Geographic Area, NHS Class, and Bridge Status': {
+                    'Number of Bridges by Geographic Area, NHS Class, and Minimum Condition Summary': {
                         rows: ["Jurisdiction", "NHS Class"],
-                        cols: ["Status"],
+                        cols: ["Minimum Condition Summary"],
                         rendererName: "Table",
                         aggregatorName: "Count",
                         vals: []
@@ -93,15 +93,15 @@ define(
 
             'Conditions of Specified Road / CDS': {
                 'Roads': {
-                    'Total Lane Miles by PSR Summary and AADT Summary': {
-                        rows: ["PSR Summary"],
+                    'Total Lane Miles by Roughness Summary and AADT Summary': {
+                        rows: ["Roughness Summary"],
                         cols: ["AADT Summary"],
                         rendererName: "Table",
                         aggregatorName: "Sum",
                         vals: ["Lane Miles"]
                     },
-                    'Total Centerline Miles by PSR Summary and AADT Summary': {
-                        rows: ["PSR Summary"],
+                    'Total Centerline Miles by Roughness Summary and AADT Summary': {
+                        rows: ["Roughness Summary"],
                         cols: ["AADT Summary"],
                         rendererName: "Table",
                         aggregatorName: "Sum",
@@ -109,8 +109,8 @@ define(
                     },
                 },
                 'Bridges': {
-                    'Number of Bridges by Status and AADT Summary': {
-                        rows: ["Status"],
+                    'Number of Bridges by Minimum Condition Summary and AADT Summary': {
+                        rows: ["Minimum Condition Summary"],
                         cols: ["AADT Summary"],
                         rendererName: "Table",
                         aggregatorName: "Count",
@@ -143,31 +143,24 @@ define(
                         aggregatorName: "Average",
                         vals: ["Total Score"]
                     },
-                    'Average Weighted Score by Geographic Area and Mitigation Present': {
-                        rows: ["Geographic Area"],
-                        cols: ["Mitigation Present"],
-                        rendererName: "Table",
-                        aggregatorName: "Average",
-                        vals: ["Weighted Score"]
-                    },
                 }
             },
 
-        'Crash Analysis': {
+        'Project Crash Analysis': {
                 'Projects': {
                     'Major and Fatal Crashes by Program by Geographic area': {
                         rows: ["Geographic Area"],
-                        cols: ["Program"],
+                        cols: ["Major and Fatal Crash Summary"],
                         rendererName: "Table",
-                        aggregatorName: "Sum",
-                        vals: ["Total Major and Fatal Crashes"]
+                        aggregatorName: "Count",
+                        vals: []
                     },
                     'Total Crashes by Primary Work Category by Geographic area': {
                         rows: ["Geographic Area"],
-                        cols: ["Primary Work Category"],
+                        cols: ["Major and Fatal Crashes per 100M VMT"],
                         rendererName: "Table",
-                        aggregatorName: "Sum",
-                        vals: ["Total Crashes"]
+                        aggregatorName: "Count",
+                        vals: []
                     },
                 }
             }
