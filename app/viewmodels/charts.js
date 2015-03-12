@@ -292,11 +292,11 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
 
                         if (appstate.queryName == "Asset Conditions") {
                             if (metric == 'LaneMiles') {
-                                that.chartTitle = 'Lane Miles by PSR Summary For ' + chartElement.text;
+                                that.chartTitle = 'Lane Miles by Roughness Summary For ' + chartElement.text;
                             } else if (metric == 'count') {
                                 that.chartTitle = 'Count by Status For ' + chartElement.text;
                             } else {
-                                that.chartTitle = 'Centerline Miles by PSR Summary For ' + chartElement.text;
+                                that.chartTitle = 'Centerline Miles by Roughness Summary For ' + chartElement.text;
                             }
 
                             if (metric == 'count') {
