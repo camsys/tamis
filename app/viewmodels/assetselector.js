@@ -82,13 +82,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', '../config/appstat
                         }
                     });
 
-                    $(that.filterValues.BridgeStatus).each(function (index, filterValue) {
+                    /*$(that.filterValues.BridgeStatus).each(function (index, filterValue) {
                         if(filterValue.Name){
                             var node ={text: 'Bridge Status: ' + filterValue.Name, value: 'bridge_' + filterValue.Value}
                             that.bridgeSelections.push(node);
                             that.filterMap[node.value] = filterValue;
                         }
-                    });
+                    });*/
                 }
 
                 var sorter = function compare(a,b) {
