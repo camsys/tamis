@@ -224,14 +224,14 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             if (metric == 'LaneMiles') {
                                 that.chartTitle = 'Lane Miles by Roughness Summary For ' + chartElement.text;
                             } else if (metric == 'count') {
-                                that.chartTitle = 'Count by Status For ' + chartElement.text;
+                                that.chartTitle = 'Count by Minimum Condition Summary For ' + chartElement.text;
                             } else {
                                 that.chartTitle = 'Centerline Miles by Roughness Summary For ' + chartElement.text;
                             }
 
                             if (metric == 'count') {
-                                var conditions = ["Structurally Deficient", "Functionally Obsolete", "Not Deficient", "N/A"];
-                                var colors = ["red", "yellow", "green", "grey"];
+                                var conditions = ["Poor (0 to 4)", "Fair (5 to 6)", "Good (7 to 9)", "N/A", "No Data"];
+                                var colors = ["red", "yellow", "green", "grey", "lightgrey"];
 
                                 var sorter = function compare(a, b) {
                                     a = conditions.indexOf(a.name);
@@ -280,13 +280,13 @@ define(['durandal/system', 'plugins/http', 'durandal/app', 'knockout', 'bootstra
                             if (metric == 'LaneMiles') {
                                 that.chartTitle = 'Lane Miles by Roughness Summary For ' + chartElement.text;
                             } else if (metric == 'count') {
-                                that.chartTitle = 'Count by Status For ' + chartElement.text;
+                                that.chartTitle = 'Count by Minimum Condition Summary For ' + chartElement.text;
                             } else {
                                 that.chartTitle = 'Centerline Miles by Roughness Summary For ' + chartElement.text;
                             }
 
                             if (metric == 'count') {
-                                var conditions = ["Structurally Deficient", "Functionally Obsolete", "Not Deficient", "N/A", "No Data"];
+                                var conditions = ["Poor (0 to 4)", "Fair (5 to 6)", "Good (7 to 9)", "N/A", "No Data"];
                                 var colors = ["red", "yellow", "green", "grey", "lightgrey"];
 
                                 var sorter = function compare(a, b) {

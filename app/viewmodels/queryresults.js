@@ -104,9 +104,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                                     if(typeof(feature.weightedtotalbin) != 'undefined'){
                                         feature['Weighted Total'] = feature.weightedtotalbin;
                                     }
-                                    if(typeof(feature.RoughnessSummary) != 'undefined'){
-                                        feature['Roughness Summary'] = feature.RoughnessSummary;
-                                    }
                                     feature.id = row.id;
                                     feature.dataKey = dataKey;
                                 }
