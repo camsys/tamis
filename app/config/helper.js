@@ -384,10 +384,10 @@ define(
                     TotalCrashes = MajorCrashes + FatalCrashes;
 
                     var crashesPerVmt = TotalCrashes / multiplier;
-                    if(crashesPerVmt > 0 && crashesPerVmt <= 0.0005){
-                        crashesPerVmt = "> 0 and <= 0.0005";
-                    }else if(TotalCrashes > 0.0005){
-                        crashesPerVmt = "> 0.0005";
+                    if(crashesPerVmt > 0 && crashesPerVmt <= 5){
+                        crashesPerVmt = "> 0 and <= 5";
+                    }else if(TotalCrashes > 5){
+                        crashesPerVmt = "> 5";
                     }else{
                         crashesPerVmt = "0";
                     }
