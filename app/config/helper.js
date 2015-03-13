@@ -177,10 +177,6 @@ define(
                     feature.deckarea = feature['StructureLength'] * feature['DeckWidth'];
                 }
 
-                if(typeof(feature['DeckCond']) != 'undefined'){
-                    feature.condition = feature['DeckCond'];
-                }
-
                 if(typeof(feature['PSRSummary']) != 'undefined'){
                     if(feature['PSRSummary'].toString().length < 1) {
                         feature['PSRSummary'] = "No Data"
@@ -263,49 +259,52 @@ define(
                     feature.aadtbin = aadt;
                 }
 
-
                 if(typeof(feature['DeckCond']) != 'undefined'){
                     var DeckCond = feature['DeckCond'];
                     if(DeckCond < 5){
-                        DeckCond = "Poor";
+                        DeckCond = "Good (7 to 9)";
                     }else if(DeckCond < 7){
-                        DeckCond = "Fair";
+                        DeckCond = "Fair (5 to 6)";
                     }else if(DeckCond < 10){
-                        DeckCond = "Good";
+                        DeckCond = 'Good (7 to 9)'
                     }else if(DeckCond == "N"){
                         DeckCond = "N/A";
                     }else{
                         DeckCond = "No Data";
                     }
                     feature.deckbin = DeckCond;
+                    feature['Deck Summary'] = DeckCond;
                 }
 
                 if(typeof(feature['SubStructure']) != 'undefined'){
                     var SubStructure = feature['SubStructure'];
                     if(SubStructure < 5){
-                        SubStructure = "Poor";
+                        SubStructure = "Poor (0 to 4)";
                     }else if(SubStructure < 7){
-                        SubStructure = "Fair";
+                        SubStructure = "Fair (5 to 6)";
                     }else if(SubStructure < 10){
-                        SubStructure = "Good";
+                        SubStructure = "Good (7 to 9)";
                     }else if(SubStructure == "N"){
                         SubStructure = "N/A";
                     }else{
                         SubStructure = "No Data";
                     }
                     feature.substructurebin = SubStructure;
+                    feature['Sub Structure Summary'] = SubStructure;
                 }
 
                 if(typeof(feature['SuperStructure']) != 'undefined'){
                     var SuperStructure = feature['SuperStructure'];
                     if(SuperStructure < 5){
-                        SuperStructure = "Poor";
+                        SuperStructure = "Poor (0 to 4)";
                     }else if(SuperStructure < 7){
-                        SuperStructure = "Fair";
+                        SuperStructure = "Fair (5 to 6)";
                     }else if(SuperStructure < 10){
-                        SuperStructure = "Good";
+                        SuperStructure = "Good (7 to 9)";
+                    }else if(SuperStructure == "N"){
+                        SuperStructure = "N/A";
                     }else{
-                        SuperStructure = "No Data";
+                        SubStructure = "No Data";
                     }
                     feature.superstructurebin = SuperStructure;
                 }
@@ -461,8 +460,8 @@ define(
                     feature['Rut Summary'] = RUTSummary;
                 }
 
-                if(typeof(feature.deckbin) != 'undefined'){
-                    var deckbin = feature.deckbin;
+                if(typeof(feature['Deck Summary']) != 'undefined'){
+                    var deckbin = feature['Deck Summary'];
                     if(deckbin == 'Good'){
                         deckbin = 'Good (7 to 9)'
                     }
