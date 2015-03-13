@@ -24,9 +24,6 @@ tamis.Map = (function () {
                 {key: 'Minimum Condition Summary', type: 'Bridges', default: true,
                     colors: [{key: "Good (7 to 9)", color: "green"},{key: "Fair (5 to 6)", color: "yellow"},{key: "Poor (0 to 4)", color: "red"},{key: "N/A", color: "#D3D3D3"}]
                 },
-                {key: 'Status', type: 'Bridges', default: false,
-                    colors: [{key: "Structurally Deficient", color: "red"},{key: "Functionally Obsolete", color: "yellow"},{key: "Not Deficient", color: "green"}]
-                },
                 {key: 'Deck Summary', type: 'Bridges', default: false,
                     colors: [{key: "Good (7 to 9)", color: "green"},{key: "Fair (5 to 6)", color: "yellow"},{key: "Poor (0 to 4)", color: "red"},{key: "N/A", color: "#D3D3D3"}]
                 },
@@ -37,6 +34,10 @@ tamis.Map = (function () {
                     colors: [{key: "Good (7 to 9)", color: "green"},{key: "Fair (5 to 6)", color: "yellow"},{key: "Poor (0 to 4)", color: "red"},{key: "N/A", color: "#D3D3D3"}]
                 },
                 {key: 'AADT Summary', type: 'Bridges', startColor: 'lightblue', endColor: 'darkblue', default: false},
+
+                {key: 'Status', type: 'Bridges', default: false,
+                    colors: [{key: "Structurally Deficient", color: "red"},{key: "Functionally Obsolete", color: "yellow"},{key: "Not Deficient", color: "green"}]
+                },
                 {key: 'NHS Class', type: 'Bridges', startColor: 'darkblue', endColor: 'lightblue', default: false},
             ],
             "RouteFeatureResults": [
