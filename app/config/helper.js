@@ -67,7 +67,7 @@ define(
                     if(PSRSummary == 'Fair (>= 3.0 to < 3.5)'){
                         PSRSummary = '3 Fair (>= 3.0 to < 3.5)'
                     }
-                    if(PSRSummary == 'Mediocre (>=2.6 to < 3.0)'){
+                    if(PSRSummary == 'Mediocre (>= 2.6 to < 3.0)'){
                         PSRSummary = '2 Mediocre (>=2.6 to < 3.0)'
                     }
                     if(PSRSummary == 'Poor (< 2.6)'){
