@@ -42,8 +42,8 @@ define(
                 Roads: {
                     type: 'bar',
                     bins: [{name: "Roughness Summary", value:'Roughness Summary'}],
-                    headers: ['Geographic Area', 'NHS Class', 'Length', 'Lane Miles', 'Roughness Summary'],
-                    fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'Roughness Summary'],
+                    headers: ['Geographic Area', 'NHS Class', 'Roughness Summary', 'Length', 'Lane Miles'],
+                    fields: ['Jurisdiction', 'NHSClass', 'Roughness Summary', 'Length', 'LaneMiles'],
                     levels: ['Jurisdiction', 'NHSClass', 'Roughness Summary'],
                     sums: ['Length', 'LaneMiles'],
                     averages: [],
@@ -79,8 +79,8 @@ define(
                 Roads: {
                     type: 'bar',
                     bins: [{name: "Roughness Summary", value:'RoughnessSummary'}],
-                    headers: ['NHS Class', 'PSR Summary', 'Miles', 'Lane Miles'],
-                    fields: ['NHSClass', 'Length', 'LaneMiles', 'Roughness Summary'],
+                    headers: ['NHS Class', 'Roughness Summary', 'Miles', 'Lane Miles'],
+                    fields: ['NHSClass', 'Roughness Summary', 'Length', 'LaneMiles'],
                     levels: ['NHSClass', 'Roughness Summary'],
                     sums: ['Length', 'LaneMiles'],
                     averages: [],
