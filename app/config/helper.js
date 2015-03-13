@@ -311,10 +311,13 @@ define(
 
                 if(typeof(feature['MinorCrashes']) != 'undefined'){
 
+                    var PDOCrashes = parseInt(feature['PDOCrashes']);
                     var MinorCrashes = parseInt(feature['MinorCrashes']);
                     var MajorCrashes = parseInt(feature['MajorCrashes']);
                     var FatalCrashes = parseInt(feature['FatalCrashes']);
 
+                    if(isNaN(PDOCrashes))
+                        PDOCrashes = 0;
                     if(isNaN(MinorCrashes))
                         MinorCrashes = 0;
                     if(isNaN(MajorCrashes))
@@ -327,7 +330,7 @@ define(
                     var VMT = length * aadt * 365;
                     feature.VMT = VMT;
 
-                    var TotalCrashes = MinorCrashes + MajorCrashes + FatalCrashes;
+                    var TotalCrashes = PDOCrashes + MinorCrashes + MajorCrashes + FatalCrashes;
                     feature.totalcrashes= TotalCrashes;
                     if(TotalCrashes > 0 && TotalCrashes < 6){
                         TotalCrashes = "1-5";
