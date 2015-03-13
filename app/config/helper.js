@@ -15,6 +15,36 @@ define(
             },
 
             applySortableLabels: function(feature){
+                if(typeof(feature['Deck Summary'] ) != 'undefined'){
+                    var deckSummary = feature['Deck Summary']
+                    if(deckSummary == 'Good (7 to 9)'){
+                        deckSummary = '3 Good (7 to 9)'
+                    }
+                    if(deckSummary == 'Fair (5 to 6)'){
+                        deckSummary = '2 Fair (5 to 6)'
+                    }
+                    if(deckSummary == 'Poor (0 to 4)'){
+                        deckSummary = '1 Poor (0 to 4)'
+                    }
+                    feature['Deck Summary'] = deckSummary;
+                }
+
+
+                if(typeof(feature['Sub Structure Summary'] ) != 'undefined'){
+                    var deckSummary = feature['Sub Structure Summary']
+                    if(deckSummary == 'Good (7 to 9)'){
+                        deckSummary = '3 Good (7 to 9)'
+                    }
+                    if(deckSummary == 'Fair (5 to 6)'){
+                        deckSummary = '2 Fair (5 to 6)'
+                    }
+                    if(deckSummary == 'Poor (0 to 4)'){
+                        deckSummary = '1 Poor (0 to 4)'
+                    }
+                    feature['Sub Structure Summary'] = deckSummary;
+                }
+
+
                 if(typeof(feature.Status) != 'undefined'){
                     var status = feature.Status;
                     if(status == 'Structurally Deficient'){
@@ -433,14 +463,14 @@ define(
 
                 if(typeof(feature.deckbin) != 'undefined'){
                     var deckbin = feature.deckbin;
-                    if(superstructurebin == 'Good'){
-                        superstructurebin = 'Good (7 to 9)'
+                    if(deckbin == 'Good'){
+                        deckbin = 'Good (7 to 9)'
                     }
-                    if(superstructurebin == 'Fair'){
-                        superstructurebin = 'Fair (5 to 6)'
+                    if(deckbin == 'Fair'){
+                        deckbin = 'Fair (5 to 6)'
                     }
-                    if(superstructurebin == 'Poor'){
-                        superstructurebin = 'Poor (0 to 4)'
+                    if(deckbin == 'Poor'){
+                        deckbin = 'Poor (0 to 4)'
                     }
                     feature.deckbin = deckbin;
                     feature['Deck Summary'] = deckbin;
@@ -448,14 +478,14 @@ define(
 
                 if(typeof(feature.substructurebin) != 'undefined'){
                     var substructurebin = feature.substructurebin;
-                    if(superstructurebin == 'Good'){
-                        superstructurebin = 'Good (7 to 9)'
+                    if(substructurebin == 'Good'){
+                        substructurebin = 'Good (7 to 9)'
                     }
-                    if(superstructurebin == 'Fair'){
-                        superstructurebin = 'Fair (5 to 6)'
+                    if(substructurebin == 'Fair'){
+                        substructurebin = 'Fair (5 to 6)'
                     }
-                    if(superstructurebin == 'Poor'){
-                        superstructurebin = 'Poor (0 to 4)'
+                    if(substructurebin == 'Poor'){
+                        substructurebin = 'Poor (0 to 4)'
                     }
                     feature.substructurebin = substructurebin;
                     feature['Sub Structure Summary'] = substructurebin;
