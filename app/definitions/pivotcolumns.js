@@ -19,7 +19,7 @@
                     { title: 'Sub Structure Condition', data: 'SubStructure'},
                     { title: 'Sub Structure Summary', data: 'substructurebin'},
                     { title: 'Deck Condition', data: 'DeckCond'},
-                    { title: 'Deck Summary', data: 'deckbin'},
+                    { title: 'Deck Summary', data: 'Deck Summary'},
                     { title: 'Minimum Condition Summary', data: 'Minimum Condition Summary'},
                     { title: 'Minimum Condition', data: 'Minimum Condition'},
                 ],
