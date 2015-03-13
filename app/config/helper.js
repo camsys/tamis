@@ -522,9 +522,11 @@ define(
                     }else{
                         if(superstructurebin && !isNaN(superstructurebin)){
                             mincond = superstructurebin;
-                        }else if(substructurebin && !isNaN(substructurebin) && substructurebin < superstructurebin){
+                        }
+                        if(substructurebin && !isNaN(substructurebin) && substructurebin < mincond){
                             mincond = substructurebin;
-                        }else if(deckbin && !isNaN(deckbin) && deckbin < substructurebin){
+                        }
+                        if(deckbin && !isNaN(deckbin) && deckbin < mincond){
                             mincond = deckbin;
                         }
                     }
