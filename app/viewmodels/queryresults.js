@@ -1,13 +1,29 @@
-define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '../config/appstate', 'plugins/router', '../definitions/tabledefs', '../config/config', './querydescription', '../services/dataservice'],
-    function (http, app, ko, jqueryui, datatables, appstate, router, tabledefs, config, querydescription, dataservice) {
+define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '../config/appstate', 'plugins/router', '../definitions/tabledefs', '../config/config', './querydescription', '../services/dataservice', 'splitter'],
+    function (http, app, ko, jqueryui, datatables, appstate, router, tabledefs, config, querydescription, dataservice, splitter) {
 
         return {
 
             querydescription: querydescription,
             displayName: 'Query Results',
             configuredTables: ko.observableArray([]),
+            defaultmapheight: ko.observable(),
+            toggletext: ko.observable('Expand Map'),
 
             activate: function () {
+                var that = this;
+                return $.get("assets/json/appstate_q2.json",
+                    function (queryData) {
+                        var fields = Object.keys(queryData);
+                        $.each(fields, function (index, field) {
+                            appstate[field] = queryData[field]
+                        });
+
+                        that.realactivate();
+                    }
+                );
+            },
+
+            realactivate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 var configuredTables = [];
@@ -160,6 +176,24 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
             compositionComplete: function () {
                 $('a[data-toggle="tab"]:first').trigger("shown.bs.tab");
                 this.fixFooterHeight();
+            },
+
+            expand: function() {
+                if(this.defaultmapheight()){
+                    $('#mapiframe').height(this.defaultmapheight());
+                    this.defaultmapheight(null);
+                    this.toggletext('Expand map');
+                    this.fixFooterHeight();
+                }else{
+                    this.defaultmapheight($('#mapiframe').height());
+                    this.toggletext('Collapse map');
+                    var mapheight = $(window).height() - $('header').height() - 80;
+                    $('#mapiframe').height(mapheight);
+                    this.fixFooterHeight();
+                }
+
+
+                //$("#stickyfooter").css('top', footerTop + 'px');
             },
 
             fixFooterHeight: function() {

@@ -6,10 +6,15 @@
 
                     <div data-bind="visible: querydescription.querystring(), compose: { model: querydescription, preserveContext: true, activate:true }"/>
 
-                    <iframe id="mapiframe" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" src="maps/Map.html"></iframe>
+                    <div id="mapcontainer" style="position: relative;">
+                        <iframe id="mapiframe" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" src="maps/Map.html"></iframe>
+                        <a style="position: relative; margin-top:-95px;"  class="btn btn-primary" data-bind="click: expand, text: toggletext">Toggle fullscreen</a>
+                    </div>
 
                     <div class="tabbable" id="resulttabs">
+
                         <ul class="nav nav-tabs">
+
                             <!-- ko foreach: configuredTables -->
                                <li data-bind="css: { active: $index() == 0 }"><a data-toggle="tab" data-bind="attr: { href: '#' + id + '_tab_div' }"><span data-bind="text: title"/></a></li>
                             <!-- /ko -->
