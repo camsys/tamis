@@ -10,20 +10,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
             toggletext: ko.observable('Expand Map'),
 
             activate: function () {
-                var that = this;
-                return $.get("assets/json/appstate_q2.json",
-                    function (queryData) {
-                        var fields = Object.keys(queryData);
-                        $.each(fields, function (index, field) {
-                            appstate[field] = queryData[field]
-                        });
-
-                        that.realactivate();
-                    }
-                );
-            },
-
-            realactivate: function () {
                 var data = appstate.queryResults;
                 var queryName = appstate.queryName;
                 var configuredTables = [];
