@@ -1,5 +1,5 @@
-define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '../config/appstate', 'plugins/router', '../definitions/tabledefs', '../config/config', './querydescription', '../services/dataservice', 'splitter'],
-    function (http, app, ko, jqueryui, datatables, appstate, router, tabledefs, config, querydescription, dataservice, splitter) {
+define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '../config/appstate', 'plugins/router', '../definitions/tabledefs', '../config/config', './querydescription', '../services/dataservice'],
+    function (http, app, ko, jqueryui, datatables, appstate, router, tabledefs, config, querydescription, dataservice) {
 
         return {
 
