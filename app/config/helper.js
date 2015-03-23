@@ -349,8 +349,8 @@ define(
                     }
                     feature['Major and Fatal Crash Summary'] = TotalCrashes;
 
-                    var multiplier = VMT / 100000000;
-                    var majorAndFatalCrashesPerMillionVMT = (MajorCrashes + FatalCrashes) / multiplier;
+                    var multiplier = 100000000 / VMT;
+                    var majorAndFatalCrashesPerMillionVMT = (MajorCrashes + FatalCrashes) * multiplier;
                     if(VMT == 0){
                         feature['Major and Fatal Crashes per 100M VMT'] = '0';
                     }else if(majorAndFatalCrashesPerMillionVMT == 0){
@@ -373,10 +373,10 @@ define(
                     TotalCrashes = MinorCrashes + MajorCrashes + FatalCrashes;
 
                     feature['VMT'] = VMT;
-                    var crashesPerVmt = TotalCrashes / multiplier;
+                    var crashesPerVmt = TotalCrashes * multiplier;
                     if(crashesPerVmt > 0 && crashesPerVmt <= 0.001){
                         crashesPerVmt = "0-0.001";
-                    }else if(TotalCrashes > 0.001){
+                    }else if(crashesPerVmt > 0.001){
                         crashesPerVmt = "> 0.001";
                     }else{
                         crashesPerVmt = "0-0.001";
@@ -385,10 +385,10 @@ define(
 
                     TotalCrashes = MajorCrashes + FatalCrashes;
 
-                    var crashesPerVmt = TotalCrashes / multiplier;
+                    var crashesPerVmt = TotalCrashes * multiplier;
                     if(crashesPerVmt > 0 && crashesPerVmt <= 5){
                         crashesPerVmt = "> 0 and <= 5";
-                    }else if(TotalCrashes > 5){
+                    }else if(crashesPerVmt > 5){
                         crashesPerVmt = "> 5";
                     }else{
                         crashesPerVmt = "0";
@@ -397,7 +397,7 @@ define(
 
                     TotalCrashes = FatalCrashes;
                     var VMT = feature['VMT'];
-                    var crashesPerVmt = TotalCrashes / multiplier;
+                    var crashesPerVmt = TotalCrashes * multiplier;
                     if(crashesPerVmt > 0){
                         crashesPerVmt = "> 0";
                     }
