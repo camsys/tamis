@@ -44,11 +44,11 @@ tamis.Map = (function () {
                 {key: 'Roughness Summary', type: 'Roads', default: true,
                     colors: [{key: "Very Good (< 60)", color: "green"}, {key: "Good (60 to 94)", color: "#9ACD32"},{key: "Fair (95 to 119)", color: "yellow"},{key: "Mediocre (120 to 170)", color: "#FF8C00"},{key: "Poor (> 170)", color: "red"}]
                 },
-                {key: 'PSR Summary', type: 'Roads', default: false,
-                    colors: [{key: "Very Good (>= 4.0)", color: "green"}, {key: "Good (>= 3.5 to < 4.0)", color: "#9ACD32"},{key: "Fair (>= 3.0 to < 3.5)", color: "yellow"},{key: "Mediocre (>=2.6 to < 3.0)", color: "#FF8C00"},{key: "Poor (< 2.6)", color: "red"}]
-                },
                 {key: 'Rut Summary', type: 'Roads', default: false,
                     colors: [{key: "Very Good (0 to 0.2)", color: "green"}, {key: "Good (0.2 to 0.33)", color: "#9ACD32"},{key: "Fair (0.33 to 0.5)", color: "yellow"},{key: "Mediocre (0.5 to 0.75)", color: "#FF8C00"},{key: "Poor (> 0.75)", color: "red"}]
+                },
+                {key: 'PSR Summary', type: 'Roads', default: false,
+                    colors: [{key: "Very Good (>= 4.0)", color: "green"}, {key: "Good (>= 3.5 to < 4.0)", color: "#9ACD32"},{key: "Fair (>= 3.0 to < 3.5)", color: "yellow"},{key: "Mediocre (>=2.6 to < 3.0)", color: "#FF8C00"},{key: "Poor (< 2.6)", color: "red"}]
                 },
                 {key: 'AADT Summary', type: 'Roads', startColor: 'lightblue', endColor: 'darkblue', default: false},
                 {key: 'NHS Class', type: 'Roads', startColor: 'darkblue', endColor: 'lightblue', default: false},
