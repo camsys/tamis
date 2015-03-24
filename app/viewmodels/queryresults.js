@@ -117,10 +117,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                     parentEvent.layers = appstate.layerMap;
                     parentEvent.queryName = appstate.queryName
                     parentEvent.tableDefs = tabledefs;
-                    var expandmap = $.cookie('expandmap');
-                    if(expandmap == 'true'){
-                        parentEvent()
-                    }
                     $( "body" ).trigger( parentEvent );
                 });
                 var that = this;
