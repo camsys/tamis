@@ -62,7 +62,7 @@ define(
                     bins: [{name: "Minimum Condition Summary", value:'Minimum Condition Summary'}],
                     headers: ['Geographic Area', 'NHS Class', 'Miles', 'Lane Miles', 'Deck Condition', 'Count', 'Minimum Condition Summary'],
                     fields: ['Jurisdiction', 'NHSClass', 'Length', 'LaneMiles', 'DeckCond', 'count', 'Minimum Condition Summary'],
-                    levels: ['Jurisdiction', 'NHSClass', 'condition'],
+                    levels: ['Jurisdiction', 'NHSClass', 'Minimum Condition Summary'],
                     sums: ['count'],
                     averages: [],
                     dataKey: 'BridgeFeatureResults',
