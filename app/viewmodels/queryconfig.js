@@ -235,6 +235,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     app.showMessage(config.emptyResultsMessage.message, config.emptyResultsMessage.title);
                 } else {
                     console.log(JSON.stringify(appstate));
+                    $.cookie('expandmap', 'false', { expires: 60, path: '/' });
                     router.navigate('queryresults');
                 }
             },

@@ -117,6 +117,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                     parentEvent.layers = appstate.layerMap;
                     parentEvent.queryName = appstate.queryName
                     parentEvent.tableDefs = tabledefs;
+                    var expandmap = $.cookie('expandmap');
+                    if(expandmap == 'true'){
+                        parentEvent()
+                    }
                     $( "body" ).trigger( parentEvent );
                 });
                 var that = this;
@@ -162,6 +166,16 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
             compositionComplete: function () {
                 $('a[data-toggle="tab"]:first').trigger("shown.bs.tab");
                 this.fixFooterHeight();
+                var expandmap = $.cookie('expandmap');
+                if(expandmap == 'true'){
+                    this.defaultmapheight($('#mapiframe').height());
+                    this.toggletext('Collapse map');
+                    var mapheight = $(window).height() - $('header').height() - 80;
+                    $('#mapiframe').height(mapheight);
+                    this.fixFooterHeight();
+                    var parentEvent = jQuery.Event( "setextent" );
+                    $( "body" ).trigger( parentEvent );
+                }
             },
 
             expand: function() {
@@ -170,12 +184,14 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                     this.defaultmapheight(null);
                     this.toggletext('Expand map');
                     this.fixFooterHeight();
+                    $.cookie('expandmap', 'false', { expires: 60, path: '/' });
                 }else{
                     this.defaultmapheight($('#mapiframe').height());
                     this.toggletext('Collapse map');
                     var mapheight = $(window).height() - $('header').height() - 80;
                     $('#mapiframe').height(mapheight);
                     this.fixFooterHeight();
+                    $.cookie('expandmap', 'true', { expires: 60, path: '/' });
                 }
 
 
