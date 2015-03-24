@@ -174,6 +174,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery-ui', 'datatables', '
                 }
             },
 
+            resetmap: function(){
+                $.cookie('expandmap', 'false', { expires: 60, path: '/' });
+                this.defaultmapheight(null);
+                this.toggletext('Expand map');
+            },
+
             expand: function() {
                 if(this.defaultmapheight()){
                     $('#mapiframe').height(this.defaultmapheight());

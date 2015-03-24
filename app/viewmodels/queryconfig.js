@@ -1,9 +1,9 @@
 define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jquery-ui',
         '../config/config', '../config/appstate', 'plugins/router', '../definitions/tabledefs', './categoryselector',
-        './geoselector', './assetselector', './routeselector', './slopeselector',  '../services/dataservice', '../config/helper'],
+        './geoselector', './assetselector', './routeselector', './slopeselector',  '../services/dataservice', '../config/helper', './queryresults'],
     function (http, app, ko, jstree, bootstrap, jqueryui,
               config, appstate, router, tabledefs, categoryselector, geoselector,
-              assetselector, routeselector, slopeselector, dataservice, helper) {
+              assetselector, routeselector, slopeselector, dataservice, helper, queryresults) {
 
         return {
             geoselector: geoselector,
@@ -235,7 +235,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jstree', 'bootstrap', 'jque
                     app.showMessage(config.emptyResultsMessage.message, config.emptyResultsMessage.title);
                 } else {
                     console.log(JSON.stringify(appstate));
-                    $.cookie('expandmap', 'false', { expires: 60, path: '/' });
+                    queryresults.resetmap();
                     router.navigate('queryresults');
                 }
             },
